@@ -2,6 +2,7 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 
+// создание сервера
 const server = http.createServer((req, res)=>{
     
     // получаем путь до открываемого файла
@@ -40,9 +41,11 @@ const server = http.createServer((req, res)=>{
                 }
             })
         } else{
-            res.writeHead(200, {
-                'Content-Type': contentType
-            })
+            // res.writeHead(200, {
+            //     'Content-Type': contentType
+            // })
+            res.statusCode = 200;
+            res.setHeader('Content-Type', contentType);
             res.end(content)
         }
     })
