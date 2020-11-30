@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "debug": "node app.js"
+    "debug": "nodemon app.js"
   },
   "author": "Alex Eliseev",
   "license": "ISC",

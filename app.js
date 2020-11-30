@@ -4,24 +4,27 @@ const path = require('path')
 
 // создание сервера
 const server = http.createServer((req, res)=>{
-    
-    // получаем путь до открываемого файла
+
+    // получаем дефолтный путь до открываемого файла
     let filePath = path.join(__dirname, 'html', req.url === '/' ? 'index.html' : req.url)
-    const ext = path.extname(filePath) // расширение
+    const ext = path.extname(filePath) // определяем расширение открываемого файла
     
-    // определяем тип файла
+    // определяем тип открываемого файла
     let contentType = 'text/html'
     switch (ext){
         case '.css':
             contentType = 'text/css'
+            filePath = path.join(__dirname, req.url) // формируем новый путь до файла
             break
         case '.js':
             contentType = 'text/javascript'
+            filePath = path.join(__dirname, req.url)
             break
         default:
             contentType = 'text/html'
     }
     
+    // вопрос в необходимости нижеуказанного
     if(!ext){
         filePath += '.html'
     }
@@ -37,7 +40,7 @@ const server = http.createServer((req, res)=>{
                     res.writeHead(200, {
                         'Content-Type': contentType
                     })
-                    res.end(data)
+                    res.end(data) // закрываем ответ
                 }
             })
         } else{
@@ -59,3 +62,6 @@ const PORT = process.env.PORT || 3000
 server.listen(PORT, ()=>{
     console.log(`Server has been started on ${PORT} ...`)
 })
+
+
+// какое-то расширение в Google вызывает ошибки в консоли, но они не влияют на сайт 
