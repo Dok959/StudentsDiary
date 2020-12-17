@@ -1,3 +1,5 @@
+//считывание конфига и подгрузка библиотек
+require('dotenv').config()
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
@@ -56,10 +58,12 @@ const server = http.createServer((req, res)=>{
 })
 
 // определение порта
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 
 // запуск сервера
 server.listen(PORT, ()=>{
+    //секретно, только для отладки
+    console.log(require('dotenv').config())
     console.log(`Server has been started on ${PORT} ...`)
 })
 
