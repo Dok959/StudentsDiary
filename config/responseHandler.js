@@ -5,10 +5,10 @@ const path = require('path')
 
 //определение маршрутов
 function route(response, filePath, contentType) {
-    
+
     //открытие файла по созданному пути
     fs.readFile(filePath, (err, content) => {
-        if (err){
+        if (err) {
             fs.readFile(path.join(__dirname, '../html', 'error.html'), (err, data) => {
                 if (err) {
                     response.writeHead(500)
