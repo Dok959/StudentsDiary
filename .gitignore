@@ -4,3 +4,5 @@
 
 # Игнорирование папок
 .vscode
+node_modules/
+coverage/
