@@ -1,18 +1,18 @@
-const mysql = require("mysql2");
- 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: 'studentsdiary'
+const pool = require('./pool')
+
+let query = "SELECT Count(*) FROM users"
+
+pool.query(query, (err, results, fields)=>{
+    console.log(err);
+    console.log(results);
+    //console.log(fields);
+})
+
+pool.execute("SELECT Count(*) FROM users",
+  function(err, results, fields) {
+    console.log(err);
+    console.log(results); // собственно данные
+    //console.log(fields); // мета-данные полей 
 });
- 
-function con(){
-    connection.query("Select count(*) from users",
-    function(err, results) {
-      if(err) console.log(err);
-      else console.log(results);
-    });
    
-    connection.end();
-}
+// connection.end();

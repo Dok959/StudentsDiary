@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest"
+    "test": "jest",
+    "con": "node js\\connect_db.js"
   },
   "jest": {
     "collectCoverage": true,
@@ -17,6 +18,7 @@
   "author": "Alex Eliseev",
   "license": "ISC",
   "devDependencies": {
+    "jes": "^0.6.1",
     "jest": "^26.6.3",
     "nodemon": "^2.0.6"
   },
