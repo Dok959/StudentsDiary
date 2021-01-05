@@ -1,3 +1,202 @@
 body{
-    background: rgb(223, 12, 12);
+    color: #263849;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    background-color: #ccdef0;
+    background-image: radial-gradient(circle 450px at center, #ffffff 0%, #ccdef0 100%);
+}
+
+.header{
+    background: #000;
+    height: 50px;
+}
+
+.navbar{
+    margin: 0 auto;
+    padding: 0 5px;
+    align-items: center;
+    max-width: 1210px;
+    justify-content: space-between;
+    display: flex;
+    height: inherit;
+    font-size: 20px;
+}
+
+.logo{
+    color: #ffffff;
+    font-weight: 400;
+}
+
+.header-button {
+    display: inline-block;
+    height: 30px;
+    padding-left: 35px;
+    padding-right: 35px;
+    border-radius: 60px;
+    background-color: rgb(45, 180, 27);
+    font-size: 20px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.container{
+    margin: 0 auto;
+    align-items: center;
+    max-width: 1210px;
+    padding: 0 5px;
+    max-height: max-content;
+}
+
+.info{
+    margin: 0 auto;
+    align-items: center;
+    max-width: 630px;
+    padding: 70px 0;
+}
+
+.title{
+    font-size: 30px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.description{
+    padding-top: 50px;
+    font-size: 25px;
+}
+
+.information{
+    padding: 15px 0;
+}
+
+.clients{
+    font-size: 25px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.clients_title{
+    padding-bottom: 20px;
+}
+
+.img{
+    padding-bottom: 20px;
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.footer{
+    position:absolute;
+    bottom:0px;
+    width:100%;
+
+    background: #000;
+    padding: 0 5px;
+}
+
+.footer_info{
+    max-width: 1210px;
+    margin: 0 auto;
+    text-align: center;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+
+@media(max-width: 1230px){
+    .navbar{
+        min-width: 900px;
+    }
+}
+
+@media(max-width: 900px){
+    .navbar{
+        min-width: 500px;
+    }
+
+    .info{
+        max-width: 430px;
+    }
+
+    .title{
+        font-size: 25px;
+    }
+    
+    .description{
+        font-size: 20px;
+    }
+
+    .clients{
+        font-size: 20px;
+    }
+}
+
+@media(max-width: 500px){
+    .header{
+        height: 85px;
+    }
+
+    .navbar{
+        min-width: 320px;
+        max-width: 320px;
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+    }
+
+    .info{
+        padding: 40px 0;
+    }
+
+    .logo{
+        margin: 0 auto;
+        padding: 5px 0;
+    }
+
+    .container{
+        max-width: 300px;
+    }
+
+    .info{
+        min-width: 300px;
+    }
+
+    .title{
+        font-size: 20px;
+    }
+    
+    .description{
+        padding: 20px 20px 0;
+        font-size: 18px;
+    }
+
+    .footer_info{
+        font-size: 18px;
+    }
+}
+
+@media(max-height: 900px){
+    .footer{
+        position:relative;
+    }
+}
+
+@media(max-height: 600px){
+    .info{
+        padding: 20px 0;
+    }
+
+    .description{
+        padding: 20px 20px 0;
+    }
+
+    .footer{
+        max-width: 100%;
+        position:relative;
+        /* bottom:-322px; */
+        width:100%;
+    }
 }

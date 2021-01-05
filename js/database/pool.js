@@ -1,5 +1,5 @@
+require('dotenv').config() // нужна только для тестирования
 const mysql = require('mysql2')
-require('dotenv').config()
 
 // создание пула подключений
 function createPool() {
@@ -10,6 +10,8 @@ function createPool() {
         password: process.env.PASSWORD, 
         database: process.env.DATABASE
     })
+
+    return pool
 }
 
-exports.pool = createPool
+module.exports = createPool()

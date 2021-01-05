@@ -1,6 +1,8 @@
-const pool = require('./pool')
+const pool = require('./database/pool')
 
 let query = 'SELECT Count(*) FROM users'
+
+console.log(process.cwd())
 
 pool.query(query, (err, results, fields)=>{
     console.log(err)
