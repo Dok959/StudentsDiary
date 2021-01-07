@@ -314,6 +314,7 @@ input{
         font-size: 20px;
         font-family: 'Roboto';
         font-weight: 300;
+        /* border-color: inherit; */
     }
 
     .btn_update{

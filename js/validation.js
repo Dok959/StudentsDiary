@@ -12,4 +12,10 @@ function validation(stingParse, code){
             break // сообщить об ошибке ввода
         }
     })
+    if (flag === true){
+        return 'ok'
+    }
 }
+
+exports.validation = validation()
+// module.exports = validation()

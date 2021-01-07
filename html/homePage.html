@@ -19,12 +19,12 @@
                 <div class="registration">
                     <div class="reg_title">Регистрация</div>
                     <a href="javascript:PopUpHide()" class="close"></a>
-                    <form action="" method="post">
+                    <form name="reg" class="reg" method="post">
                         <label>Логин:</label>
-                        <input class="login" type="text" name="login" autofocus required>
+                        <input type="text" name="login" autofocus required>
                         <label>Пароль:</label>
                         <input type="password" name="password" required>
-                        <a class="btn_input" href="javascript:PopUpHide()"><span>Зарегистрироваться</span></a>
+                        <a type="submit" class="btn_input" href="javascript:handlerReg()"><span>Зарегистрироваться</span></a>
                     </form>
                     <a class="btn_update" href="javascript:PopUpShowAuthorization()">Хотите авторизоваться?</a>
                 </div>
@@ -34,7 +34,7 @@
                     <a href="javascript:PopUpHide()" class="close"></a>
                     <form action="" method="post">
                         <label>Логин:</label>
-                        <input class="login" type="text" name="login" autofocus required>
+                        <input type="text" name="login" autofocus required>
                         <label>Пароль:</label>
                         <input type="password" name="password" required>
                         <a class="btn_input" href="javascript:PopUpHide()"><span>Авторизоваться</span></a>
@@ -77,7 +77,7 @@
 
     <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
     <script src="/js/PopUp.js"></script>
+    <script src="/js/homePageHadnler.js"></script>
     <script src="/js/validation.js"></script>
-    <!-- <script src="авторизация"></script> -->
 </body>
 </html>
