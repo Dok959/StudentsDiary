@@ -4,7 +4,7 @@ const path = require('path')
 
 function parse(dirname, pathname, response, handle) {
     // получаем дефолтный путь до открываемого файла
-    let filePath = path.join(dirname, 'html', pathname === '/' ? 'index.html' : pathname)
+    let filePath = path.join(dirname, 'html', pathname === '/' ? 'homePage.html' : pathname)
 
     // определяем расширение открываемого файла
     const ext = path.extname(filePath)
@@ -20,6 +20,10 @@ function parse(dirname, pathname, response, handle) {
             break
         case '.js':
             contentType = 'text/javascript'
+            filePath = path.join(dirname, pathname)
+            break
+        case '.png':
+            contentType = 'image/png'
             filePath = path.join(dirname, pathname)
             break
         default:
