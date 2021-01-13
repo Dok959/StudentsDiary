@@ -10,7 +10,18 @@ function start(dirname, parser, handle) {
         const pathname = url.parse(request.url).pathname
         console.log('Выполняется запрос по адресу: ' + pathname)
 
-        parser(dirname, pathname, response, handle)
+        // console.log('Строка запроса: ' + request.body)
+
+        switch (request.method) {
+            case 'POST':
+                console.log('Метод POST')
+                console.log(request.body)
+                parser(dirname, pathname, response, handle)
+                break
+            default:
+                console.log('Метод GET')
+                parser(dirname, pathname, response, handle)
+        }
     }
 
     // определение порта
