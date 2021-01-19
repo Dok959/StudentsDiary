@@ -46,8 +46,8 @@ body{
     background-color: rgba(252, 248, 248, 0.5);
     overflow:hidden;
     position:fixed;
-    display: inline-block;
-    top:50px;
+    display: none;
+    top:0;
     left: 0;
 }
 
@@ -56,12 +56,13 @@ body{
 }
 
 .b-popup .registration, .b-popup .authorization{
-    margin:40px auto 0px auto;
+    margin:70px auto 0px auto;
     width:500px;
     height: 500px;
     padding:10px;
     border-radius:5px;
     box-shadow: 0px 0px 10px #000;
+    top: 100px;
 }
 
 .registration, .authorization{
@@ -202,7 +203,7 @@ input{
 }
 
 .footer{
-    position:absolute;
+    /* position:absolute; */
     bottom:0px;
     width:100%;
 
@@ -231,7 +232,7 @@ input{
     }
 
     .b-popup .registration, .b-popup .authorization{
-        margin:40px auto 0px auto;
+        /* margin:40px auto 0px auto; */
         width:400px;
         height: 450px;
     }
@@ -271,11 +272,11 @@ input{
     }
 
     .b-popup{
-        top:85px;
+        /* top:85px; */
     }
 
     .b-popup .registration, .b-popup .authorization{
-        margin:20px auto 0px auto;
+        margin:100px auto 0px auto;
         width:300px;
         height: 380px;
     }
@@ -354,7 +355,7 @@ input{
 
 
 
-@media(max-height: 930px){
+/* @media(max-height: 930px){
     .b-popup{
         position: absolute;
         top: 85px;
@@ -412,6 +413,6 @@ input{
         max-width: 100%;
         position:relative;
         /* bottom:-322px; */
-        width:100%;
+        /*width:100%;
     }
-}
+} */

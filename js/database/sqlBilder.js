@@ -1,4 +1,4 @@
-const pool = require('./database/pool')
+const pool = require('./pool')
 
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
 function query (code, table, args){
@@ -9,5 +9,5 @@ function query (code, table, args){
     }
 }
 
-// module.exports = query()
-exports.query = {query()}
+module.exports = query;
+// exports.query = {query()}

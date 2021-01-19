@@ -1,8 +1,3 @@
-// const bilder = require('./database/sqlBilder')
-// import { query} from './database/sqlBilder';
-
-// const bilder = require('./database/sqlBilder.mjs')
-
 function handlerReg() {
     const login = document.forms.reg.login
     const password = document.forms.reg.password
@@ -61,19 +56,20 @@ async function checkErrors(args) {
     const errors = document.forms.reg.querySelectorAll('.error')
 
     if (errors.length === 0) {
-        //const bilder = require('./database/sqlBilder')
+
+        // сериализуем данные в json
+        let user = JSON.stringify({'login': args[0].value, 'password': args[1].value});
+        // посылаем запрос на адрес "./database/sqlBilder"
         let response = await fetch('./database/sqlBilder', {
             method: 'POST',
-            body: {
-                    'login': args[0].value,
-                    'password': args[1].value
+            body: user,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
                 }
-            //'name=Vasya'
         })
 
         if (response.ok) { // если HTTP-статус в диапазоне 200-299
-            // получаем тело ответа (см. про этот метод ниже)
-            // let json = await response.text();
             alert("Запрос выполнен: " + response.status);
           } else {
             alert("Ошибка HTTP: " + response.status);
