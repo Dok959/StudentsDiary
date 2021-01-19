@@ -10,4 +10,3 @@ function query(code, table, args) {
 }
 
 module.exports = query;
-// exports.query = {query()}
