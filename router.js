@@ -39,7 +39,7 @@ router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, re
 router.post('/database/sqlBilder', jsonParser, function (request, response) {
     if (!request.body) return response.sendStatus(400);
     console.log(request.body);
-    sqlBilder(1, 'USERS', [request.body.login, request.body.password]);
+    sqlBilder(request.body.code, request.body.table, [request.body.login, request.body.password]);
     // response.send(`${request.body.login} - ${request.body.password}`);
 });
 
