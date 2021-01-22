@@ -11,7 +11,7 @@ function createPool() {
         database: process.env.DATABASE
     })
 
-    return pool
+    return pool.promise();
 }
 
 module.exports = createPool()

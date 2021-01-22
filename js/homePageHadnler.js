@@ -83,9 +83,9 @@ async function checkErrors(code, table, form, args) {
 
         // сериализуем данные в json
         let user = JSON.stringify({ 'code': code,
-                                    'table': table, 
-                                    'login': args[0].value, 
-                                    'password': args[1].value });
+                                            'table': table,
+                                            'login': args[0].value,
+                                            'password': args[1].value});
         // посылаем запрос на адрес "./database/sqlBilder"
         let response = await fetch('./database/sqlBilder', {
             method: 'POST',
@@ -94,13 +94,17 @@ async function checkErrors(code, table, form, args) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        });
+        })
+        console.log(response);
 
         if (response.ok) { // если HTTP-статус в диапазоне 200-299
+            const result = await response.json();
+            console.log('Успех:', JSON.stringify(result));
+
             alert("Запрос выполнен: " + response.status);
         } else {
             alert("Ошибка HTTP: " + response.status);
-        }
+        };
 
         // bilder.query(1, 'users', args)
 
