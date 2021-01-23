@@ -26,20 +26,61 @@ async function query(code, table, args, callback) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${table};`;
 
+        // let result = {};
+
         pool.execute(query)
             .then( (res) => {
                 // парсинг результата и взятие 0 массива
-                var rows = JSON.parse(JSON.stringify(res[0]))[0];
+                const rows = JSON.parse(JSON.stringify(res[0]));
 
-                // перебор элементов
+                let fields = new Array(); // массив для полей таблицы
+
+                // перебор полей таблицы
                 Object.keys(rows).forEach(key => {
-                    console.log(key + ': ' + rows[key])
+                    fields.push(`${rows[key].Field}`);
                 })
 
-                return r;
+                // формирование основного запроса
+                query = `SELECT * FROM USERS WHERE`;
+                for (let field = 1; field < fields.length; field++) {
+                    for (let element = field - 1; element < args.length; element++) {
+                        query += ` ${fields[field]} = '${args[element]}' and`;
+                        break;
+                    }
+                };
+                query = query.substr(0, query.length-4);
+                query += ';';
+
+                // let result = {};
+
+                pool.execute(query)
+                    .then( (res) => {
+                        // парсинг результата и взятие 0 массива
+                        const rows = JSON.parse(JSON.stringify(res[0]))[0];
+                        // возможно, если потребуется вернуть список элементов, то произойдет ошибка, будет вернут один
+
+                        let result = {};
+                        // перебор элементов результата
+                        Object.keys(rows).forEach(key => {
+                            result[key] = rows[key]
+                        })
+
+                        return result;
+                    })
+                
+                console.log(result)
+                Object.keys(result).forEach(key => {
+                    console.log(key + ": " + result[key])
+                })
+                return result;
             })
             .catch(console.log);
 
+        Object.keys(result).forEach(key => {
+            console.log(key + ": " + result[key])
+        })
+        return JSON.stringify(result); // возврат на обработчик идёт отсюда
+        
         // const res = await pool.execute("SELECT id FROM USERS WHERE login = 'admin'");
         // console.log(res)
         // return res;
@@ -49,85 +90,7 @@ async function query(code, table, args, callback) {
 
         // console.log('---')
         // return { 'id': 1};
-
-
-        // получение названий полей в искомой таблице
-        // let fields = new Array();
-        // try {
-        //     let results = await pool.execute(query);
-        //     console.log(results[0])
-
-        //     for (let i = 0; i < results[0].length; i++) {
-        //         console.log(results[i])
-        //         fields.push(`${results[i].Field}`);
-        //     }
-        //     console.log(fields)
-
-        //     // формирование основного запроса
-        //     query = `SELECT * FROM ${table} WHERE`;
-        //     for (let field = 1; field < fields.length; field++) {
-        //         for (let element = field - 1; element < args.length; element++) {
-        //             query += ` ${fields[field]} = '${args[element]}' and`;
-        //             break;
-        //         }
-        //     };
-        //     query = query.substr(0, query.length-4);
-        //     query += ';';
-
-        //     console.log(query)
-        //     try {
-        //         results = await pool.execute(query);
-
-        //         console.log('+++')
-        //         console.log(results[0])
-        //         console.log(results[0].id)
-        //         return { 'id': results[0].id};
-        //         // return JSON.stringify({ 'id': results[0].id});
-
-        //     } catch (error) {
-        //         throw error;
-        //     }
-
-        // } catch (error) {
-        //     throw error;
-        // }
     }
 }
-
-async function step1(error, results) {
-    if (error) {
-        throw error;
-    } else {
-        let fields = new Array();
-        for (let i = 0; i < results.length; i++) {
-            fields.push(`${results[i].Field}`);
-        }
-
-        // формирование основного запроса
-        query = `SELECT * FROM USERS WHERE`;
-        // for (let field = 1; field < fields.length; field++) {
-        //     for (let element = field - 1; element < args.length; element++) {
-        //         query += ` ${fields[field]} = '${args[element]}' and`;
-        //         break;
-        //     }
-        // };
-        // query = query.substr(0, query.length-4);
-        // query += ';';
-        query += ` login = 'admin' and password = 'admin';`;
-        return pool.execute(query, step2);
-    }
-};
-
-async function step2(error, results) {
-    if (error) { 
-        throw error;
-    }
-    else{
-        console.log('+++')
-        return { 'id': results[0].id};
-        // return JSON.stringify({ 'id': results[0].id});
-    }
-};
-
 
 module.exports = query;

@@ -51,7 +51,7 @@ router.post('/database/sqlBilder', jsonParser, async function (request, response
         [request.body.login, request.body.password])
         .then(result => {
             console.log(result);
-            response.json(JSON.stringify({ 'result': result }));
+            response.send(result);
         });
         // распарсить результат и перенаправить на основную страницу
         

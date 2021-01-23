@@ -95,11 +95,11 @@ async function checkErrors(code, table, form, args) {
                 'Accept': 'application/json'
             }
         })
-        console.log(response);
 
         if (response.ok) { // если HTTP-статус в диапазоне 200-299
-            const result = await response.json();
-            console.log('Успех:', JSON.stringify(result));
+            const result = await response;
+            console.log(result.body);
+            console.log('Успех:', JSON.parse(result));
 
             alert("Запрос выполнен: " + response.status);
         } else {
