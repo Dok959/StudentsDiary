@@ -2,33 +2,36 @@ const pool = require('./pool');
 
 
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
-async function query(code, table, args) {
+async function buildingUserQueries(code, table, args) {
     let query = '';
+    let request, response;
     if (code === 1) {
-        query = `INSERT INTO ${table} () VALUES (DEFAULT`;
-        args.forEach(element => {
-            query += `, '${element}'`;
-        });
-        query += ');';
-        console.log(query);
-        pool.execute(query, (err, results) => {
-            if (err) {
-                throw err;
-            }
-            else {
-                console.log('В базу добавлена новая запись');
-            }
-        })
-        return query;
+        request = await buildingUserQueries(4, table, args); // проверяем существование такой записи
+        if (request.el != undefined){ // если записи нет
+            query = `INSERT INTO ${table} () VALUES (DEFAULT`;
+            args.forEach(element => {
+                query += `, '${element}'`;
+            });
+            query += ');';
+            console.log(query);
+
+            await pool.execute(query)
+                .then(result => console.log('В базу добавлена новая запись'))
+                .catch(error => console.log(error));
+            return buildingUserQueries(4, table, args);
+        }
+        else{
+            return buildingUserQueries(4, table, args);
+        }
     }
 
     else if (code === 4) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${table};`;
 
-        let request = await pool.execute(query);
+        request = await pool.execute(query);
         // парсинг результата и взятие 0 массива
-        let response = JSON.parse(JSON.stringify(request[0]));
+        response = JSON.parse(JSON.stringify(request[0]));
 
         let fields = new Array(); // массив для полей таблицы
 
@@ -65,4 +68,4 @@ async function query(code, table, args) {
     }
 }
 
-module.exports = query;
+module.exports = buildingUserQueries;
