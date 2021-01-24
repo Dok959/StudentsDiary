@@ -82,10 +82,12 @@ async function checkErrors(code, table, form, args) {
     if (errors.length === 0) {
 
         // сериализуем данные в json
-        let user = JSON.stringify({ 'code': code,
-                                            'table': table,
-                                            'login': args[0].value,
-                                            'password': args[1].value});
+        let user = JSON.stringify({
+            'code': code,
+            'table': table,
+            'login': args[0].value,
+            'password': args[1].value
+        });
         // посылаем запрос на адрес "./database/sqlBilder"
         let response = await fetch('./database/sqlBilder', {
             method: 'POST',
@@ -97,13 +99,16 @@ async function checkErrors(code, table, form, args) {
         })
 
         if (response.ok) { // если HTTP-статус в диапазоне 200-299
-            const result = await response;
-            console.log(result.body);
-            console.log('Успех:', JSON.parse(result));
-
-            alert("Запрос выполнен: " + response.status);
+            const result = await response.json();
+            console.log(result);
+            if (result.id){
+                alert("Добро пожаловать !)"); // переадресация на рабочую область
+            }
+            else{
+                alert("Указанный пользователь не найден.\nПроверьте корректность данных или зарегистрируйтесь!");
+            }
         } else {
-            alert("Ошибка HTTP: " + response.status);
+            alert("Произошла ошибка подключения к серверу.\nКод ошибки: " + response.status);
         };
 
         // bilder.query(1, 'users', args)

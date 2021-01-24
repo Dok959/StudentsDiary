@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const sqlBilder = require('./js/database/sqlBilder');
-const {setCookie, getCookie} = require('./js/cookies/cookies');
+const { setCookie, getCookie } = require('./js/cookies/cookies');
 const pool = require('./js/database/pool');
 
 const router = express.Router();
@@ -42,40 +42,24 @@ router.post('/database/sqlBilder', jsonParser, async function (request, response
     if (!request.body)
         return response.sendStatus(400);
     console.log(request.body);
-    // let result = sqlBilder(request.body.code, request.body.table, 
-    //                         [request.body.login, request.body.password]);
-    // console.log(result);
-    console.log('before start');
-    
-    let result = await sqlBilder(request.body.code, request.body.table, 
+
+    await sqlBilder(request.body.code, request.body.table,
         [request.body.login, request.body.password])
         .then(result => {
-            console.log(result);
-            response.send(result);
-        });
-        // распарсить результат и перенаправить на основную страницу
-        
-    // await response.json(JSON.stringify({ result: result }));
-    console.log('after start');
+            console.log(result),
+            response.send(result)// перенаправление на основную страницу
+        })
+        .catch(error => console.log(error))
 
-    console.log(result);
-    // response.json(JSON.stringify({ result: result }));
-    // response.json(sqlBilder(request.body.code, request.body.table, [request.body.login, request.body.password]));
-    
-    //sqlBilder(request.body.code, request.body.table, [request.body.login, request.body.password]);
-    
+
     // setCookie('USER', result, { secure: false, 'max-age': 3600 });
     // response.redirect(301, __dirname + "/html" + "/dashbord");
     // response.send(`${request.body.login} - ${request.body.password}`);
 });
 
-function start() {
-    return console.log('Inside of myfunction');
-}
-
 // обработчик для рабочей области приложения
 router.use('/dashbord(.html)?', jsonParser, function (request, response) {
-    if (getCookie('USER')){
+    if (getCookie('USER')) {
 
         // получить данные от базы и передать их в представление
         response.render('dashbord', {
@@ -84,7 +68,7 @@ router.use('/dashbord(.html)?', jsonParser, function (request, response) {
             phone: '+1234567890'
         });
     }
-    else{
+    else {
         response.redirect(301, __dirname + "/html" + "/");
     }
 });
