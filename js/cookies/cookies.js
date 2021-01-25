@@ -19,11 +19,11 @@ function setCookie(name, value, options = {}) {
 }
 
 // получение куки
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+function getCookie(request, name) {
+    let matches = request.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
-  }
+}
 
-module.exports = {setCookie, getCookie};
+module.exports = { setCookie, getCookie };

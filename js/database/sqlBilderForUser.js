@@ -7,7 +7,7 @@ async function buildingUserQueries(code, table, args) {
     let request, response;
     if (code === 1) {
         request = await buildingUserQueries(4, table, args); // проверяем существование такой записи
-        if (request.el != undefined){ // если записи нет
+        if (request.el != undefined) { // если записи нет
             query = `INSERT INTO ${table} () VALUES (DEFAULT`;
             args.forEach(element => {
                 query += `, '${element}'`;
@@ -15,12 +15,13 @@ async function buildingUserQueries(code, table, args) {
             query += ');';
             console.log(query);
 
+            // выполняем запрос к базе и обрабатываем результат
             await pool.execute(query)
                 .then(result => console.log('В базу добавлена новая запись'))
                 .catch(error => console.log(error));
             return buildingUserQueries(4, table, args);
         }
-        else{
+        else {
             return buildingUserQueries(4, table, args);
         }
     }

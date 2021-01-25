@@ -101,18 +101,36 @@ async function checkErrors(code, table, form, args) {
         if (response.ok) { // если HTTP-статус в диапазоне 200-299
             const result = await response.json();
             console.log(result);
-            if (result.id){
-                alert("Добро пожаловать !)"); // переадресация на рабочую область
+            if (result.id) {
+                alert("Добро пожаловать !)");
+                setCookie('USER', result.id, { secure: false, 'max-age': 3600 });
+                window.location.href = 'dashbord'; // переадресация на рабочую область
             }
-            else{
+            else {
                 alert("Указанный пользователь не найден.\nПроверьте корректность данных или зарегистрируйтесь!");
             }
         } else {
             alert("Произошла ошибка подключения к серверу.\nКод ошибки: " + response.status);
         };
-
-        // bilder.query(1, 'users', args)
-
-        //конект к базе данных
     }
+}
+
+// установка куки
+function setCookie(name, value, options = {}) {
+
+    options = {
+        path: '/'
+    };
+
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
 }
