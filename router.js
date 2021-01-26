@@ -51,9 +51,7 @@ router.use('/dashbord(.html)?', jsonParser, function (request, response) {
     if (getCookie(request.headers.cookie, 'USER')) {
         // получить данные от базы и передать их в представление
         response.render('dashbord', {
-            title: 'Мои контакты',
-            email: 'gavgav@mycorp.com',
-            phone: '+1234567890'
+            user: 'Александр'
         });
     }
     else {

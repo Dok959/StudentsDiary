@@ -3,17 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styleDashbord.css">
     <title>Document</title>
 </head>
 <body>
-    
-    {{> menu}}
-     
-    <h1>{{title}}</h1>
-    <p>Электронный адрес: {{email}}</p>
-    <p>Телефон: {{phone}}</p>
-     
-    {{!-- {{> footer}} --}}
+    <div class="container">
 
+        <div class="header">
+
+            <div class="hello">
+                <h1>Здравствуйте, {{user}}!</h1>
+            </div>
+
+            <nav>
+                <div class="menu__element">
+                    <img class="img" src="/img/inbox.png" alt="Входящие">
+                    <a href="#">Входящие</a>
+                </div>
+
+                <div class="menu__element">
+                    <img class="img" src="/img/today.png" alt="Сегодня">
+                    <a href="#">Сегодня</a>
+                </div>
+
+                <div class="menu__element">
+                    <img class="img" src="/img/calendar.png" alt="Сегодня">
+                    <a href="#">Предстоящие</a>
+                </div>
+            </nav>
+            
+        
+        </div>
+
+        <div class="bord">
+
+            <div>
+                <h1>{{user}}!</h1>
+            </div>
+        </div>
+
+        {{!-- {{> menu}} --}}
+    </div>
 </body>
 </html>
