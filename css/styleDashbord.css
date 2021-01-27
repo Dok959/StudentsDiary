@@ -59,12 +59,13 @@ body{
 .link__element{
     font-size: 20px;
     padding: 0 10px;
-    color: #A41799;
+    color: #C10FB3;
     display: flex;
 }
 
 .link__description{
     padding-left: 10px;
+    font-weight: 400;
 }
 
 .bord{
