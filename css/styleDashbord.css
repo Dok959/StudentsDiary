@@ -7,46 +7,172 @@ body{
 }
 
 .container{
-    min-width: 600px;
+    display: flex;
+    flex: 1 0 auto;
 }
 
 .header{
     display:inline-block;
-    min-width: 250px;
+    /* min-width: 250px; */
+    max-width: 20%;
     height: 100%;
-    /* padding: 5px; */
+    padding: 15px;
 
 
     /* max-height: 100%; */
+    flex: 0 0 20%;
     min-height: 100vh;
-    border-right: 1px  solid #263849;
+    background-color:#C3DAF0;
+     /* #B5DAFF; */
 }
 
 .hello{
     margin: 0 auto;
     text-align: center;
+    font-size: 25px;
+    font-weight: 400;
 }
 
-nav{
+.menu{
     margin: 5px;
     line-height: 2;
 }
 
 .menu__element{
     margin: 0 auto;
+    padding: 5px 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
 }
 
-.img{
-    width: 32px;
-    height: 32px;
+.link__img{
+    max-width: 32px;
+    max-height: 32px;
 }
 
-a{
+.link{
     display:inline-block;
+}
+
+.link__element{
+    font-size: 20px;
+    padding: 0 10px;
+    color: #A41799;
+    display: flex;
+}
+
+.link__description{
+    padding-left: 10px;
 }
 
 .bord{
     display:inline-block;
-    min-width: 600px;
     height: 100%;
+    margin-left: 15px;
+}
+
+.title__bord{
+    padding: 15px;
+    font-size: 25px;
+}
+
+
+
+
+@media (max-width: 1000px){
+    .header{
+        max-width: 200px;
+        flex: none;
+    }
+
+    .hello{
+        display: none;
+    }
+
+    .link__element{
+        font-size: 18px;
+    }
+
+    .title__bord{
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 770px){
+
+    .link__element{
+        font-size: 17px;
+    }
+
+    .title__bord{
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px){
+
+    .link__img{
+        display: none;
+    }
+
+    .link__element{
+        font-size: 15px;
+    }
+
+    .title__bord{
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 500px){
+
+    .link__img{
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .link__description{
+        display: none;
+    }
+
+    .title__bord{
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 400px){
+    .container{
+        display: inline;
+    }
+
+    .header{
+        display:block;
+        border: none;
+        max-width: 100%;
+        height: fit-content;
+        padding: 15px;
+        min-height: min-content;
+    }
+
+    .menu{
+        display: flex;
+    }
+
+    .menu__element{
+        width: min-content;
+    }
+
+    .link__element{
+        display: inline;
+    }
+
+    .link__description{
+        display: none;
+    }
+
+    .bord{
+        display:block;
+    }
 }

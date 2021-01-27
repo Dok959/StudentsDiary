@@ -17,21 +17,35 @@
                 <h1>Здравствуйте, {{user}}!</h1>
             </div>
 
-            <nav>
+            <nav class="menu">
                 <div class="menu__element">
-                    <img class="img" src="/img/inbox.png" alt="Входящие">
-                    <a href="#">Входящие</a>
+                    <a class="link__element" href="#">
+                        <img class="link__img" src="/img/inbox.png" alt="Входящие">
+                        <span class="link__description">
+                            Входящие
+                        </span>
+                    </a>
                 </div>
 
                 <div class="menu__element">
-                    <img class="img" src="/img/today.png" alt="Сегодня">
-                    <a href="#">Сегодня</a>
+                    <a class="link__element" href="#">
+                        <img class="link__img" src="/img/today.png" alt="Сегодня">
+                        <span class="link__description">
+                            Сегодня
+                        </span>
+                    </a>
                 </div>
 
                 <div class="menu__element">
-                    <img class="img" src="/img/calendar.png" alt="Сегодня">
-                    <a href="#">Предстоящие</a>
+                    <a class="link__element" href="#">
+                        <img class="link__img" src="/img/calendar.png" alt="Планируемые">
+                        <span class="link__description">
+                            Предстоящие
+                        </span>
+                    </a>
                 </div>
+
+                <img src="https://img.icons8.com/nolan/64/add-image.png" style="display: none;"/>
             </nav>
             
         
@@ -39,8 +53,13 @@
 
         <div class="bord">
 
+            <div class="title__bord">
+                <h1>Сегодня</h1>
+                Сегодня
+            </div>
+
             <div>
-                <h1>{{user}}!</h1>
+                text
             </div>
         </div>
 
