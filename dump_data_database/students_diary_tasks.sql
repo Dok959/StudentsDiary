@@ -30,6 +30,7 @@ CREATE TABLE `tasks` (
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
+  `date` DATE NULL COMMENT 'Срок выполнения данной задачи',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;

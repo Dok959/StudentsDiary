@@ -1,11 +1,22 @@
+function inbox(){
+    checkTasks(1, 'TASKS', null);
+}
+
+function today(){
+    const now = new Date();
+    const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    checkTasks(1, 'TASKS', date);
+}
+
 // может передавать код вкладки, задачи которой нужны 
-async function checkTasks(code, table, args) {
+async function checkTasks(code, table, date) {
 
     // сериализуем данные в json
     let user = JSON.stringify({
         'code': code,
         'table': table,
-        'id_owner': document.cookie
+        'id_owner': getCookie(document.cookie, 'USER'),
+        'date': date
     });
     console.log(user)
     // посылаем запрос на адрес "./database/sqlBilder"
@@ -30,4 +41,12 @@ async function checkTasks(code, table, args) {
     // } else {
     //     alert("Ошибка" + response.status);
     // };
+}
+
+// получение куки
+function getCookie(request, name) {
+    let matches = request.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
