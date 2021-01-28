@@ -42,7 +42,7 @@ async function buildingUserQueries(code, table, args) {
         });
 
         // формирование основного запроса
-        query = `SELECT * FROM USERS WHERE`;
+        query = `SELECT * FROM ${table} WHERE`;
         for (let field = 1; field < fields.length; field++) {
             for (let element = field - 1; element < args.length; element++) {
                 query += ` ${fields[field]} = '${args[element]}' and`;

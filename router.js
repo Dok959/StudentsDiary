@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const sqlBilderForUSer = require('./js/database/sqlBilderForUser');
 const { setCookie, getCookie } = require('./js/cookies/cookies');
+const sqlBilderForTasks = require('./js/database/sqlBilderForTasks');
 
 const router = express.Router();
 
@@ -32,7 +33,7 @@ router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, re
 });
 
 // обработчик для отправки запросов к базе
-router.post('/database/sqlBilder', jsonParser, async function (request, response) {
+router.post('/database/sqlBilderForUser', jsonParser, async function (request, response) {
     if (!request.body)
         return response.sendStatus(400);
     console.log(request.body);
@@ -46,7 +47,7 @@ router.post('/database/sqlBilder', jsonParser, async function (request, response
         .catch(error => console.log(error))
 });
 
-// обработчик для рабочей области приложения
+// обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, function (request, response) {
     if (getCookie(request.headers.cookie, 'USER')) {
         // получить данные от базы и передать их в представление
@@ -58,6 +59,27 @@ router.use('/dashbord(.html)?', jsonParser, function (request, response) {
         response.redirect(301, __dirname + "/html" + "/");
     }
 });
+
+// обработчик для рабочей области приложения
+router.post('/database/sqlBilderForTasks', jsonParser, async function (request, response) {
+    if (getCookie(request.headers.cookie, 'USER')) {
+        if (!request.body)
+            return response.sendStatus(400);
+        console.log(request.body);
+
+        await sqlBilderForTasks(request.body)
+            .then(result => {
+                console.log(result),
+                response.send(result)// возврат информации на страницу запроса
+            })
+            .catch(error => console.log(error))
+    }
+    else {
+        response.redirect(301, __dirname + "/html" + "/");
+    }
+});
+
+
 
 // определяем обработчик для маршрута '/'
 router.get('/foo', function (request, response) {
