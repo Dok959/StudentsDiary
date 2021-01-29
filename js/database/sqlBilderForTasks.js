@@ -5,7 +5,13 @@ const pool = require('./pool');
 async function buildingQueryForTasks(args) {
     let query = '';
     let request, response;
-    if (args.code === 4) {
+    if (args.code === 1){
+        args.code = 4;
+        request = await buildingQueryForTasks(args);
+        console.log(request);
+        //записи нет, можно добавлять; потом проверить повторное добавление
+    }
+    else if (args.code === 4) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${args.table};`;
 
@@ -40,7 +46,7 @@ async function buildingQueryForTasks(args) {
         let result = {};
 
         request = await pool.execute(query);
-        response = JSON.parse(JSON.stringify(request[0]))[0];
+        response = JSON.parse(JSON.stringify(request[0]));
 
         if (response === undefined) {
             result.el = undefined;

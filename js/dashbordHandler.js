@@ -1,23 +1,65 @@
+const cookie = getCookie(document.cookie, 'USER');
+
 function inbox(){
-    checkTasks(4, 'TASKS', null);
+    // закрытие иных названий вкладок
+    $(".inbox").show();
+    $(".today").hide();
+    $(".upcoming").hide();
+
+    // формируем набор данных
+    const data = JSON.stringify({
+        'code': 4,
+        'table': 'TASKS',
+        'id_owner': cookie,
+        'id_project': null,
+        'date': null
+    });
+    checkTasks(data);
 }
 
 function today(){
+    // закрытие иных названий вкладок
+    $(".today").show();
+    $(".inbox").hide();
+    $(".upcoming").hide();
+
+    // формируем набор данных
     const now = new Date();
     const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
-    checkTasks(4, 'TASKS', date);
+    const data = JSON.stringify({
+        'code': 4,
+        'table': 'TASKS',
+        'id_owner': cookie,
+        'date': date
+    });
+    checkTasks(data);
+    // если задача на день и без проекта, то её отображать и в inbox, иначе тут и в проетке
+    // возможно сделать запрос к проектам еще
+}
+
+function upcoming(){ // недоделано
+    // закрытие иных названий вкладок
+    $(".upcoming").show();
+    $(".inbox").hide();
+    $(".today").hide();
+
+    // формируем набор данных
+    const now = new Date();
+    const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    // checkTasks(4, 'TASKS', date);
 }
 
 // может передавать код вкладки, задачи которой нужны 
-async function checkTasks(code, table, date) {
+async function checkTasks(data) {
 
     // сериализуем данные в json
-    let data = JSON.stringify({
-        'code': code,
-        'table': table,
-        'id_owner': getCookie(document.cookie, 'USER'),
-        'date': date
-    });
+    // let data = JSON.stringify({
+    //     'code': code,
+    //     'table': table,
+    //     'id_owner': getCookie(document.cookie, 'USER'),
+    //     'date': date
+    // });
+
     // let data = JSON.stringify({  // работает, значит это универсальный select для любой таблицы
     //     'code': code,
     //     'table': 'USERS',
@@ -35,18 +77,18 @@ async function checkTasks(code, table, date) {
         }
     })
 
-    // if (response.ok) { // если HTTP-статус в диапазоне 200-299
-    //     const result = await response.json();
-    //     console.log(result);
-    //     if (result.id) {
-    //         alert("Получено");
-    //     }
-    //     else {
-    //         alert("Ничего ...");
-    //     }
-    // } else {
-    //     alert("Ошибка" + response.status);
-    // };
+    if (response.ok) { // если HTTP-статус в диапазоне 200-299
+        const result = await response.json();
+        console.log(result);
+        if (!result.el) {
+            alert("Получено");
+        }
+        else {
+            alert("Ничего ...");
+        }
+    } else {
+        alert("Ошибка" + response.status);
+    };
 }
 
 // получение куки

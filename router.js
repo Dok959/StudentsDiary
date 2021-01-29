@@ -52,7 +52,7 @@ router.use('/dashbord(.html)?', jsonParser, function (request, response) {
     if (getCookie(request.headers.cookie, 'USER')) {
         // получить данные от базы и передать их в представление
         response.render('dashbord', {
-            user: 'Александр'
+            user: getCookie(request.headers.cookie, 'LOGIN') //'Александр' // сюда передавать имя или ник пользователя
         });
     }
     else {

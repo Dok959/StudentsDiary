@@ -74,13 +74,70 @@ body{
 .bord{
     display:inline-block;
     height: 100%;
-    margin-left: 15px;
+    width: 100%;
+    margin: 0 15px;
 }
 
 .title__bord{
     padding: 15px;
     font-size: 25px;
 }
+
+.inbox, .upcoming{
+    display: none;
+}
+
+.bord__element{
+    height: fit-content;
+    background: #C3DAF0; 
+    /* поменять цвет */
+    margin: 0 15px 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bord__element__title{
+    display: flex;
+    align-items: center;
+}
+
+.link__element__img{
+    width: 32px;
+    height: 32px;
+}
+
+.link__bord__element{
+    display: inline-block;
+    margin: 0 20px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+
+/* Таблица */
+/* .bord__element{
+    height: fit-content;
+    width: 95%;
+    background: #C3DAF0;
+    margin: 0 0 15px;
+    vertical-align: middle;
+}
+
+tr{
+    margin: 10px 0;
+}
+
+.link__element__img{
+    width: 32px;
+    height: 32px;
+}
+
+.link__bord__element{
+    display: inline-block;
+    margin: 0 20px;
+    font-size: 20px;
+    font-weight: 400;
+} */
 
 
 
