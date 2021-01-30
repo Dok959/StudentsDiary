@@ -2,14 +2,32 @@ const pool = require('./pool');
 
 
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
-async function buildingQueryForTasks(args) {
+async function buildingQueryForDB(args) {
     let query = '';
     let request, response;
     if (args.code === 1){
         args.code = 4;
-        request = await buildingQueryForTasks(args);
-        console.log(request);
-        //записи нет, можно добавлять; потом проверить повторное добавление
+        request = await buildingQueryForDB(args);
+        if (request[0] === undefined){ // если записи не существует
+            query = `INSERT INTO ${args.table} () VALUES (DEFAULT`;
+
+            for (let element in args) {
+                if (element !== 'code' && element !== 'table'){
+                    query += `, '${args[element]}'`;
+                }
+            };
+            query += ');';
+            console.log(query);
+
+            // выполняем запрос к базе и обрабатываем результат
+            await pool.execute(query)
+                .then(result => console.log('В базу добавлена новая запись'))
+                .catch(error => console.log(error));
+            return buildingQueryForDB(args);
+        }
+        else{ // если запись уже есть
+            return buildingQueryForDB(args);
+        };
     }
     else if (args.code === 4) {
         // получение названий полей в искомой таблице
@@ -60,4 +78,4 @@ async function buildingQueryForTasks(args) {
     }
 }
 
-module.exports = buildingQueryForTasks;
+module.exports = buildingQueryForDB;

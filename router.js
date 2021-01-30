@@ -1,8 +1,7 @@
 const express = require('express');
 const fs = require('fs');
-const sqlBilderForUSer = require('./js/database/sqlBilderForUser');
 const { setCookie, getCookie } = require('./js/cookies/cookies');
-const sqlBilderForTasks = require('./js/database/sqlBilderForTasks');
+const buildingQueryForDB = require('./js/database/sqlBilderForDB');
 
 const router = express.Router();
 
@@ -33,19 +32,19 @@ router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, re
 });
 
 // обработчик для отправки запросов к базе
-router.post('/database/sqlBilderForUser', jsonParser, async function (request, response) {
-    if (!request.body)
-        return response.sendStatus(400);
-    console.log(request.body);
+// router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
+//     if (!request.body)
+//         return response.sendStatus(400);
+//     console.log(request.body);
 
-    await sqlBilderForUSer(request.body.code, request.body.table,
-        [request.body.login, request.body.password])
-        .then(result => {
-            console.log(result),
-                response.send(result)// перенаправление на основную страницу
-        })
-        .catch(error => console.log(error))
-});
+//     await buildingQueryForDB(request.body.code, request.body.table,
+//         [request.body.login, request.body.password])
+//         .then(result => {
+//             console.log(result),
+//                 response.send(result)// перенаправление на основную страницу
+//         })
+//         .catch(error => console.log(error))
+// });
 
 // обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, function (request, response) {
@@ -60,23 +59,23 @@ router.use('/dashbord(.html)?', jsonParser, function (request, response) {
     }
 });
 
-// обработчик для рабочей области приложения
-router.post('/database/sqlBilderForTasks', jsonParser, async function (request, response) {
-    if (getCookie(request.headers.cookie, 'USER')) {
+// обработчик для отправки запросов к базе
+router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
+    // if (getCookie(request.headers.cookie, 'USER')) {
         if (!request.body)
             return response.sendStatus(400);
         console.log(request.body);
 
-        await sqlBilderForTasks(request.body)
+        await buildingQueryForDB(request.body)
             .then(result => {
                 console.log(result),
                 response.send(result)// возврат информации на страницу запроса
             })
             .catch(error => console.log(error))
-    }
-    else {
-        response.redirect(301, __dirname + "/html" + "/");
-    }
+    // }
+    // else {
+    //     response.redirect(301, __dirname + "/html" + "/");
+    // }
 });
 
 

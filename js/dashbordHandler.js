@@ -51,24 +51,9 @@ function upcoming(){ // недоделано
 
 // может передавать код вкладки, задачи которой нужны 
 async function checkTasks(data) {
-
-    // сериализуем данные в json
-    // let data = JSON.stringify({
-    //     'code': code,
-    //     'table': table,
-    //     'id_owner': getCookie(document.cookie, 'USER'),
-    //     'date': date
-    // });
-
-    // let data = JSON.stringify({  // работает, значит это универсальный select для любой таблицы
-    //     'code': code,
-    //     'table': 'USERS',
-    //     'login': 'admin',
-    //     'password': 'admin'
-    // });
     console.log(data)
 
-    let response = await fetch('./database/sqlBilderForTasks', {
+    let response = await fetch('./database/buildingQueryForDB', {
         method: 'POST',
         body: data,
         headers: {

@@ -89,7 +89,7 @@ async function checkErrors(code, table, form, args) {
             'password': args[1].value
         });
         // посылаем запрос на адрес "./database/sqlBilder"
-        let response = await fetch('./database/sqlBilderForTasks', {
+        let response = await fetch('./database/buildingQueryForDB', {
             method: 'POST',
             body: user,
             headers: {
@@ -103,7 +103,7 @@ async function checkErrors(code, table, form, args) {
             console.log(result);
             if (result[0].id) {
                 alert("Добро пожаловать !)");
-                setCookie('USER', result.id, { secure: false, 'max-age': 3600 });
+                setCookie('USER', result[0].id, { secure: false, 'max-age': 3600 });
                 setCookie('LOGIN', args[0].value, { secure: false, 'max-age': 3600 });
                 window.location.href = 'dashbord'; // переадресация на рабочую область
             }
