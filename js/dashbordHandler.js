@@ -66,7 +66,16 @@ async function checkTasks(data) {
         const result = await response.json();
         console.log(result);
         if (!result.el) {
-            alert("Получено");
+            console.log(result.length)
+            if (result[0] !== undefined){
+                for (let element in result) {
+                    getTasks(result[element]);
+                }
+            }
+            else{
+                getTasks({title: 'Задач на горизонте не видно'})
+            }
+            // alert("Получено");
         }
         else {
             alert("Ничего ...");
@@ -74,6 +83,23 @@ async function checkTasks(data) {
     } else {
         alert("Ошибка" + response.status);
     };
+}
+
+// отображение задачи
+function getTasks(element){
+    $(".bord__tasks").html('<div class="bord__element">'+
+            '<div class="bord__element__title">'+
+                '<a class="link__element__ready" href="#">'+
+                    '<img class="link__element__img" src="/img/pac1/ready.png" alt="Выполнено">'+
+                '</a>'+
+                '<a class="link__bord__element" href="#">'+
+                    element.title +
+                '</a>'+
+            '</div>'+
+            '<a class="link__element__cancel" href="#">'+
+                '<img class="link__element__img" src="/img/pac1/trash.png" alt="Удалить задачу">'+
+            '</a>'+
+        '</div>');
 }
 
 // получение куки
