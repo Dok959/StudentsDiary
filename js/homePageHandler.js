@@ -89,7 +89,7 @@ async function checkErrors(code, table, form, args) {
             'password': args[1].value
         });
         // посылаем запрос на адрес "./database/sqlBilder"
-        let response = await fetch('./database/buildingQueryForDB', {
+        let response = await fetch('./queryForUser', {
             method: 'POST',
             body: user,
             headers: {

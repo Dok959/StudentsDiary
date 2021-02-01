@@ -5,16 +5,16 @@ const pool = require('./pool');
 async function buildingQueryForDB(args) {
     let query = '';
     let request, response;
-    if (args.code === 1){
+    if (args.code === 1) {
         args.code = 4;
         request = await buildingQueryForDB(args);
-        if (request[0] === undefined){ // если записи не существует
+        if (request[0] === undefined) { // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (DEFAULT`;
 
             for (let element in args) {
-                if (element !== 'code' && element !== 'table'){
+                if (element !== 'code' && element !== 'table') {
                     query += `, '${args[element]}'`;
-                }
+                };
             };
             query += ');';
             console.log(query);
@@ -25,7 +25,7 @@ async function buildingQueryForDB(args) {
                 .catch(error => console.log(error));
             return buildingQueryForDB(args);
         }
-        else{ // если запись уже есть
+        else { // если запись уже есть
             return buildingQueryForDB(args);
         };
     }
@@ -48,14 +48,13 @@ async function buildingQueryForDB(args) {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach(element => {
             if (args.hasOwnProperty(element)) {
-                const iSValue = eval('args.'+`${element}`);
-                if (iSValue === null){
+                const iSValue = eval('args.' + `${element}`);
+                if (iSValue === null) {
                     query += ` ${element} is ${iSValue} and`;
                 }
-                else{
+                else {
                     query += ` ${element} = '${iSValue}' and`;
-                }
-
+                };
             };
         });
         query = query.substr(0, query.length - 4);
@@ -66,10 +65,10 @@ async function buildingQueryForDB(args) {
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));
 
-        if (response === undefined) {
+        if (response.length === 0) {
             result.el = undefined;
             return result;
-        }
+        };
 
         Object.keys(response).forEach(key => {
             result[key] = response[key];

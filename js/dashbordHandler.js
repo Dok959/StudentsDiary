@@ -1,6 +1,6 @@
 const cookie = getCookie(document.cookie, 'USER');
 
-function inbox(){
+function inbox() {
     // закрытие иных названий вкладок
     $(".inbox").show();
     $(".today").hide();
@@ -17,7 +17,7 @@ function inbox(){
     checkTasks(data);
 }
 
-function today(){
+function today() {
     // закрытие иных названий вкладок
     $(".today").show();
     $(".inbox").hide();
@@ -37,7 +37,7 @@ function today(){
     // возможно сделать запрос к проектам еще
 }
 
-function upcoming(){ // недоделано
+function upcoming() { // недоделано
     // закрытие иных названий вкладок
     $(".upcoming").show();
     $(".inbox").hide();
@@ -51,7 +51,7 @@ function upcoming(){ // недоделано
 
 // может передавать код вкладки, задачи которой нужны 
 async function checkTasks(data) {
-    console.log(data)
+    console.log(data);
 
     let response = await fetch('./database/buildingQueryForDB', {
         method: 'POST',
@@ -60,7 +60,7 @@ async function checkTasks(data) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-    })
+    });
 
     if (response.ok) { // если HTTP-статус в диапазоне 200-299
         const result = await response.json();
@@ -70,7 +70,7 @@ async function checkTasks(data) {
         }
         else {
             alert("Ничего ...");
-        }
+        };
     } else {
         alert("Ошибка" + response.status);
     };
