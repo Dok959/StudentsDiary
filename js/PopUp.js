@@ -1,6 +1,6 @@
 $(document).ready(function(){
     //Скрыть PopUp при загрузке страницы    
-    PopUpHide();
+    // PopUpHide();
 });
 //Функция отображения PopUp
 function PopUpShow(){

@@ -1,16 +1,28 @@
 // Точка входа приложения
-const path = require('path')
+
+//считывание конфига
+require('dotenv').config();
 
 //подключение модулей
-let filePath = path.join(__dirname, '/config/server')
-const server = require(filePath)
+const express = require('express'); // подключение express
+const router = require('./router'); // подключение маршрутизатора
+const hbs = require("hbs");
 
-filePath = path.join(__dirname, '/config/pathParse')
-const parser = require(filePath)
+// создаем объект приложения
+const app = express();
 
-filePath = path.join(__dirname, '/config/responseHandler')
-const responseHandlers = require(filePath)
+// определение порта
+const PORT = process.env.PORT;
 
+// создаем установку и подключение представлений
+app.set('view engine', 'hbs'); // установка движка представлений
+app.set('views', 'html'); // установка пути к представлениям
+hbs.registerPartials(__dirname + '/html/parts'); // установка пути к частичным представлениям
 
-// запуск сервера
-server.start(__dirname, parser.pathParse, responseHandlers.route)
+// перевод на маршрутизацию файлов
+app.use(router);
+
+// начинаем прослушивать подключение на 3000 порту
+app.listen(PORT, () => {
+    console.log(`Server has been started and listening at http://localhost:${PORT}`);
+});

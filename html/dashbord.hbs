@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styleDashbord.css">
+    <title>Document</title>
+    <script src="/js/dashbordHandler.js" defer></script>
+    <script src="http://code.jquery.com/jquery-2.0.2.min.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+
+            <div class="hello">
+                <h1>Здравствуйте, {{user}}!</h1>
+            </div>
+
+            <nav class="menu">
+                <div class="menu__element">
+                    <a class="link__element" href="javascript:inbox()">
+                        <img class="link__img" src="/img/pac1/inbox.png" alt="Входящие">
+                        <span class="link__description">
+                            Входящие
+                        </span>
+                    </a>
+                </div>
+
+                <div class="menu__element">
+                    <a class="link__element" href="javascript:today()">
+                        <img class="link__img" src="/img/pac1/today.png" alt="Сегодня">
+                        <span class="link__description">
+                            Сегодня
+                        </span>
+                    </a>
+                </div>
+
+                <div class="menu__element">
+                    <a class="link__element" href="#">
+                        <img class="link__img" src="/img/pac1/calendar.png" alt="Планируемые">
+                        <span class="link__description">
+                            Предстоящие
+                        </span>
+                    </a>
+                </div>
+            </nav>
+
+
+        </div>
+
+        <div class="bord">
+
+            <div class="title__bord">
+                <h1 class="inbox">Входящие</h1>
+                <h1 class="today">Сегодня</h1>
+                <h1 class="upcoming">Предстоящие</h1>
+            </div>
+
+            <div class="bord__tasks">
+                {{!-- <div class="bord__element">
+                    <div class="bord__element__title">
+                        <a class="link__element__ready" href="#">
+                            <img class="link__element__img" src="/img/pac1/ready.png" alt="Выполнено">
+                        </a>
+                        <a class="link__bord__element" href="#">
+                            Привет мир
+                        </a>
+                    </div>
+                    <a class="link__element__cancel" href="#">
+                        <img class="link__element__img" src="/img/pac1/trash.png" alt="Удалить задачу">
+                    </a>
+                </div> --}}
+
+                {{!-- <table class="bord__element">
+                    <tr>
+                        <td>
+                            <a class="link__element__ready" href="#">
+                                <img class="link__element__img" src="/img/pac1/ready.png" alt="Выполнено">
+                            </a>
+                        </td>
+                        <td>
+                            <a class="link__bord__element" href="#">
+                                Привет мир
+                            </a>
+                        </td>
+                        <td>
+                            <a class="link__element__cancel" href="#">
+                                <img class="link__element__img" src="/img/pac1/trash.png" alt="Удалить задачу">
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="link__element__ready" href="#">
+                                <img class="link__element__img" src="/img/pac1/ready.png" alt="Выполнено">
+                            </a>
+                        </td>
+                        <td>
+                            <a class="link__bord__element" href="#">
+                                Привет мир
+                            </a>
+                        </td>
+                        <td>
+                            <a class="link__element__cancel" href="#">
+                                <img class="link__element__img" src="/img/pac1/trash.png" alt="Удалить задачу">
+                            </a>
+                        </td>
+                    </tr>
+                </table> --}}
+
+            </div>
+        </div>
+
+        {{!-- {{> menu}} --}}
+    </div>
+</body>
+
+</html>

@@ -46,8 +46,8 @@ body{
     background-color: rgba(252, 248, 248, 0.5);
     overflow:hidden;
     position:fixed;
-    display: inline-block;
-    top:50px;
+    display: none;
+    top:0;
     left: 0;
 }
 
@@ -56,12 +56,13 @@ body{
 }
 
 .b-popup .registration, .b-popup .authorization{
-    margin:40px auto 0px auto;
+    margin:70px auto 0px auto;
     width:500px;
     height: 500px;
     padding:10px;
     border-radius:5px;
     box-shadow: 0px 0px 10px #000;
+    top: 100px;
 }
 
 .registration, .authorization{
@@ -141,7 +142,6 @@ input{
 
 .btn_update{
     display: block;
-    height: 30px;
     padding-left: 35px;
     padding-right: 35px;
     border-radius: 60px;
@@ -149,7 +149,8 @@ input{
     font-size: 20px;
     font-weight: 400;
     text-decoration: none;
-    max-width: fit-content;
+    max-width: 300px;
+    text-align: center;
     margin: 20px auto;
 }
 
@@ -159,6 +160,7 @@ input{
     max-width: 1210px;
     padding: 0 5px;
     max-height: max-content;
+    min-height: 900px;
 }
 
 .info{
@@ -231,7 +233,6 @@ input{
     }
 
     .b-popup .registration, .b-popup .authorization{
-        margin:40px auto 0px auto;
         width:400px;
         height: 450px;
     }
@@ -270,12 +271,8 @@ input{
         text-align: center;
     }
 
-    .b-popup{
-        top:85px;
-    }
-
     .b-popup .registration, .b-popup .authorization{
-        margin:20px auto 0px auto;
+        margin:100px auto 0px auto;
         width:300px;
         height: 380px;
     }
@@ -314,7 +311,6 @@ input{
         font-size: 20px;
         font-family: 'Roboto';
         font-weight: 300;
-        /* border-color: inherit; */
     }
 
     .btn_update{
@@ -353,65 +349,8 @@ input{
 }
 
 
-
-@media(max-height: 930px){
-    .b-popup{
-        position: absolute;
-        top: 85px;
-        max-height: 100%;
-        min-height: 97%;
-    }
-}
-
-@media(max-height: 900px){
-    .img {
-        margin-bottom: 5px;
-        max-width: 225px;
-        max-height: 245px;
-    }
-
-    .b-popup{
-        min-height: 100%;
-    }
-
-    .container{
-        margin-bottom: -12px;
-    }
-
+@media(max-height: 980px){
     .footer{
-        position:relative;
-    }
-}
-
-@media(max-height: 800px){
-    .b-popup{
-        min-height: 114%;
-    }
-}
-
-@media(max-height: 700px){
-    .b-popup{
-        min-height: 126%;
-    }
-}
-
-@media(max-height: 600px){
-    .b-popup{
-        min-height: 140%;
-    }
-
-    .info{
-        padding: 20px 0;
-    }
-
-    .description{
-        padding: 20px 20px 0;
-    }
-
-    .footer{
-        max-width: 100%;
-        position:relative;
-        /* bottom:-322px; */
-        width:100%;
+        position: relative;
     }
 }
