@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const { setCookie, getCookie } = require('./js/cookies/cookies');
 const buildingQueryForDB = require('./js/database/sqlBilderForDB');
+const NodeRSA = require('node-rsa');
+const key = new NodeRSA({ b: 512 }); // создание обработчика генерации шифрованых данных
 
 const router = express.Router();
 
@@ -35,7 +37,7 @@ router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, re
 router.post('/queryForUser', jsonParser, async function (request, response) {
     await buildingQueryForDB(request.body)
         .then(result => {
-            console.log(result), // необходимо защифровать id пользователя
+            result[0].id = key.encrypt(result[0].id, 'base64'), // шифруем id
                 response.send(result) // возврат информации на страницу запроса
         })
         .catch(error => console.log(error));
@@ -69,20 +71,26 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
 
 // проверка существования такого пользователя на текущий момент
 async function checkUser(request) {
-    return await buildingQueryForDB({
-        'code': 4,
-        'table': 'USERS',
-        'id': getCookie(request.headers.cookie, 'USER')
-    })
-        .then(result => {
-            if (result[0] !== undefined) {
-                return true;
-            }
-            else {
-                return false;
-            };
-        })
-        .catch(error => console.log(error));
+    try {
+        let user = {
+            'code': 4,
+            'table': 'USERS',
+            'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
+        }
+
+        return await buildingQueryForDB(user)
+            .then(result => {
+                if (result[0] !== undefined) {
+                    return true;
+                }
+                else {
+                    return false;
+                };
+            })
+            .catch(error => console.log(error));
+    } catch (error) {
+        return false;
+    }
 }
 
 
