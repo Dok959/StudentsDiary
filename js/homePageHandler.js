@@ -102,7 +102,6 @@ async function checkErrors(code, table, form, args) {
             const result = await response.json();
             console.log(result);
             if (result[0].id) {
-                alert("Добро пожаловать !)");
                 setCookie('USER', result[0].id, { secure: false, 'max-age': 3600 });
                 setCookie('LOGIN', args[0].value, { secure: false, 'max-age': 3600 });
                 window.location.href = 'dashbord'; // переадресация на рабочую область

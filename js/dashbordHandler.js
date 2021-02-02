@@ -1,5 +1,9 @@
 const cookie = getCookie(document.cookie, 'USER');
 
+document.addEventListener("DOMContentLoaded", function() {
+    today();
+});
+
 function inbox() {
     // закрытие иных названий вкладок
     $(".inbox").show();
