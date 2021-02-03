@@ -1,5 +1,6 @@
 let code = 1;
 const table = 'USERS';
+deleteCookie('USER');
 
 function handlerReg() {
     const login = document.forms.reg.login;
@@ -113,24 +114,4 @@ async function checkErrors(code, table, form, args) {
             alert("Произошла ошибка подключения к серверу.\nКод ошибки: " + response.status);
         };
     }
-}
-
-// установка куки
-function setCookie(name, value, options = {}) {
-
-    options = {
-        path: '/'
-    };
-
-    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-
-    for (let optionKey in options) {
-        updatedCookie += "; " + optionKey;
-        let optionValue = options[optionKey];
-        if (optionValue !== true) {
-            updatedCookie += "=" + optionValue;
-        }
-    }
-
-    document.cookie = updatedCookie;
 }

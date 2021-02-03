@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const { setCookie, getCookie } = require('./js/cookies/cookies');
+const { setCookie, getCookie, deleteCookie } = require('./js/cookies/cookies');
 const buildingQueryForDB = require('./js/database/sqlBilderForDB');
 const NodeRSA = require('node-rsa');
 const key = new NodeRSA({ b: 512 }); // создание обработчика генерации шифрованых данных
@@ -46,13 +46,12 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
 // обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
     if (await checkUser(request)) {
-
         const now = new Date();
         // Запрашиваем день недели вместе с коротким форматом даты
         var options = { weekday: 'short', month: 'short', day: 'numeric' };
         let date = now.toLocaleDateString('ru-RU', options);
         date = date[0].toUpperCase() + date.slice(1);
-        
+
         response.render('dashbord', {
             user: getCookie(request.headers.cookie, 'LOGIN'), // сюда передавать имя или ник пользователя
             today: date
@@ -65,6 +64,9 @@ router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
 
 // обработчик для отправки запросов к базе
 router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
+    if (request.body.id_owner){ // если пользователь авторизован, то парсим его hash
+        request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
+    };
     await buildingQueryForDB(request.body)
         .then(result => {
             // console.log(result),
@@ -80,7 +82,7 @@ async function checkUser(request) {
             'code': 4,
             'table': 'USERS',
             'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
-        }
+        };
 
         return await buildingQueryForDB(user)
             .then(result => {
@@ -94,7 +96,7 @@ async function checkUser(request) {
             .catch(error => console.log(error));
     } catch (error) {
         return false;
-    }
+    };
 }
 
 

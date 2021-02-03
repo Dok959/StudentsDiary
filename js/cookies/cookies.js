@@ -5,6 +5,10 @@ function setCookie(name, value, options = {}) {
         path: '/'
     };
 
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+    
     let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
 
     for (let optionKey in options) {
@@ -26,4 +30,11 @@ function getCookie(request, name) {
     return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-module.exports = { setCookie, getCookie };
+// удаление куки
+function deleteCookie(name) {
+    setCookie(name, "", {
+      'max-age': -1
+    })
+}
+
+module.exports = { setCookie, getCookie, deleteCookie };
