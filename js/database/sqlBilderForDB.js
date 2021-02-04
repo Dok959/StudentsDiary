@@ -57,6 +57,9 @@ async function buildingQueryForDB(args) {
                 };
             };
         });
+        if (args.hasOwnProperty('startDate') && args.hasOwnProperty('endDate')) {
+            query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
+        };
         query = query.substr(0, query.length - 4);
         query += ';';
 

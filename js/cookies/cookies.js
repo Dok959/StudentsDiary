@@ -5,10 +5,6 @@ function setCookie(name, value, options = {}) {
         path: '/'
     };
 
-    if (options.expires instanceof Date) {
-        options.expires = options.expires.toUTCString();
-    }
-    
     let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
 
     for (let optionKey in options) {
@@ -16,11 +12,11 @@ function setCookie(name, value, options = {}) {
         let optionValue = options[optionKey];
         if (optionValue !== true) {
             updatedCookie += "=" + optionValue;
-        }
-    }
+        };
+    };
 
     document.cookie = updatedCookie;
-}
+};
 
 // получение куки
 function getCookie(request, name) {
@@ -28,13 +24,15 @@ function getCookie(request, name) {
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
-}
+};
 
 // удаление куки
 function deleteCookie(name) {
     setCookie(name, "", {
-      'max-age': -1
-    })
-}
+        'max-age': -1
+    });
+};
 
-module.exports = { setCookie, getCookie, deleteCookie };
+try {
+    module.exports = { setCookie, getCookie, deleteCookie };
+} catch (error) { };

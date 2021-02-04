@@ -46,15 +46,8 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
 // обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
     if (await checkUser(request)) {
-        const now = new Date();
-        // Запрашиваем день недели вместе с коротким форматом даты
-        var options = { weekday: 'short', month: 'short', day: 'numeric' };
-        let date = now.toLocaleDateString('ru-RU', options);
-        date = date[0].toUpperCase() + date.slice(1);
-
         response.render('dashbord', {
             user: getCookie(request.headers.cookie, 'LOGIN'), // сюда передавать имя или ник пользователя
-            today: date
         });
     }
     else {
@@ -64,12 +57,11 @@ router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
 
 // обработчик для отправки запросов к базе
 router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
-    if (request.body.id_owner){ // если пользователь авторизован, то парсим его hash
+    if (request.body.id_owner) { // если пользователь авторизован, то парсим его hash
         request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
     };
     await buildingQueryForDB(request.body)
         .then(result => {
-            // console.log(result),
             response.send(result)
         })
         .catch(error => console.log(error));
@@ -97,7 +89,7 @@ async function checkUser(request) {
     } catch (error) {
         return false;
     };
-}
+};
 
 
 // определяем обработчик для маршрута '/'

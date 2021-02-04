@@ -114,33 +114,6 @@ body{
 }
 
 
-/* Таблица */
-/* .bord__element{
-    height: fit-content;
-    width: 95%;
-    background: #C3DAF0;
-    margin: 0 0 15px;
-    vertical-align: middle;
-}
-
-tr{
-    margin: 10px 0;
-}
-
-.link__element__img{
-    width: 32px;
-    height: 32px;
-}
-
-.link__bord__element{
-    display: inline-block;
-    margin: 0 20px;
-    font-size: 20px;
-    font-weight: 400;
-} */
-
-
-
 @media (max-width: 1130px){
     .header{
         padding: 10px;

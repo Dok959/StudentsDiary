@@ -8,8 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styleDashbord.css">
     <title>Document</title>
-    <script src="/js/dashbordHandler.js" defer></script>
     <script src="http://code.jquery.com/jquery-2.0.2.min.js" defer></script>
+    <script src="/js/cookies/cookies.js" defer></script>
+    <script src="/js/dashbordHandler.js" defer></script>
 </head>
 
 <body>
@@ -41,7 +42,7 @@
                 </div>
 
                 <div class="menu__element">
-                    <a class="link__element" href="#">
+                    <a class="link__element" href="javascript:upcoming()">
                         <img class="link__img" src="/img/pac1/calendar.png" alt="Планируемые">
                         <span class="link__description">
                             Предстоящие
@@ -57,7 +58,7 @@
 
             <div class="title__bord">
                 <h1 class="inbox">Входящие</h1>
-                <h1 class="today">Сегодня, {{today}}</h1>
+                <h1 class="today">Сегодня</h1>
                 <h1 class="upcoming">Предстоящие</h1>
             </div>
 
