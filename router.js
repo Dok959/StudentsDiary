@@ -60,8 +60,10 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
     if (request.body.id_owner) { // если пользователь авторизован, то парсим его hash
         request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
     };
+    console.log(request.body)
     await buildingQueryForDB(request.body)
         .then(result => {
+            console.log(result),
             response.send(result)
         })
         .catch(error => console.log(error));

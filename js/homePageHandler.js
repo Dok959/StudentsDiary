@@ -1,6 +1,6 @@
 let code = 1;
 const table = 'USERS';
-deleteCookie('USER');
+deleteCookie('USER'); // должно срабатывать только при выходе из аккаунта
 
 function handlerReg() {
     const login = document.forms.reg.login;
