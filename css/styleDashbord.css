@@ -71,6 +71,23 @@ body{
     border-color: #C10FB3;
 }
 
+.bottom_menu{
+    bottom: 5px;
+    position: absolute;
+    display: flex;
+    /* max-width: inherit; */
+    /* width: 100%; */
+    margin: 0 auto;
+    flex: 1 0 auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.bottom_menu.menu__element{
+    max-width: initial;
+    width: 30%;
+}
+
 .bord{
     display:inline-block;
     height: 100%;
@@ -86,6 +103,13 @@ body{
 .inbox, .upcoming{
     display: none;
 }
+.menu__element .settings{
+    width:fit-content;
+}
+
+.bord__tasks{
+    width: 100%;
+}
 
 .bord__element{
     height: fit-content;
@@ -94,6 +118,7 @@ body{
     margin: 0 15px 5px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .bord__element__title{
@@ -111,6 +136,10 @@ body{
     margin: 0 20px;
     font-size: 20px;
     font-weight: 400;
+}
+
+.link__element__ready, .link__element__more{
+    height: 32px;
 }
 
 
@@ -177,6 +206,14 @@ body{
     .title__bord{
         font-size: 15px;
     }
+
+    .bord{
+        margin: 0;
+    }
+
+    .bord__element{
+        margin: 0 10px 5px;
+    }
 }
 
 @media (max-width: 500px){
@@ -189,6 +226,10 @@ body{
 
     .link__description{
         display: none;
+    }
+
+    .bord__tasks{
+        width: fit-content;
     }
 
     .title__bord{
@@ -228,5 +269,10 @@ body{
 
     .bord{
         display:block;
+        width: fit-content;
+    }
+
+    .bord__element {
+        margin: 0 3px 5px;
     }
 }

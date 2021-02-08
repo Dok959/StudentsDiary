@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="513px" height="513px" viewbox="0 0 513 513" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M291.054 14.5533L138.006 212.193L63.7278 115.294C49.2921 96.3885 25.7283 96.1814 11.0884 114.804C-3.55152 133.446 -3.71192 163.875 10.7092 182.781L111.497 314.384C118.452 323.723 127.989 329.09 138.006 329.316C147.951 329.052 157.429 323.874 164.516 314.854L344.058 82.5108C353.595 70.3278 357.342 52.4581 353.857 35.7182C350.372 18.9783 340.209 5.94793 327.217 1.56054C314.239 -2.80803 300.43 2.14427 291.054 14.5533L291.054 14.5533Z" transform="translate(79 117)" id="path_1" />
+    <clipPath id="clip_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="ready" transform="translate(0.5 0.5)">
+    <path d="M0 256C0 114.615 114.615 0 256 0C397.385 0 512 114.615 512 256C512 397.385 397.385 512 256 512C114.615 512 0 397.385 0 256Z" id="Ellipse" fill="#083863" fill-rule="evenodd" stroke="none" />
+    <path d="M0 231C0 103.422 103.422 0 231 0C358.578 0 462 103.422 462 231C462 358.578 358.578 462 231 462C103.422 462 0 358.578 0 231Z" transform="translate(25 25)" id="Ellipse-2" fill="#00EFD1" fill-rule="evenodd" stroke="#808080" stroke-width="1" />
+    <g id="Shape-2">
+      <use stroke="none" fill="#00ACEA" xlink:href="#path_1" fill-rule="evenodd" />
+      <g clip-path="url(#clip_1)">
+        <use xlink:href="#path_1" fill="none" stroke="#083863" stroke-width="40" />
+      </g>
+    </g>
+  </g>
+</svg>

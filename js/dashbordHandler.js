@@ -126,14 +126,14 @@ function getTasks(element) {
     $(".bord__tasks").html('<div class="bord__element">' +
         '<div class="bord__element__title">' +
         '<a class="link__element__ready" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/ready.png" alt="Выполнено">' +
+        '<img class="link__element__img" src="/img/pac1/ready.svg" alt="Выполнено">' +
         '</a>' +
         '<a class="link__bord__element" href="#">' +
         element.title +
         '</a>' +
         '</div>' +
-        '<a class="link__element__cancel" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/trash.png" alt="Удалить задачу">' +
+        '<a class="link__element__more" href="#">' +
+        '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Действия">' +
         '</a>' +
         '</div>');
 };
