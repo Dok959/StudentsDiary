@@ -17,17 +17,30 @@ async function buildingQueryForDB(args) {
                 };
             };
             query += ');';
-            console.log(query);
+            console.log(query); //временно
 
             // выполняем запрос к базе и обрабатываем результат
-            await pool.execute(query)
-                .then(result => console.log('В базу добавлена новая запись'))
-                .catch(error => console.log(error));
+            await pool.execute(query);
+
+            // если создаётся пользователь, то создастся информация о его настройках
+            if (args.table === 'USERS'){
+                request = await buildingQueryForDB(args);
+                response = JSON.parse(JSON.stringify(request[0]));
+                let id_owner = response.id;
+                query = `INSERT INTO SETTINGS () VALUES (` + id_owner + ', NULL, NULL, NULL, DEFAULT);';
+                await pool.execute(query);
+            }
+                
             return buildingQueryForDB(args);
         }
         else { // если запись уже есть
             return buildingQueryForDB(args);
         };
+    }
+    else if (args.code === 2){
+        // только для таблицы настроек
+        // требуется приписка лимит, так как нет первичного ключа.
+        //UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1
     }
     else if (args.code === 4) {
         // получение названий полей в искомой таблице

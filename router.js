@@ -45,14 +45,27 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
 
 // обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
-    if (await checkUser(request)) {
-        response.render('dashbord', {
-            user: getCookie(request.headers.cookie, 'LOGIN'), // сюда передавать имя или ник пользователя
-        });
-    }
-    else {
-        response.redirect('/');
-    };
+    await checkUser(request)
+        .then(result => {
+            if (result) {
+                let userName;
+                if (result === undefined) {
+                    userName = getCookie(request.headers.cookie, 'LOGIN');
+                }
+                else {
+                    userName = result;
+                };
+
+                // вывод имени пользователя или его логина при приветствие
+                response.render('dashbord', {
+                    user: userName,
+                });
+            }
+            else {
+                response.redirect('/');
+            };
+        }
+        );
 });
 
 // обработчик для отправки запросов к базе
@@ -64,13 +77,13 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
     await buildingQueryForDB(request.body)
         .then(result => {
             console.log(result),
-            response.send(result)
+                response.send(result)
         })
         .catch(error => console.log(error));
 });
 
 // обработчик для попадания на рабочую область приложения
-router.use('/personPage(.html)?', jsonParser, async function (request, response) {
+router.use('/personPage(.html)?', jsonParser, async function (request, response) {    
     if (await checkUser(request)) {
         response.sendFile(__dirname + '/html' + '/personPage.html');
     }
@@ -88,10 +101,19 @@ async function checkUser(request) {
             'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
         };
 
+        let settingsUser = {
+            'code': 4,
+            'table': 'SETTINGS',
+            'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
+        };
+
         return await buildingQueryForDB(user)
             .then(result => {
                 if (result[0] !== undefined) {
-                    return true;
+                    return buildingQueryForDB(settingsUser)
+                        .then(settings => {
+                            return settings[0].first_name
+                        });
                 }
                 else {
                     return false;
