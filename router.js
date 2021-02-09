@@ -30,7 +30,7 @@ const jsonParser = express.json();
 // определяем обработчик для маршрута на главную страницу, '/'
 router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, response) {
     // отправляем ответ
-    response.sendFile(__dirname + "/html" + "/homePage.html");
+    response.sendFile(__dirname + '/html' + '/homePage.html');
 });
 
 // переводящий обработчик для регистрации и авторизации пользователя
@@ -67,6 +67,16 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
             response.send(result)
         })
         .catch(error => console.log(error));
+});
+
+// обработчик для попадания на рабочую область приложения
+router.use('/personPage(.html)?', jsonParser, async function (request, response) {
+    if (await checkUser(request)) {
+        response.sendFile(__dirname + '/html' + '/personPage.html');
+    }
+    else {
+        response.redirect('/');
+    };
 });
 
 // проверка существования такого пользователя на текущий момент

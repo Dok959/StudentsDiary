@@ -137,3 +137,8 @@ function getTasks(element) {
         '</a>' +
         '</div>');
 };
+
+// Настройки
+function settings() {
+    window.location.href = 'personPage';
+};

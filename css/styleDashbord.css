@@ -13,17 +13,12 @@ body{
 
 .header{
     display:inline-block;
-    /* min-width: 250px; */
     max-width: 20%;
     height: 100%;
     padding: 15px;
-
-
-    /* max-height: 100%; */
     flex: 0 0 20%;
     min-height: 100vh;
     background-color:#C3DAF0;
-     /* #B5DAFF; */
 }
 
 .hello{
@@ -71,21 +66,22 @@ body{
     border-color: #C10FB3;
 }
 
-.bottom_menu{
-    bottom: 5px;
+.menu.bottom__menu{
+    bottom: 10px;
+    left: 3%;
     position: absolute;
-    display: flex;
-    /* max-width: inherit; */
-    /* width: 100%; */
-    margin: 0 auto;
-    flex: 1 0 auto;
-    text-align: center;
-    justify-content: center;
 }
 
-.bottom_menu.menu__element{
-    max-width: initial;
-    width: 30%;
+.bottom__menu__element{
+    max-width: inherit;
+    width: 100%;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.bottom__menu__element:hover { 
+    transition: border linear 1s;
+    border-color: #C10FB3;
 }
 
 .bord{
@@ -103,9 +99,6 @@ body{
 .inbox, .upcoming{
     display: none;
 }
-.menu__element .settings{
-    width:fit-content;
-}
 
 .bord__tasks{
     width: 100%;
@@ -113,8 +106,7 @@ body{
 
 .bord__element{
     height: fit-content;
-    background: #C3DAF0; 
-    /* поменять цвет */
+    background: #C3DAF0;
     margin: 0 15px 5px;
     display: flex;
     justify-content: space-between;
@@ -154,6 +146,10 @@ body{
 
     .link__description{
         font-size: 19px;
+    }
+
+    .bottom__menu{
+        padding: 0;
     }
 
 }
