@@ -47,13 +47,13 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
 router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
     await checkUser(request)
         .then(result => {
-            if (result) {
+            if (result !== false) {
                 let userName;
-                if (result === undefined) {
-                    userName = getCookie(request.headers.cookie, 'LOGIN');
+                if (result !== null) {
+                    userName = result;
                 }
                 else {
-                    userName = result;
+                    userName = getCookie(request.headers.cookie, 'LOGIN');
                 };
 
                 // вывод имени пользователя или его логина при приветствие
@@ -73,9 +73,13 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
     if (request.body.id_owner) { // если пользователь авторизован, то парсим его hash
         request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
     };
+
+    console.log('Запрос:')
     console.log(request.body)
+
     await buildingQueryForDB(request.body)
         .then(result => {
+            console.log('Ответ:'),
             console.log(result),
                 response.send(result)
         })
@@ -95,16 +99,17 @@ router.use('/personPage(.html)?', jsonParser, async function (request, response)
 // проверка существования такого пользователя на текущий момент
 async function checkUser(request) {
     try {
+        let id_user = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
         let user = {
             'code': 4,
             'table': 'USERS',
-            'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
+            'id': id_user
         };
 
         let settingsUser = {
             'code': 4,
             'table': 'SETTINGS',
-            'id': key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8')
+            'id_owner': id_user
         };
 
         return await buildingQueryForDB(user)

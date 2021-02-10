@@ -11,6 +11,7 @@
     <script src="http://code.jquery.com/jquery-2.0.2.min.js" defer></script>
     <script src="/js/cookies/cookies.js" defer></script>
     <script src="/js/dashbordHandler.js" defer></script>
+    <script src="/js/dashbordElements.js" defer></script>
 </head>
 
 <body>
@@ -72,7 +73,33 @@
                 <h1 class="upcoming">Предстоящие</h1>
             </div>
 
-            <div class="bord__tasks">
+            <section class="bord__tasks">
+                <ul class="bord__list">
+
+                    <li>
+                        <article class="tweet">
+                            <div class="row">
+                                <img class="avatar" src="images/mary.jpg" alt="Аватар пользователя Мария">
+                                <div class="tweet__wrapper">
+                                    <header class="tweet__header">
+                                        <h3 class="tweet-author">Мария Иванова
+                                            <span class="tweet-author__add tweet-author__nickname">@mary</span>
+                                            <time class="tweet-author__add tweet__date">11 января</time>
+                                        </h3>
+                                        <button class="tweet__delete-button chest-icon"></button>
+                                    </header>
+                                    <div class="tweet-post">
+                                        <p class="tweet-post__text">Сообщение Марии Lorem ipsum dolor sit amet, consectetur.</p>
+                                        <figure class="tweet-post__image">
+                                            <img src="https://images.pexels.com/photos/6432931/pexels-photo-6432931.jpeg" alt="Сообщение Марии Lorem ipsum dolor sit amet, consectetur.">
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </li>
+
+
                 {{!-- <div class="bord__element">
                     <div class="bord__element__title">
                         <a class="link__element__ready" href="#">
@@ -87,7 +114,8 @@
                     </a>
                 </div> --}}
 
-            </div>
+                </ul>
+            </section>
         </div>
 
         {{!-- {{> menu}} --}}

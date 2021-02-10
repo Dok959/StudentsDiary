@@ -122,8 +122,8 @@ async function checkTasks(data) {
 };
 
 // отображение задачи
-function getTasks(element) {
-    $(".bord__tasks").html('<div class="bord__element">' +
+function getTasks(element) { // перетирает существующие записи
+    $(".bord__list").html('<div class="bord__element">' +
         '<div class="bord__element__title">' +
         '<a class="link__element__ready" href="#">' +
         '<img class="link__element__img" src="/img/pac1/ready.svg" alt="Выполнено">' +

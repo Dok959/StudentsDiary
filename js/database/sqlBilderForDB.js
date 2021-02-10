@@ -34,7 +34,7 @@ async function buildingQueryForDB(args) {
             return buildingQueryForDB(args);
         }
         else { // если запись уже есть
-            return buildingQueryForDB(args);
+            return request;
         };
     }
     else if (args.code === 2){
