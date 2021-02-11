@@ -131,6 +131,12 @@ async function checkUser(request) {
 };
 
 
+// адресация если страниц несуществует???
+router.use(function (request, response) {
+    response.status(404).sendFile(__dirname + '/html' + '/error.html');
+});
+
+
 // определяем обработчик для маршрута '/'
 router.get('/foo', function (request, response) {
     // отправляем ответ

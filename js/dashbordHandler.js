@@ -121,7 +121,7 @@ async function checkTasks(data) {
     };
 };
 
-// отображение задачи
+// отображение задачи; можно переделать для отображения что задач нет.
 function getTasks(element) { // перетирает существующие записи
     $(".bord__list").html('<div class="bord__element">' +
         '<div class="bord__element__title">' +
