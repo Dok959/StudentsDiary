@@ -1,8 +1,4 @@
 body{
-    color: #263849;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300;
-    font-size: 14px;
     background-color: #ccdef0;
 }
 
@@ -67,8 +63,9 @@ body{
 }
 
 .menu.bottom__menu{
+    margin: 0 auto;
     bottom: 10px;
-    left: 3%;
+    left: 5%;
     position: absolute;
 }
 
@@ -104,7 +101,16 @@ body{
     width: 100%;
 }
 
-.bord__element{
+.bord__list{
+    width: 100%;
+}
+
+li{
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+
+.task{
     height: fit-content;
     background: #C3DAF0;
     margin: 0 15px 5px;
@@ -113,9 +119,16 @@ body{
     align-items: center;
 }
 
-.bord__element__title{
+.row{
+    max-width: inherit;
+    width: 100%;
     display: flex;
-    align-items: center;
+    vertical-align: middle;
+}
+
+.task__ready{
+    background-color: #C3DAF0;
+    align-self: center;
 }
 
 .link__element__img{
@@ -123,15 +136,47 @@ body{
     height: 32px;
 }
 
-.link__bord__element{
+.task__wrapper{
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    max-width: 100%;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.link__task{
     display: inline-block;
     margin: 0 20px;
     font-size: 20px;
     font-weight: 400;
+    color: #263849;
+    max-width: 100%;
 }
 
-.link__element__ready, .link__element__more{
-    height: 32px;
+.task__title{
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+}
+
+.task__description{
+    font-size: 14px;
+    max-width: 150px;
+}
+
+.task__empty{
+    max-width: fit-content;
+    width: 100%;
+    background: #C3DAF0;
+    align-items: center;
+    margin: 60px auto;
+    align-content: center;
+    text-align: center;
+}
+
+.task__empty__title{
+    font-size: 20px;
 }
 
 
@@ -150,6 +195,10 @@ body{
 
     .bottom__menu{
         padding: 0;
+    }
+
+    .menu.bottom__menu{
+        left: 3%;
     }
 
 }
@@ -207,8 +256,16 @@ body{
         margin: 0;
     }
 
-    .bord__element{
+    .bord__element__empty{
+        margin-left:15px;
+    }
+
+    .task{
         margin: 0 10px 5px;
+    }
+
+    .task__wrapper{
+        margin: 0;
     }
 }
 
@@ -222,10 +279,6 @@ body{
 
     .link__description{
         display: none;
-    }
-
-    .bord__tasks{
-        width: fit-content;
     }
 
     .title__bord{
@@ -265,10 +318,21 @@ body{
 
     .bord{
         display:block;
-        width: fit-content;
     }
 
-    .bord__element {
+    .task {
         margin: 0 3px 5px;
+    }
+
+    .task__ready{
+        margin-left: 5px;
+    }
+
+    .link__task{
+        margin: 0 10px;
+    }
+
+    .task__more{
+        margin-right: 5px;
     }
 }

@@ -80,14 +80,14 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
     await buildingQueryForDB(request.body)
         .then(result => {
             console.log('Ответ:'),
-            console.log(result),
+                console.log(result),
                 response.send(result)
         })
         .catch(error => console.log(error));
 });
 
 // обработчик для попадания на рабочую область приложения
-router.use('/personPage(.html)?', jsonParser, async function (request, response) {    
+router.use('/personPage(.html)?', jsonParser, async function (request, response) {
     if (await checkUser(request)) {
         response.sendFile(__dirname + '/html' + '/personPage.html');
     }
@@ -117,7 +117,11 @@ async function checkUser(request) {
                 if (result[0] !== undefined) {
                     return buildingQueryForDB(settingsUser)
                         .then(settings => {
-                            return settings[0].first_name
+                            try {
+                                return settings[0].first_name;
+                            } catch (error) {
+                                return null;
+                            };
                         });
                 }
                 else {

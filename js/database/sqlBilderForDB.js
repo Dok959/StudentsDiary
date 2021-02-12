@@ -23,21 +23,21 @@ async function buildingQueryForDB(args) {
             await pool.execute(query);
 
             // если создаётся пользователь, то создастся информация о его настройках
-            if (args.table === 'USERS'){
+            if (args.table === 'USERS') {
                 request = await buildingQueryForDB(args);
                 response = JSON.parse(JSON.stringify(request[0]));
                 let id_owner = response.id;
                 query = `INSERT INTO SETTINGS () VALUES (` + id_owner + ', NULL, NULL, NULL, DEFAULT);';
                 await pool.execute(query);
             }
-                
+
             return buildingQueryForDB(args);
         }
         else { // если запись уже есть
             return request;
         };
     }
-    else if (args.code === 2){
+    else if (args.code === 2) {
         // только для таблицы настроек
         // требуется приписка лимит, так как нет первичного ключа.
         //UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1

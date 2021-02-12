@@ -33,7 +33,7 @@ function today() {
     // определяем текущую дату
     const now = new Date();
     // Запрашиваем день недели вместе с коротким форматом даты
-    var options = { weekday: 'short', month: 'short', day: 'numeric' };
+    var options = { weekday: 'long', month: 'short', day: 'numeric' };
     let date = now.toLocaleDateString('ru-RU', options);
     date = date[0].toUpperCase() + date.slice(1);
 
@@ -104,14 +104,15 @@ async function checkTasks(data) {
         console.log(result);
         if (!result.el) {
             if (result[0] !== undefined) {
+                $('.bord__element__empty').remove(); // очистка списка задач
+                $('li').remove();
                 for (let element in result) {
                     getTasks(result[element]);
                 };
             }
             else {
-                getTasks({ title: 'Задач на горизонте не видно' });
+                emptyTasks({ title: 'Дел на горизонте не видно' });
             };
-            // alert("Получено");
         }
         else {
             alert("Ничего ...");
@@ -121,21 +122,47 @@ async function checkTasks(data) {
     };
 };
 
-// отображение задачи; можно переделать для отображения что задач нет.
-function getTasks(element) { // перетирает существующие записи
-    $(".bord__list").html('<div class="bord__element">' +
-        '<div class="bord__element__title">' +
-        '<a class="link__element__ready" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/ready.svg" alt="Выполнено">' +
-        '</a>' +
-        '<a class="link__bord__element" href="#">' +
-        element.title +
-        '</a>' +
-        '</div>' +
-        '<a class="link__element__more" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Действия">' +
-        '</a>' +
-        '</div>');
+// отображение отсутствия задач
+function emptyTasks(element) {
+    $(".bord__list")
+        .html('<div class="bord__element__empty">' +
+            '<div class="bord__element__empty__title">' +
+            '<h1>' +
+            element.title +
+            '</h1>' +
+            '</div>' +
+            '</div>');
+};
+
+
+// отображение задач
+function getTasks(element) {
+    $('.bord__list')
+        .append('<li>' +
+            '<article class="task">' +
+            '<div class="row">' +
+            '<a class="task__ready" href="#">' +
+            '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
+            '</a>' +
+            '<div class="task__wrapper">' +
+            '<a class="link__task" href="#">' +
+            '<header class="task__header">' +
+            '<h3 class="task__title">' +
+            element.title +
+            '</h3>' +
+            '<span class="task__description">' +
+            element.description +
+            '</span>' +
+            '</header>' +
+
+            '</a>' +
+            '<a class="task__more" href="#">' +
+            '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
+            '</a>' +
+            '</div>' +
+            '</div>' +
+            '</article>' +
+            '</li>');
 };
 
 // Настройки
