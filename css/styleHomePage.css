@@ -1,8 +1,4 @@
 body{
-    color: #263849;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300;
-    font-size: 14px;
     background-color: #ccdef0;
     background-image: radial-gradient(circle 450px at center, #ffffff 0%, #ccdef0 100%);
 }
@@ -102,30 +98,6 @@ body{
     transform: rotate(-45deg);
 }
 
-form{
-    margin: 0 auto;
-    max-width: 300px;   
-}
-
-label, input {
-    margin: 25px auto;
-    display: flex;
-    font-size: 20px;
-}
-label{
-    width: fit-content;
-}
-
-input{
-    margin: 25px 0;
-    max-width: 100%;
-    width: 292px;
-    outline: none;
-    font-size: 20px;
-    font-family: 'Roboto';
-    font-weight: 300;
-}
-
 .btn_input{
     width: 100%;
     display: block;
@@ -183,7 +155,7 @@ input{
 }
 
 .information{
-    padding: 15px 0;
+    padding: 15px 20px 0;
 }
 
 .clients{
@@ -264,11 +236,17 @@ input{
     }
 
     .navbar{
-        min-width: 320px;
-        max-width: 320px;
+        min-width: 303px;
+        max-width: 310px;
         margin: 0 auto;
         display: block;
         text-align: center;
+        padding: 0;
+    }
+
+    .logo{
+        margin: 0 auto;
+        padding: 5px 0;
     }
 
     .b-popup .registration, .b-popup .authorization{
@@ -296,41 +274,24 @@ input{
 
     label, input {
         margin: 15px auto;
-        display: flex;
-        font-size: 20px;
-    }
-
-    label{
-        width: fit-content;
     }
     
     input{
         margin: 15px auto;
         max-width: 90%;
-        outline: none;
-        font-size: 20px;
-        font-family: 'Roboto';
-        font-weight: 300;
     }
 
     .btn_update{
         height: 60px;
     }
 
-    .info{
-        padding: 40px 0;
-    }
-
-    .logo{
-        margin: 0 auto;
-        padding: 5px 0;
-    }
-
     .container{
         max-width: 300px;
+        padding: 0;
     }
 
     .info{
+        padding: 40px 0;
         min-width: 300px;
     }
 
