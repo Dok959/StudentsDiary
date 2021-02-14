@@ -66,7 +66,12 @@ async function buildingQueryForDB(args) {
                     query += ` ${element} is ${iSValue} and`;
                 }
                 else {
-                    query += ` ${element} = '${iSValue}' and`;
+                    if (element === 'date'){
+                        query += ` ${element} < '${iSValue}' and`;
+                    }
+                    else{
+                        query += ` ${element} = '${iSValue}' and`;
+                    }
                 };
             };
         });

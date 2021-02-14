@@ -37,7 +37,7 @@ router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, re
 router.post('/queryForUser', jsonParser, async function (request, response) {
     await buildingQueryForDB(request.body)
         .then(result => {
-            result[0].id = key.encrypt(result[0].id, 'base64'), // шифруем id
+            // result[0].id = key.encrypt(result[0].id, 'base64'), // шифруем id
                 response.send(result) // возврат информации на страницу запроса
         })
         .catch(error => console.log(error));
@@ -45,34 +45,39 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
 
 // обработчик для попадания на рабочую область приложения
 router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
-    await checkUser(request)
-        .then(result => {
-            if (result !== false) {
-                let userName;
-                if (result !== null) {
-                    userName = result;
-                }
-                else {
-                    userName = getCookie(request.headers.cookie, 'LOGIN');
-                };
+    // await checkUser(request)
+    //     .then(result => {
+    //         if (result !== false) {
+    //             let userName;
+    //             if (result !== null) {
+    //                 userName = result;
+    //             }
+    //             else {
+    //                 userName = getCookie(request.headers.cookie, 'LOGIN');
+    //             };
 
-                // вывод имени пользователя или его логина при приветствие
-                response.render('dashbord', {
-                    user: userName,
-                });
-            }
-            else {
-                response.redirect('/');
-            };
-        }
-        );
+    //             // вывод имени пользователя или его логина при приветствие
+    //             response.render('dashbord', {
+    //                 user: userName,
+    //             });
+    //         }
+    //         else {
+    //             response.redirect('/');
+    //         };
+    //     }
+    //     );
+
+    // вход для разработки
+    response.render('dashbord', {
+        user: 'admin',
+    });
 });
 
 // обработчик для отправки запросов к базе
 router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
-    if (request.body.id_owner) { // если пользователь авторизован, то парсим его hash
-        request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
-    };
+    // if (request.body.id_owner) { // если пользователь авторизован, то парсим его hash
+    //     request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
+    // };
 
     console.log('Запрос:')
     console.log(request.body)

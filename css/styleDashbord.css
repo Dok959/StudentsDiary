@@ -2,6 +2,10 @@ body{
     background-color: #ccdef0;
 }
 
+h2{
+    font-size: 15px;
+}
+
 .container{
     display: flex;
     flex: 1 0 auto;
@@ -20,7 +24,7 @@ body{
 .hello{
     margin: 0 auto;
     text-align: center;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 400;
 }
 
@@ -46,13 +50,13 @@ body{
 }
 
 .link__img{
-    max-width: 32px;
-    max-height: 32px;
+    max-width: 28px;
+    max-height: 28px;
 }
 
 .link__description{
     padding-left: 10px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     color: #C10FB3;
 }
@@ -62,16 +66,12 @@ body{
     border-color: #C10FB3;
 }
 
-.menu.bottom__menu{
-    margin: 0 auto;
+.bottom__menu__element{
+    position: absolute;
     bottom: 10px;
     left: 5%;
-    position: absolute;
-}
 
-.bottom__menu__element{
     max-width: inherit;
-    width: 100%;
     padding-bottom: 5px;
     border-bottom: 2px solid transparent;
 }
@@ -90,7 +90,6 @@ body{
 
 .title__bord{
     padding: 15px;
-    font-size: 25px;
 }
 
 .inbox, .upcoming{
@@ -132,14 +131,13 @@ li{
 }
 
 .link__element__img{
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
 }
 
 .task__wrapper{
     display: flex;
     align-items: center;
-    margin-left: 20px;
     max-width: 100%;
     width: 100%;
     justify-content: space-between;
@@ -148,7 +146,7 @@ li{
 .link__task{
     display: inline-block;
     margin: 0 20px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     color: #263849;
     max-width: 100%;
@@ -190,14 +188,14 @@ li{
     }
 
     .link__description{
-        font-size: 19px;
+        font-size: 16px;
     }
 
     .bottom__menu{
         padding: 0;
     }
 
-    .menu.bottom__menu{
+    .bottom__menu__element{
         left: 3%;
     }
 
@@ -216,10 +214,6 @@ li{
     .link__description{
         font-size: 18px;
     }
-
-    .title__bord{
-        font-size: 20px;
-    }
 }
 
 @media (max-width: 770px){
@@ -228,8 +222,12 @@ li{
         font-size: 17px;
     }
 
-    .title__bord{
-        font-size: 18px;
+    .task__title{
+        font-size: 14px;
+    }
+
+    .task__description{
+        font-size: 12px;
     }
 }
 
@@ -245,13 +243,9 @@ li{
 
     .link__description{
         padding-left: 5px;
-        font-size: 18px;
+        font-size: 16px;
     }
-
-    .title__bord{
-        font-size: 15px;
-    }
-
+    
     .bord{
         margin: 0;
     }
@@ -262,10 +256,6 @@ li{
 
     .task{
         margin: 0 10px 5px;
-    }
-
-    .task__wrapper{
-        margin: 0;
     }
 }
 
@@ -279,10 +269,6 @@ li{
 
     .link__description{
         display: none;
-    }
-
-    .title__bord{
-        font-size: 18px;
     }
 }
 
@@ -306,6 +292,19 @@ li{
 
     .menu__element{
         width: min-content;
+    }
+
+    .bottom__menu__element{
+        position: relative;
+        left: 0%;
+        margin: 10px auto;
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        max-width: fit-content;
+        bottom: 0%;
+        padding: 0;
     }
 
     .link__element{

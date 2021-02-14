@@ -125,8 +125,8 @@ async function checkTasks(data) {
 // отображение отсутствия задач
 function emptyTasks(element) {
     $(".bord__list")
-        .html('<div class="bord__element__empty">' +
-            '<div class="bord__element__empty__title">' +
+        .html('<div class="task__empty">' +
+            '<div class="task__empty__title">' +
             '<h1>' +
             element.title +
             '</h1>' +
@@ -137,6 +137,24 @@ function emptyTasks(element) {
 
 // отображение задач
 function getTasks(element) {
+    let title = element.title;
+    if (title === null || title.length === 0){
+        title = 'Без названия ...'
+    }
+    else if (title.length > 70){
+        title = title.slice(0, 60) + '...'
+    }
+
+    let description = element.description;
+    if (description === null || description.length === 0){
+        description = null
+    }
+    else if (description.length > 70){
+        description = description.slice(0, 60) + '...'
+    }
+    console.log(title)
+    console.log(description)
+    if (description === null){
     $('.bord__list')
         .append('<li>' +
             '<article class="task">' +
@@ -148,11 +166,8 @@ function getTasks(element) {
             '<a class="link__task" href="#">' +
             '<header class="task__header">' +
             '<h3 class="task__title">' +
-            element.title +
+            title +
             '</h3>' +
-            '<span class="task__description">' +
-            element.description +
-            '</span>' +
             '</header>' +
 
             '</a>' +
@@ -163,6 +178,35 @@ function getTasks(element) {
             '</div>' +
             '</article>' +
             '</li>');
+    }
+    else{
+        $('.bord__list')
+            .append('<li>' +
+                '<article class="task">' +
+                '<div class="row">' +
+                '<a class="task__ready" href="#">' +
+                '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
+                '</a>' +
+                '<div class="task__wrapper">' +
+                '<a class="link__task" href="#">' +
+                '<header class="task__header">' +
+                '<h3 class="task__title">' +
+                title +
+                '</h3>' +
+                '<span class="task__description">' +
+                description +
+                '</span>' +
+                '</header>' +
+    
+                '</a>' +
+                '<a class="task__more" href="#">' +
+                '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
+                '</a>' +
+                '</div>' +
+                '</div>' +
+                '</article>' +
+                '</li>');
+    }
 };
 
 // Настройки
