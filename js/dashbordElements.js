@@ -41,9 +41,9 @@ class Bord {
     }
 }
 
-const bord = new Bord({
-    listElements: '.bord__list'
-})
+// const bord = new Bord({
+//     listElements: '.bord__list'
+// })
 
-console.log('bord:')
-console.log(bord)
+// console.log('bord:')
+// console.log(bord)

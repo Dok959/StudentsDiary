@@ -104,9 +104,12 @@ async function checkTasks(data) {
         console.log(result);
         if (!result.el) {
             if (result[0] !== undefined) {
+                // const bord = new Bord('.bord__list');
+                // console.log(bord)
                 $('.bord__element__empty').remove(); // очистка списка задач
                 $('li').remove();
                 for (let element in result) {
+                    // bord.tasks.addTask(element)
                     getTasks(result[element]);
                 };
             }
@@ -137,76 +140,82 @@ function emptyTasks(element) {
 
 // отображение задач
 function getTasks(element) {
+    let node = ('<li>' +
+        '<article class="task">' +
+        '<div class="row">' +
+        '<a class="task__ready" href="#">' +
+        '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
+        '</a>' +
+        '<div class="task__wrapper">' +
+        '<a class="link__task" href="#">' +
+        '<header class="task__header">' +
+        '<h3 class="task__title">');
+
     let title = element.title;
     if (title === null || title.length === 0){
-        title = 'Без названия ...'
+        title = 'Без названия ...';
     }
     else if (title.length > 70){
-        title = title.slice(0, 60) + '...'
+        title = title.slice(0, 60) + '...';
     }
+    node += title + '</h3>';
+    
 
     let description = element.description;
     if (description === null || description.length === 0){
-        description = null
+        description = null;
+        node += '</header>';
     }
     else if (description.length > 70){
         description = description.slice(0, 60) + '...'
-    }
-    console.log(title)
-    console.log(description)
-    if (description === null){
-    $('.bord__list')
-        .append('<li>' +
-            '<article class="task">' +
-            '<div class="row">' +
-            '<a class="task__ready" href="#">' +
-            '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
-            '</a>' +
-            '<div class="task__wrapper">' +
-            '<a class="link__task" href="#">' +
-            '<header class="task__header">' +
-            '<h3 class="task__title">' +
-            title +
-            '</h3>' +
-            '</header>' +
-
-            '</a>' +
-            '<a class="task__more" href="#">' +
-            '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
-            '</a>' +
-            '</div>' +
-            '</div>' +
-            '</article>' +
-            '</li>');
+        node += '<span class="task__description">' +
+                description +
+                '</span>' + '</header>';
     }
     else{
-        $('.bord__list')
-            .append('<li>' +
-                '<article class="task">' +
-                '<div class="row">' +
-                '<a class="task__ready" href="#">' +
-                '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
-                '</a>' +
-                '<div class="task__wrapper">' +
-                '<a class="link__task" href="#">' +
-                '<header class="task__header">' +
-                '<h3 class="task__title">' +
-                title +
-                '</h3>' +
-                '<span class="task__description">' +
+        node += '<span class="task__description">' +
                 description +
-                '</span>' +
-                '</header>' +
-    
-                '</a>' +
-                '<a class="task__more" href="#">' +
-                '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
-                '</a>' +
-                '</div>' +
-                '</div>' +
-                '</article>' +
-                '</li>');
+                '</span>' + '</header>';
     }
+    
+    node += ('</a>' +
+        '<time class="">'+ element.date +'</time>'+ // добавить форматирование
+        '<a class="task__more" href="#">' +
+        '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
+        '</a>' +
+        '</div>' +
+        '</div>' +
+        '</article>' +
+        '</li>');
+
+    $('.bord__list').append(node);
+
+    // $('.bord__list')
+    //     .append('<li>' +
+    //         '<article class="task">' +
+    //         '<div class="row">' +
+    //         '<a class="task__ready" href="#">' +
+    //         '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
+    //         '</a>' +
+    //         '<div class="task__wrapper">' +
+    //         '<a class="link__task" href="#">' +
+    //         '<header class="task__header">' +
+    //         '<h3 class="task__title">' +
+    //         title +
+    //         '</h3>' +
+    //         '<span class="task__description">' +
+    //             description +
+    //         '</span>' +
+    //         '</header>' +
+
+    //         '</a>' +
+    //         '<a class="task__more" href="#">' +
+    //         '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
+    //         '</a>' +
+    //         '</div>' +
+    //         '</div>' +
+    //         '</article>' +
+    //         '</li>');
 };
 
 // Настройки
