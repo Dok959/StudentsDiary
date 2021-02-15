@@ -1,6 +1,9 @@
 const cookie = getCookie(document.cookie, 'USER');
+let bord;
 
 document.addEventListener("DOMContentLoaded", function () {
+    bord = new Bord('.bord__list');
+    // добавить объявление борд сюда
     today();
 });
 
@@ -51,8 +54,6 @@ function today() {
     });
     checkTasks(data);
 };
-// если задача на день и без проекта, то её отображать и в inbox, иначе тут и в проетке
-// возможно сделать запрос к проектам еще
 
 // отображение сегоднящней даты
 function getDateToday(date) {
@@ -102,23 +103,20 @@ async function checkTasks(data) {
     if (response.ok) { // если HTTP-статус в диапазоне 200-299
         const result = await response.json();
         console.log(result);
-        if (!result.el) {
-            if (result[0] !== undefined) {
-                // const bord = new Bord('.bord__list');
-                // console.log(bord)
-                $('.bord__element__empty').remove(); // очистка списка задач
-                $('li').remove();
-                for (let element in result) {
-                    // bord.tasks.addTask(element)
-                    getTasks(result[element]);
-                };
-            }
-            else {
-                emptyTasks({ title: 'Дел на горизонте не видно' });
+        
+        if (result[0] !== undefined) {
+            bord.tasks.clearTasks()
+            console.log(bord)
+            $('.task__empty').remove(); // очистка списка задач
+            $('li').remove();
+            for (let element in result) {
+                bord.tasks.addTask(result[element])
+                // getTasks(result[element]);
             };
+            bord.tasks.renderTasks();
         }
         else {
-            alert("Ничего ...");
+            emptyTasks({ title: 'Дел на горизонте не видно' });
         };
     } else {
         alert("Ошибка" + response.status);
