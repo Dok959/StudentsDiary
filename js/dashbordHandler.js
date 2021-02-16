@@ -1,9 +1,6 @@
 const cookie = getCookie(document.cookie, 'USER');
-let bord;
 
 document.addEventListener("DOMContentLoaded", function () {
-    bord = new Bord('.bord__list');
-    // добавить объявление борд сюда
     today();
 });
 
@@ -24,7 +21,9 @@ function inbox() {
         'id_project': null,
         'date': null
     });
-    checkTasks(data);
+    
+    taskList.list.clearTasks();
+    taskList.getTasks(data);
 };
 
 // Сегодня
@@ -52,7 +51,9 @@ function today() {
         'id_owner': cookie,
         'date': date
     });
-    checkTasks(data);
+    
+    taskList.list.clearTasks();
+    taskList.getTasks(data);
 };
 
 // отображение сегоднящней даты
@@ -84,43 +85,9 @@ function upcoming() {
         'startDate': startDate,
         'endDate': endDate
     });
-    checkTasks(data);
-};
-
-// может передавать код вкладки, задачи которой нужны 
-async function checkTasks(data) {
-    console.log(data);
-
-    let response = await fetch('./database/buildingQueryForDB', {
-        method: 'POST',
-        body: data,
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    });
-
-    if (response.ok) { // если HTTP-статус в диапазоне 200-299
-        const result = await response.json();
-        console.log(result);
-        
-        if (result[0] !== undefined) {
-            bord.tasks.clearTasks()
-            console.log(bord)
-            $('.task__empty').remove(); // очистка списка задач
-            $('li').remove();
-            for (let element in result) {
-                bord.tasks.addTask(result[element])
-                // getTasks(result[element]);
-            };
-            bord.tasks.renderTasks();
-        }
-        else {
-            emptyTasks({ title: 'Дел на горизонте не видно' });
-        };
-    } else {
-        alert("Ошибка" + response.status);
-    };
+    
+    taskList.list.clearTasks();
+    taskList.getTasks(data);
 };
 
 // отображение отсутствия задач
@@ -133,87 +100,6 @@ function emptyTasks(element) {
             '</h1>' +
             '</div>' +
             '</div>');
-};
-
-
-// отображение задач
-function getTasks(element) {
-    let node = ('<li>' +
-        '<article class="task">' +
-        '<div class="row">' +
-        '<a class="task__ready" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
-        '</a>' +
-        '<div class="task__wrapper">' +
-        '<a class="link__task" href="#">' +
-        '<header class="task__header">' +
-        '<h3 class="task__title">');
-
-    let title = element.title;
-    if (title === null || title.length === 0){
-        title = 'Без названия ...';
-    }
-    else if (title.length > 70){
-        title = title.slice(0, 60) + '...';
-    }
-    node += title + '</h3>';
-    
-
-    let description = element.description;
-    if (description === null || description.length === 0){
-        description = null;
-        node += '</header>';
-    }
-    else if (description.length > 70){
-        description = description.slice(0, 60) + '...'
-        node += '<span class="task__description">' +
-                description +
-                '</span>' + '</header>';
-    }
-    else{
-        node += '<span class="task__description">' +
-                description +
-                '</span>' + '</header>';
-    }
-    
-    node += ('</a>' +
-        '<time class="">'+ element.date +'</time>'+ // добавить форматирование
-        '<a class="task__more" href="#">' +
-        '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
-        '</a>' +
-        '</div>' +
-        '</div>' +
-        '</article>' +
-        '</li>');
-
-    $('.bord__list').append(node);
-
-    // $('.bord__list')
-    //     .append('<li>' +
-    //         '<article class="task">' +
-    //         '<div class="row">' +
-    //         '<a class="task__ready" href="#">' +
-    //         '<img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">' +
-    //         '</a>' +
-    //         '<div class="task__wrapper">' +
-    //         '<a class="link__task" href="#">' +
-    //         '<header class="task__header">' +
-    //         '<h3 class="task__title">' +
-    //         title +
-    //         '</h3>' +
-    //         '<span class="task__description">' +
-    //             description +
-    //         '</span>' +
-    //         '</header>' +
-
-    //         '</a>' +
-    //         '<a class="task__more" href="#">' +
-    //         '<img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">' +
-    //         '</a>' +
-    //         '</div>' +
-    //         '</div>' +
-    //         '</article>' +
-    //         '</li>');
 };
 
 // Настройки
