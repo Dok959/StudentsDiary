@@ -104,7 +104,7 @@ async function checkErrors(code, table, form, args) {
             if (result[0].id) {
                 setCookie('USER', result[0].id, { secure: false, 'max-age': 3600 });
                 setCookie('LOGIN', args[0].value, { secure: false, 'max-age': 3600 });
-                window.location.href = 'dashbord'; // переадресация на рабочую область
+                window.location.href = 'dashboard'; // переадресация на рабочую область
             }
             else {
                 alert("Указанный пользователь не найден.\nПроверьте корректность данных или зарегистрируйтесь!");
