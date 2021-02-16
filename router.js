@@ -28,10 +28,21 @@ const jsonParser = express.json();
 // Обработчики на маршруты
 
 // определяем обработчик для маршрута на главную страницу, '/'
-router.get('/' || '/index(.html)?' || '/homePage(.html)?', function (request, response) {
+router.get('/', function (request, response) {
     // отправляем ответ
     response.sendFile(__dirname + '/html' + '/homePage.html');
 });
+
+router.get('/index(.html)?', function (request, response) {
+    // отправляем ответ
+    response.redirect('/');
+});
+
+router.get('/homePage(.html)?', function (request, response) {
+    // отправляем ответ
+    response.redirect('/');
+});
+
 
 // переводящий обработчик для регистрации и авторизации пользователя
 router.post('/queryForUser', jsonParser, async function (request, response) {
@@ -43,8 +54,9 @@ router.post('/queryForUser', jsonParser, async function (request, response) {
         .catch(error => console.log(error));
 });
 
+
 // обработчик для попадания на рабочую область приложения
-router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
+router.use('/dashboard(.html)?', jsonParser, async function (request, response) {
     // await checkUser(request)
     //     .then(result => {
     //         if (result !== false) {
@@ -57,7 +69,7 @@ router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
     //             };
 
     //             // вывод имени пользователя или его логина при приветствие
-    //             response.render('dashbord', {
+    //             response.render('dashboard', {
     //                 user: userName,
     //             });
     //         }
@@ -68,10 +80,16 @@ router.use('/dashbord(.html)?', jsonParser, async function (request, response) {
     //     );
 
     // вход для разработки
-    response.render('dashbord', {
+    response.render('dashboard', {
         user: 'admin',
     });
 });
+
+router.get('/dashboard(.hbs)?', function (request, response) {
+    // отправляем ответ
+    response.redirect('/dashboard');
+});
+
 
 // обработчик для отправки запросов к базе
 router.post('/database/buildingQueryForDB', jsonParser, async function (request, response) {
@@ -91,6 +109,7 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
         .catch(error => console.log(error));
 });
 
+
 // обработчик для попадания на рабочую область приложения
 router.use('/personPage(.html)?', jsonParser, async function (request, response) {
     if (await checkUser(request)) {
@@ -100,6 +119,7 @@ router.use('/personPage(.html)?', jsonParser, async function (request, response)
         response.redirect('/');
     };
 });
+
 
 // проверка существования такого пользователя на текущий момент
 async function checkUser(request) {
@@ -140,23 +160,9 @@ async function checkUser(request) {
 };
 
 
-// адресация если страниц несуществует???
+// адресация если страниц несуществует
 router.use(function (request, response) {
     response.status(404).sendFile(__dirname + '/html' + '/error.html');
 });
-
-
-// определяем обработчик для маршрута '/'
-router.get('/foo', function (request, response) {
-    // отправляем ответ
-    response.status(404).send(`Ресурс не найден`);
-});
-
-// определяем обработчик для маршрута '/'
-router.post('/foo', function (request, response) {
-    // постоянная переадресация
-    response.redirect(301, __dirname + "/html" + "/error.html");
-});
-
 
 module.exports = router;
