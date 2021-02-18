@@ -49,7 +49,6 @@ class Bord {
             emptyTasks({ title: 'Дел на горизонте не видно' });
     }
 
-    // доработать
     renderTasks(tasks) {
         tasks.forEach((element) => {
 
@@ -64,14 +63,35 @@ class Bord {
             }
 
             let date = element.date;
+            let expired = '';
             if (date) {
-                date = date.slice(8, 10) + '.' + date.slice(5, 7) + '.' + date.slice(0, 4);
+                date = new Date(date);
+                let year = date.getFullYear()
+                let month = date.getMonth()
+                let day = date.getDate()
+
+                date = (day < 10 ? '0' + day: day)
+                    + '.' + (month < 9 ? '0' + (month + 1): month + 1)
+                    + '.' + year;
+                
+                let now = new Date();
+                if (year >= now.getFullYear()){
+                    if (month >= now.getMonth()){
+                        if (day < now.getDate()){
+                            expired = 'expired';
+                        }
+                    }
+                    else{
+                        expired = 'expired';
+                    }
+                }
+                else{
+                    expired = 'expired';
+                }
             }
 
-            // добавить форматирование для времени
-
             let node = `<li>
-                            <article class="task">
+                            <article class="task ${expired}">
                                 <div class="row">
                                     <a class="task__ready" href="#">
                                         <img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">
@@ -87,7 +107,7 @@ class Bord {
                                                 </span>
                                             </header>
                                         </a>
-                                        <time class="task-author__add task__date">
+                                        <time class="tisk__time">
                                             ${date ? date : ''}
                                         </time>
                                         <a class="task__more" href="#">
@@ -137,10 +157,11 @@ class Task {
 };
 
 
-function openTask(id) {
-    bord.tasks.forEach(element => {
+openTask = id => {
+    taskList.list.tasks.forEach(element => {
         if (element.id === id) {
             console.log(element.title);
+            // открыть окно с вывыдом задачи
         }
     })
 }

@@ -118,6 +118,10 @@ li{
     align-items: center;
 }
 
+.expired{
+    background: #dec3f0;
+}
+
 .row{
     max-width: inherit;
     width: 100%;
@@ -126,8 +130,14 @@ li{
 }
 
 .task__ready{
-    background-color: #C3DAF0;
     align-self: center;
+    display: flex;
+    align-items: center;
+}
+
+.task__more{
+    display: flex;
+    align-items: center;
 }
 
 .link__element__img{
@@ -161,6 +171,13 @@ li{
 .task__description{
     font-size: 14px;
     max-width: 150px;
+}
+
+.tisk__time{
+    position: absolute;
+    right: 150px;
+    font-weight: 300;
+    font-size: 16px;
 }
 
 .task__empty{
