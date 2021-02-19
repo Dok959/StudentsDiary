@@ -107,7 +107,7 @@ class Bord {
                                                 </span>
                                             </header>
                                         </a>
-                                        <time class="tisk__time">
+                                        <time class="task__time">
                                             ${date ? date : ''}
                                         </time>
                                         <a class="task__more" href="#">
@@ -161,6 +161,7 @@ openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
             console.log(element.title);
+            $(".element__info").show();
             // открыть окно с вывыдом задачи
         }
     })

@@ -26,7 +26,7 @@ CREATE TABLE `tasks` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
   `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
   `date` date DEFAULT NULL COMMENT 'Срок выполнения данной задачи',
   PRIMARY KEY (`id`)

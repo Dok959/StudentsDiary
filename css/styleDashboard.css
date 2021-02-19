@@ -86,6 +86,7 @@ h2{
     height: 100%;
     width: 100%;
     margin: 0 15px;
+    position: relative;
 }
 
 .title__bord{
@@ -133,11 +134,13 @@ li{
     align-self: center;
     display: flex;
     align-items: center;
+    margin-left: 5px;
 }
 
 .task__more{
     display: flex;
     align-items: center;
+    margin-right: 5px;
 }
 
 .link__element__img{
@@ -173,7 +176,7 @@ li{
     max-width: 150px;
 }
 
-.tisk__time{
+.task__time{
     position: absolute;
     right: 150px;
     font-weight: 300;
@@ -194,6 +197,36 @@ li{
     font-size: 20px;
 }
 
+.task__open{
+    min-width: 100%;
+    min-height:100%;
+    background-color: rgba(252, 248, 248, 0.5);
+    overflow:hidden;
+    display: none;
+    top:0;
+    left: 0;
+}
+
+.element__info{
+    display: none;
+    position:absolute;
+    left: 10%;
+    z-index: 1;
+    width: 80%;
+    height: 500px;
+    padding:10px;
+    border-radius:5px;
+    box-shadow: 0px 0px 10px #000;
+    top: 100px;
+    background-image: radial-gradient(circle 450px at center, #ffffff 0%, #ccdef0 100%);
+}
+
+
+@media (max-width: 1200px){
+    /* .element__info{
+        left: 12%;
+    } */
+}
 
 @media (max-width: 1130px){
     .header{
@@ -216,6 +249,15 @@ li{
         left: 3%;
     }
 
+    .task__time{
+        right: 70px;
+    }
+}
+
+@media (max-width: 1050px){
+    /* .element__info{
+        left: 8%;
+    } */
 }
 
 @media (max-width: 1000px){
@@ -233,8 +275,19 @@ li{
     }
 }
 
-@media (max-width: 770px){
+@media (max-width: 930px){
+    .task__time{
+        display: none;
+    }
+}
 
+@media (max-width: 830px){
+    /* .element__info{
+        left: 4%;
+    } */
+}
+
+@media (max-width: 770px){
     .link__description{
         font-size: 17px;
     }
@@ -246,10 +299,24 @@ li{
     .task__description{
         font-size: 12px;
     }
+
+    .task__time{
+        right: 65px;
+    }
+
+    .element__info{
+        left: 2%;
+        width: 95%;
+    }
+}
+
+@media (max-width: 760px){
+    /* .element__info{
+        width: 80%;
+    } */
 }
 
 @media (max-width: 600px){
-
     .link__element{
         padding: 0;
     }
@@ -277,7 +344,6 @@ li{
 }
 
 @media (max-width: 500px){
-
     .link__img{
         margin: 0 5px;
         display: inline-block;
@@ -350,5 +416,11 @@ li{
 
     .task__more{
         margin-right: 5px;
+    }
+
+    .element__info {
+        top: 30%;
+        left: 1%;
+        width: 98%;
     }
 }

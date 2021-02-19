@@ -23,11 +23,12 @@ DROP TABLE IF EXISTS `settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
-  `id_owner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
+  `id` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
   `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
   `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
-  `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления'
+  `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

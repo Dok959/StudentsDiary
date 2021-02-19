@@ -34,13 +34,10 @@ router.get('/', function (request, response) {
 });
 
 router.get('/index(.html)?', function (request, response) {
-    console.log(request.url)
-    // отправляем ответ
     response.redirect('/');
 });
 
 router.get('/homePage(.html)?', function (request, response) {
-    // отправляем ответ
     response.redirect('/');
 });
 
@@ -78,15 +75,9 @@ router.use('/dashboard(.html)?', jsonParser, async function (request, response) 
                 response.redirect('/');
             };
         });
-
-    // вход для разработки
-    // response.render('dashboard', {
-    //     user: 'admin',
-    // });
 });
 
 router.get('/dashboard(.hbs)?', function (request, response) {
-    // отправляем ответ
     response.redirect('/dashboard');
 });
 
@@ -134,18 +125,12 @@ async function checkUser(request, flag = true) {
             'id': id_user
         };
 
-        let settingsUser = {
-            'code': 4,
-            'table': 'SETTINGS',
-            'id_owner': id_user
-        };
-
         return await buildingQueryForDB(user)
             .then(result => {
                 if (result[0] !== undefined) {
                     if (flag) {
-
-                        return buildingQueryForDB(settingsUser)
+                        user.table = 'SETTINGS';
+                        return buildingQueryForDB(user)
                             .then(settings => {
                                 try {
                                     return settings[0].first_name;

@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Входящие
 function inbox() {
-    // закрытие иных названий вкладок
+    // закрытие иных вкладок
     $(".today").hide();
     $(".upcoming").hide();
+    $(".element__info").hide();
 
     // открытие нужной вкладки
     $(".inbox").show();
@@ -28,9 +29,10 @@ function inbox() {
 
 // Сегодня
 function today() {
-    // закрытие иных названий вкладок
+    // закрытие иных вкладок
     $(".inbox").hide();
     $(".upcoming").hide();
+    $(".element__info").hide();
 
     // определяем текущую дату
     const now = new Date();
@@ -66,6 +68,7 @@ function upcoming() {
     // закрытие иных названий вкладок
     $(".inbox").hide();
     $(".today").hide();
+    $(".element__info").hide();
 
     // открытие нужной вкладки
     $(".upcoming").show();

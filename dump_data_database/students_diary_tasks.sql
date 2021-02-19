@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `students_diary` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `students_diary`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: students_diary
@@ -26,7 +28,7 @@ CREATE TABLE `tasks` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
   `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
   `date` date DEFAULT NULL COMMENT 'Срок выполнения данной задачи',
   PRIMARY KEY (`id`)
@@ -39,7 +41,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Это первая задача','бла-бла-бла',NULL),(2,1,NULL,'тест',NULL,'2021-01-29'),(3,1,NULL,'ТЕКСТ','новый',NULL),(4,1,NULL,'fsdhfsjdf','sdhfsdjkfh','2021-02-07');
+INSERT INTO `tasks` VALUES (1,1,NULL,'Это первая задача написанная мной в данном сервисе. Сам сервис также разработал я сам и частично уже','бла-бла-бла',NULL),(2,1,NULL,'тест а это задача на 100 знаков но пока не удается это adsd asdasd asdasd ',NULL,'2021-01-29'),(3,1,NULL,'ТЕКСТ','новый',NULL),(4,1,NULL,'fsdhfsjdf','sdhfsdjkfh','2021-02-07');
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-09 13:13:13
+-- Dump completed on 2021-02-19 11:09:42
