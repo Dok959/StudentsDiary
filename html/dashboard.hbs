@@ -73,11 +73,32 @@
                 <h2 class="upcoming">Предстоящие</h2>
             </div>
 
-            {{!-- <div class="task__open"> --}}
-                <div class="element__info">
-                    adasda
-                </div>
-            {{!-- </div> --}}
+            <div class="element__info">
+                <form class="element__task" name="id_task" method="get">
+
+                    <div class="element__info__block">
+                        <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100></textarea>
+                    </div>
+
+                    {{!-- временно выключен --}}
+                    <div class="element__info__block" style="display: none;">
+                        <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
+                    </div>
+
+                    <div class="element__btn">
+                        <a type="submit" class="safe" href="#">
+                            <span>Сохранить</span>
+                        </a>
+                        <a type="submit" class="rdy" href="#">
+                            <span>Выполнено</span>
+                        </a>
+                        <a type="submit" class="del" href="#">
+                            <span>Удалить</span>
+                        </a>
+                    </div>
+
+                </form>
+            </div>
 
             <section class="bord__tasks">
                 <ul class="bord__list">
