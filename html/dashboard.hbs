@@ -73,10 +73,10 @@
                 <h2 class="upcoming">Предстоящие</h2>
             </div>
 
-            {{!-- <div class="element__info">
+            <div class="element__info">
                 <form class="element__task" name="id_task" method="get">
 
-                    <div class="element__info__block">
+                    <div class="element__info__block" id="title">
                         <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100></textarea>
                     </div>
 
@@ -94,19 +94,19 @@
 
                     <div class="element__info__more">
                         <nav class="element__menu">
-                            <a class="link__element tab" href="#">
+                            <a class="link__element tab" href="javascript:openSubtasks()">
                                 <span class="link__description link_tab">
                                     Подзадачи
                                 </span>
                             </a>
 
-                            <a class="link__element tab" href="#">
+                            <a class="link__element tab" href="javascript:openDescription()">
                                 <span class="link__description link_tab">
                                     Описание
                                 </span>
                             </a>
 
-                            <a class="link__element tab" href="#">
+                            <a class="link__element tab" href="javascript:openAction()">
                                 <span class="link__description link_tab">
                                     Действия
                                 </span>
@@ -114,18 +114,24 @@
                         </nav>
 
                         <div class="element__bord">
-                            <div class="element__info__block">
-                                <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
+                            <div class="element__info__block" id="subtasks">
+                                <textarea class="element__task__area subtasks" type="text" name="subtasks" placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
+                            </div>
+
+                            <div class="element__info__block" id="description">
+                                <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>fdsfsdf</textarea>
+                            </div>
+
+                            <div class="element__info__block" id="action">
+                                {{!-- Большой отступ перед label-ом --}}
+                                <label for="">Укажите срок выполнения задачи</label>
+                                <input type="date" name="date">
+                                <textarea class="element__task__area action" type="text" name="action" placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="element__info__block" style="display: none;">
-                        <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
-                    </div>
-
                 </form>
-            </div> --}}
+            </div>
 
             <section class="bord__tasks">
                 <ul class="bord__list">

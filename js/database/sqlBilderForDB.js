@@ -63,6 +63,29 @@ async function buildingQueryForDB(args) {
         result.el = undefined;
         return result;
     }
+    else if (args.code === 3) {
+        query = `DELETE FROM ${args.table} WHERE `;
+
+        for (let element in args) {
+            if (element !== 'code' && element !== 'table') {
+                const iSValue = eval('args.' + `${element}`);
+                if (iSValue === null) {
+                    query += `${element} is ${iSValue} and `;
+                }
+                else {
+                    query += `${element} = '${iSValue}' and `;
+                }
+            };
+        };
+        query = query.substring(0, query.length - 5);
+        query += ';';
+        console.log(query)
+
+        request = await pool.execute(query);
+
+        result.el = undefined;
+        return result;
+    }
     else if (args.code === 4) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${args.table};`;

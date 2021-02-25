@@ -208,7 +208,7 @@ li{
 }
 
 .element__info{
-    /* display: none; */
+    display: none; /* ОКЛЮЧИТЬ ПОСЛЕ СОЗДАНИЯ ФОРМЫ ВЫВОДА ЗАДАЧИ */
     position:absolute;
     /* left: 10%; */
     left: 5%;
@@ -228,7 +228,7 @@ li{
 }
 
 .element__info__block{
-    display: flex;
+    /* display: flex; */
     background: #ccdef0;
     margin: 0 auto 10px;
 }
@@ -305,8 +305,8 @@ li{
 }
 
 .tab{
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border-bottom: 2px solid transparent;
 }
 
@@ -317,6 +317,10 @@ li{
 .link__description.link_tab{
     padding: 0;
     display: block;
+}
+
+#title{
+    display: flex;
 }
 
 .description{

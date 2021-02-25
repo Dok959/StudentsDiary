@@ -147,7 +147,18 @@ class Tasks {
         let task = this.getIdTask(id);
         task.setTitle(title);
         task.setDescription(description);
-        // метод для обновления задачи в списке без перезагрузки
+        taskList.showTasks();
+    }
+
+    localDeleteTask = id => {
+        let index;
+        for (let element = 0; element < this.tasks.length; element++) {
+            if (this.tasks[element].id == id) {
+                index = element;
+                break;
+            }
+        };
+        this.tasks.splice(index, 1);
         taskList.showTasks();
     }
 }
@@ -179,7 +190,8 @@ class Task {
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            renderTask(element)
+            $(".element__info").show(); // тестовая штука
+            // renderTask(element);
             openDescription();
         }
     })
@@ -203,7 +215,7 @@ function renderTask({ id, id_project = '', title = '', description = '', date = 
                     <a type="submit" class="rdy" href="#">
                         <span>Выполнено</span>
                     </a>
-                    <a type="submit" class="del" href="#">
+                    <a type="submit" class="del" href="javascript:deleteTask()">
                         <span>Удалить</span>
                     </a>
                 </div>
@@ -278,7 +290,7 @@ function openAction() {
         element = document.getElementById('description');
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('action');
-        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
+        element.setAttribute('style', 'display: flow-root; margin: 0 auto 10px;');
     } catch (error) { }
 }
 
@@ -307,7 +319,25 @@ async function updateTask() {
         'title': title,
         'description': description
     });
-    console.log(data)
+
+    let fetchData = new FetchData();
+    fetchData.getElements(data);
+}
+
+
+function deleteTask() {
+    let id = getTask();
+
+    // обновление данных локально
+    taskList.list.localDeleteTask(id);
+    $('.element__info').remove();
+
+    // формируем набор для отправки на сервер
+    let data = JSON.stringify({
+        'code': 3,
+        'table': 'TASKS',
+        'id': Number.parseInt(id)
+    });
 
     let fetchData = new FetchData();
     fetchData.getElements(data);
