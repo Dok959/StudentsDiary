@@ -6,7 +6,6 @@ class FetchData {
             throw new Error('Произошла ошибка: ' + res.status);
         }
 
-        // не уверен, что тут не упадёт если не будет базы
         return res.json();
     }
 
@@ -54,12 +53,12 @@ class Bord {
 
             let title = element.title;
             if (title && title.length > 70) {
-                title = title.slice(0, 60) + '...';
+                title = title.slice(0, 55) + '...';
             }
 
             let description = element.description;
             if (description && description.length > 70) {
-                description = description.slice(0, 60) + '...';
+                description = description.slice(0, 56) + '...';
             }
 
             let date = element.date;
@@ -70,22 +69,22 @@ class Bord {
                 let month = date.getMonth()
                 let day = date.getDate()
 
-                date = (day < 10 ? '0' + day: day)
-                    + '.' + (month < 9 ? '0' + (month + 1): month + 1)
+                date = (day < 10 ? '0' + day : day)
+                    + '.' + (month < 9 ? '0' + (month + 1) : month + 1)
                     + '.' + year;
-                
+
                 let now = new Date();
-                if (year >= now.getFullYear()){
-                    if (month >= now.getMonth()){
-                        if (day < now.getDate()){
+                if (year >= now.getFullYear()) {
+                    if (month >= now.getMonth()) {
+                        if (day < now.getDate()) {
                             expired = 'expired';
                         }
                     }
-                    else{
+                    else {
                         expired = 'expired';
                     }
                 }
-                else{
+                else {
                     expired = 'expired';
                 }
             }
@@ -135,6 +134,22 @@ class Tasks {
     clearTasks({ tasks = [] } = {}) {
         this.tasks = tasks;
     }
+
+    getIdTask = id => {
+        for (let element = 0; element < this.tasks.length; element++) {
+            if (this.tasks[element].id == id) {
+                return this.tasks[element];
+            }
+        }
+    }
+
+    localUpdateTask = (id, title, description) => {
+        let task = this.getIdTask(id);
+        task.setTitle(title);
+        task.setDescription(description);
+        // метод для обновления задачи в списке без перезагрузки
+        taskList.showTasks();
+    }
 }
 
 class Task {
@@ -154,20 +169,24 @@ class Task {
     setTitle(title) {
         this.title = title;
     };
+
+    setDescription(description) {
+        this.description = description;
+    };
 };
 
 // открытие окна с выбранной задачей
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            renderTask (element)
+            renderTask(element)
             openDescription();
         }
     })
 }
 
 // в процессе доработки
-function renderTask ({id, id_project = '', title = '', description = '', date = ''} = {}){
+function renderTask({ id, id_project = '', title = '', description = '', date = '' } = {}) {
     $('.element__info').remove();
     let node = `
         <div class="element__info" id="task">
@@ -178,7 +197,7 @@ function renderTask ({id, id_project = '', title = '', description = '', date = 
                 </div>
 
                 <div class="element__btn">
-                    <a type="submit" class="safe" href="#">
+                    <a type="submit" class="safe" href="javascript:updateTask()">
                         <span>Сохранить</span>
                     </a>
                     <a type="submit" class="rdy" href="#">
@@ -227,10 +246,10 @@ function renderTask ({id, id_project = '', title = '', description = '', date = 
             </form>
         </div>`
 
-        $('.bord').append(node);
+    $('.bord').append(node);
 }
 
-function openSubtasks (){
+function openSubtasks() {
     try {
         let element = document.getElementById('description');
         element.setAttribute('style', 'display: none; margin: 0;');
@@ -241,7 +260,7 @@ function openSubtasks (){
     } catch (error) { }
 }
 
-function openDescription () {
+function openDescription() {
     try {
         let element = document.getElementById('subtasks');
         element.setAttribute('style', 'display: none; margin: 0;');
@@ -252,7 +271,7 @@ function openDescription () {
     } catch (error) { }
 }
 
-function openAction (){
+function openAction() {
     try {
         let element = document.getElementById('subtasks');
         element.setAttribute('style', 'display: none; margin: 0;');
@@ -263,14 +282,50 @@ function openAction (){
     } catch (error) { }
 }
 
+// обновление в базе
+async function updateTask() {
+    let id = getTask();
+
+    let title = document.getElementsByName('title')[0].value;
+    if (title === null) {
+        title = null;
+    }
+
+    let description = document.getElementsByName('description')[0].value;
+    if (description === null) {
+        description = null;
+    }
+
+    // обновление данных локально
+    taskList.list.localUpdateTask(id, title, description);
+
+    // формируем набор для отправки на сервер
+    let data = JSON.stringify({
+        'code': 2,
+        'table': 'TASKS',
+        'id': Number.parseInt(id),
+        'title': title,
+        'description': description
+    });
+    console.log(data)
+
+    let fetchData = new FetchData();
+    fetchData.getElements(data);
+}
+
+function getTask() {
+    let task = document.forms[0].name;
+    return task;
+}
 
 const taskList = new Bord({
     listElem: '.bord__list'
 })
 
+//нужно ли сохранение при закрытии области задачи?
 
 // проверка нажатия вне выбранной задачи
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     try {
         let node = document.getElementById('task');
         if (!node.contains(event.target)) {

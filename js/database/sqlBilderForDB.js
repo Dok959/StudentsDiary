@@ -5,6 +5,7 @@ const pool = require('./pool');
 async function buildingQueryForDB(args) {
     let query = '';
     let request, response;
+    let result = {};
     if (args.code === 1) {
         args.code = 4;
         request = await buildingQueryForDB(args);
@@ -17,7 +18,6 @@ async function buildingQueryForDB(args) {
                 };
             };
             query += ');';
-            console.log(query); //временно
 
             // выполняем запрос к базе и обрабатываем результат
             await pool.execute(query);
@@ -41,6 +41,27 @@ async function buildingQueryForDB(args) {
         // только для таблицы настроек
         // требуется приписка лимит, так как нет первичного ключа.
         //UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1
+
+        query = `UPDATE ${args.table} SET `;
+
+        for (let element in args) {
+            if (element !== 'code' && element !== 'table' && element !== 'id') {
+                const iSValue = eval('args.' + `${element}`);
+                if (iSValue === null) {
+                    query += `${element} is ${iSValue}, `;
+                }
+                else {
+                    query += `${element} = '${iSValue}', `;
+                }
+            };
+        };
+        query = query.substring(0, query.length - 2);
+        query += ` WHERE id = '${args.id}';`;
+
+        request = await pool.execute(query);
+
+        result.el = undefined;
+        return result;
     }
     else if (args.code === 4) {
         // получение названий полей в искомой таблице
@@ -66,10 +87,10 @@ async function buildingQueryForDB(args) {
                     query += ` ${element} is ${iSValue} and`;
                 }
                 else {
-                    if (element === 'date'){
+                    if (element === 'date') {
                         query += ` ${element} < '${iSValue}' and`;
                     }
-                    else{
+                    else {
                         query += ` ${element} = '${iSValue}' and`;
                     }
                 };
@@ -81,7 +102,7 @@ async function buildingQueryForDB(args) {
         query = query.substr(0, query.length - 4);
         query += ';';
 
-        let result = {};
+        // let result = {};
 
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));
