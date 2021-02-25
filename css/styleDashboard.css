@@ -208,7 +208,7 @@ li{
 }
 
 .element__info{
-    display: none;
+    /* display: none; */
     position:absolute;
     /* left: 10%; */
     left: 5%;
@@ -258,15 +258,9 @@ li{
     padding: 10px;
 }
 
-.description{
-    font-weight: 300;
-    font-size: 16px;
-    min-height: 202px;
-}
-
 .element__btn{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 .safe{
@@ -300,9 +294,53 @@ li{
     border-color: #083863;
 }
 
+.element__info__more{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.element__menu{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.tab{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover, .tab:active, .tab:focus{
+    border-color: #C10FB3;
+}
+
+.link__description.link_tab{
+    padding: 0;
+    display: block;
+}
+
+.description{
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 202px;
+    padding: 10px;
+}
+
+#subtasks, #description, #action{
+    display: none;
+}
+
+
 @media (max-width: 1200px){
     .element__info{
         width: 70%;
+    }
+}
+
+@media (max-width: 1150px){
+    .description{
+        font-size: 15px;
+        min-height: 210px;
     }
 }
 
@@ -378,8 +416,9 @@ li{
         max-height: 80px;
     }
 
-    .title{
-        /* font-size: 16px; */
+    .description{
+        font-size: 14px;
+        min-height: 250px;
     }
 }
 
@@ -387,6 +426,10 @@ li{
     .safe, .rdy, .del{
         font-size: 18px;
         width: 110px;
+    }
+
+    .description{
+        font-size: 13px;
     }
 }
 
@@ -414,6 +457,10 @@ li{
 }
 
 @media (max-width: 640px){
+    .title{
+        font-size: 17px;
+    }
+
     .element__btn {
         justify-content: space-between;
     }
@@ -423,8 +470,8 @@ li{
         width: 100px;
     }
 
-    .title{
-        font-size: 17px;
+    .element__menu{
+        justify-content: space-between;
     }
 }
 

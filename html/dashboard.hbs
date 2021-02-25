@@ -73,16 +73,11 @@
                 <h2 class="upcoming">Предстоящие</h2>
             </div>
 
-            <div class="element__info">
+            {{!-- <div class="element__info">
                 <form class="element__task" name="id_task" method="get">
 
                     <div class="element__info__block">
                         <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100></textarea>
-                    </div>
-
-                    {{!-- временно выключен --}}
-                    <div class="element__info__block" style="display: none;">
-                        <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
                     </div>
 
                     <div class="element__btn">
@@ -97,8 +92,40 @@
                         </a>
                     </div>
 
+                    <div class="element__info__more">
+                        <nav class="element__menu">
+                            <a class="link__element tab" href="#">
+                                <span class="link__description link_tab">
+                                    Подзадачи
+                                </span>
+                            </a>
+
+                            <a class="link__element tab" href="#">
+                                <span class="link__description link_tab">
+                                    Описание
+                                </span>
+                            </a>
+
+                            <a class="link__element tab" href="#">
+                                <span class="link__description link_tab">
+                                    Действия
+                                </span>
+                            </a>
+                        </nav>
+
+                        <div class="element__bord">
+                            <div class="element__info__block">
+                                <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="element__info__block" style="display: none;">
+                        <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
+                    </div>
+
                 </form>
-            </div>
+            </div> --}}
 
             <section class="bord__tasks">
                 <ul class="bord__list">

@@ -156,18 +156,125 @@ class Task {
     };
 };
 
-
+// открытие окна с выбранной задачей
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            console.log(element.title);
-            $(".element__info").show();
-            // открыть окно с вывыдом задачи
+            renderTask (element)
+            openDescription();
         }
     })
+}
+
+// в процессе доработки
+function renderTask ({id, id_project = '', title = '', description = '', date = ''} = {}){
+    $('.element__info').remove();
+    let node = `
+        <div class="element__info" id="task">
+            <form class="element__task" name="${id}" method="get">
+
+                <div class="element__info__block">
+                    <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100>${title}</textarea>
+                </div>
+
+                <div class="element__btn">
+                    <a type="submit" class="safe" href="#">
+                        <span>Сохранить</span>
+                    </a>
+                    <a type="submit" class="rdy" href="#">
+                        <span>Выполнено</span>
+                    </a>
+                    <a type="submit" class="del" href="#">
+                        <span>Удалить</span>
+                    </a>
+                </div>
+
+                <div class="element__info__more">
+                    <nav class="element__menu">
+                        <a class="link__element tab" href="javascript:openSubtasks()">
+                            <span class="link__description link_tab">
+                                Подзадачи
+                            </span>
+                        </a>
+
+                        <a class="link__element tab" href="javascript:openDescription()">
+                            <span class="link__description link_tab">
+                                Описание
+                            </span>
+                        </a>
+
+                        <a class="link__element tab" href="javascript:openAction()">
+                            <span class="link__description link_tab">
+                                Действия
+                            </span>
+                        </a>
+                    </nav>
+
+                    <div class="element__bord">
+                        <div class="element__info__block" id="subtasks">
+                            <textarea class="element__task__area subtasks" type="text" name="subtasks" placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
+                        </div>
+
+                        <div class="element__info__block" id="description">
+                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${description}</textarea>
+                        </div>
+
+                        <div class="element__info__block" id="action">
+                            <textarea class="element__task__area action" type="text" name="action" placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>`
+
+        $('.bord').append(node);
+}
+
+function openSubtasks (){
+    try {
+        let element = document.getElementById('description');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('action');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('subtasks');
+        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
+    } catch (error) { }
+}
+
+function openDescription () {
+    try {
+        let element = document.getElementById('subtasks');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('action');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('description');
+        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
+    } catch (error) { }
+}
+
+function openAction (){
+    try {
+        let element = document.getElementById('subtasks');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('description');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('action');
+        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
+    } catch (error) { }
 }
 
 
 const taskList = new Bord({
     listElem: '.bord__list'
 })
+
+
+// проверка нажатия вне выбранной задачи
+document.addEventListener('click', function(event) {
+    try {
+        let node = document.getElementById('task');
+        if (!node.contains(event.target)) {
+            $('.element__info').remove();
+        }
+    } catch (error) { }
+});
