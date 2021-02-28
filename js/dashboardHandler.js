@@ -22,7 +22,7 @@ function inbox() {
         'id_project': null,
         'date': null
     });
-    
+
     taskList.list.clearTasks();
     taskList.getTasks(data);
 };
@@ -53,7 +53,7 @@ function today() {
         'id_owner': cookie,
         'date': date
     });
-    
+
     taskList.list.clearTasks();
     taskList.getTasks(data);
 };
@@ -88,7 +88,7 @@ function upcoming() {
         'startDate': startDate,
         'endDate': endDate
     });
-    
+
     taskList.list.clearTasks();
     taskList.getTasks(data);
 };

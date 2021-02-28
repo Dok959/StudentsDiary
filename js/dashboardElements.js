@@ -190,15 +190,15 @@ class Task {
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            $(".element__info").show(); // тестовая штука
-            // renderTask(element);
+            // $(".element__info").show(); // тестовая штука
+            renderTask(element);
             openDescription();
         }
     })
 }
 
 // в процессе доработки
-function renderTask({ id, id_project = '', title = '', description = '', date = '' } = {}) {
+function renderTask({ id, id_project = '', title, description = '', date = '' } = {}) {
     $('.element__info').remove();
     let node = `
         <div class="element__info" id="task">
@@ -209,13 +209,13 @@ function renderTask({ id, id_project = '', title = '', description = '', date = 
                 </div>
 
                 <div class="element__btn">
-                    <a type="submit" class="safe" href="javascript:updateTask()">
-                        <span>Сохранить</span>
+                    <a type="submit" id="updateElement" href="javascript:updateTask()">
+                        <span>Изменить</span>
                     </a>
-                    <a type="submit" class="rdy" href="#">
+                    <a type="submit" id="readyElement" href="#">
                         <span>Выполнено</span>
                     </a>
-                    <a type="submit" class="del" href="javascript:deleteTask()">
+                    <a type="submit" id="deleteElement" href="javascript:deleteTask()">
                         <span>Удалить</span>
                     </a>
                 </div>
@@ -296,32 +296,36 @@ function openAction() {
 
 // обновление в базе
 async function updateTask() {
+    let flag = true; // отвечает за валидность изменённых данных
     let id = getTask();
 
-    let title = document.getElementsByName('title')[0].value;
-    if (title === null) {
-        title = null;
-    }
+    let title = document.getElementsByName('title')[0];
+    // проверка на пустоту
+    checkLength(title) ? title = title.value : flag = false;
 
     let description = document.getElementsByName('description')[0].value;
     if (description === null) {
         description = null;
     }
 
-    // обновление данных локально
-    taskList.list.localUpdateTask(id, title, description);
+    // если все ок, сохраняем
+    if (flag) {
+        removeValidation(); // удаление ошибочного выделения
+        // обновление данных локально
+        taskList.list.localUpdateTask(id, title, description);
 
-    // формируем набор для отправки на сервер
-    let data = JSON.stringify({
-        'code': 2,
-        'table': 'TASKS',
-        'id': Number.parseInt(id),
-        'title': title,
-        'description': description
-    });
+        // формируем набор для отправки на сервер
+        let data = JSON.stringify({
+            'code': 2,
+            'table': 'TASKS',
+            'id': Number.parseInt(id),
+            'title': title,
+            'description': description
+        });
 
-    let fetchData = new FetchData();
-    fetchData.getElements(data);
+        let fetchData = new FetchData();
+        fetchData.getElements(data);
+    }
 }
 
 

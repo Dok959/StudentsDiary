@@ -208,7 +208,7 @@ li{
 }
 
 .element__info{
-    display: none; /* ОКЛЮЧИТЬ ПОСЛЕ СОЗДАНИЯ ФОРМЫ ВЫВОДА ЗАДАЧИ */
+    /* display: none;*/ /*ОКЛЮЧИТЬ ПОСЛЕ СОЗДАНИЯ ФОРМЫ ВЫВОДА ЗАДАЧИ */
     position:absolute;
     /* left: 10%; */
     left: 5%;
@@ -228,7 +228,7 @@ li{
 }
 
 .element__info__block{
-    /* display: flex; */
+    display: flex;
     background: #ccdef0;
     margin: 0 auto 10px;
 }
@@ -263,22 +263,19 @@ li{
     justify-content: space-evenly;
 }
 
-.safe{
-    /* background: rgb(39, 221, 22); */
+#updateElement{
     background: #00EFD1;
 }
 
-.rdy{
-    /* background: rgb(221, 185, 22); */
+#readyElement{
     background:#00ACEA;
 }
 
-.del{
+#deleteElement{
     background: #00EFD1;
-    /* background: rgb(255, 0, 0); */
 }
 
-.safe, .rdy, .del{
+#updateElement, #readyElement, #deleteElement{
     color: #263849;
     font-weight: 400;
     font-size: 20px;
@@ -288,9 +285,9 @@ li{
     border: 2px solid transparent;
 }
 
-.safe:hover, .safe:active, .safe:focus,
-.rdy:hover, .rdy:active, .rdy:focus,
-.del:hover, .del:active, .del:focus{
+#updateElement:hover, #updateElement:active, #updateElement:focus,
+#readyElement:hover, #readyElement:active, #readyElement:focus,
+#deleteElement:hover, #deleteElement:active, #deleteElement:focus{
     border-color: #083863;
 }
 
@@ -334,6 +331,10 @@ li{
     display: none;
 }
 
+.error{
+    color:red;
+    outline: 2px solid red;
+}
 
 @media (max-width: 1200px){
     .element__info{

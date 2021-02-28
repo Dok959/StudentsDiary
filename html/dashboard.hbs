@@ -13,6 +13,7 @@
     <script src="/js/library/jquery-3.5.1.min.js" defer></script>
     <script src="/js/cookies/cookies.js" defer></script>
     <script src="/js/dashboardHandler.js" defer></script>
+    <script src="/js/validation.js" defer></script>
     <script src="/js/dashboardElements.js" defer></script>
 </head>
 
@@ -77,17 +78,18 @@
                 <form class="element__task" name="id_task" method="get">
 
                     <div class="element__info__block" id="title">
-                        <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100></textarea>
+                        <textarea class="element__task__area title" type="text" name="title" placeholder="Название"
+                            maxlength=100>Название</textarea>
                     </div>
 
                     <div class="element__btn">
-                        <a type="submit" class="safe" href="#">
-                            <span>Сохранить</span>
+                        <a type="submit" id="updateElement" href="javascript:updateTask()">
+                            <span>Изменить</span>
                         </a>
-                        <a type="submit" class="rdy" href="#">
+                        <a type="submit" id="readyElement" href="#">
                             <span>Выполнено</span>
                         </a>
-                        <a type="submit" class="del" href="#">
+                        <a type="submit" id="deleteElement" href="#">
                             <span>Удалить</span>
                         </a>
                     </div>
@@ -115,18 +117,21 @@
 
                         <div class="element__bord">
                             <div class="element__info__block" id="subtasks">
-                                <textarea class="element__task__area subtasks" type="text" name="subtasks" placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
+                                <textarea class="element__task__area subtasks" type="text" name="subtasks"
+                                    placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
                             </div>
 
                             <div class="element__info__block" id="description">
-                                <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>fdsfsdf</textarea>
+                                <textarea class="element__task__area description" type="text" name="description"
+                                    placeholder="Описание" maxlength=600>fdsfsdf</textarea>
                             </div>
 
                             <div class="element__info__block" id="action">
                                 {{!-- Большой отступ перед label-ом --}}
                                 <label for="">Укажите срок выполнения задачи</label>
                                 <input type="date" name="date">
-                                <textarea class="element__task__area action" type="text" name="action" placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
+                                <textarea class="element__task__area action" type="text" name="action"
+                                    placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
                             </div>
                         </div>
                     </div>

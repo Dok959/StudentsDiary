@@ -1,21 +1,27 @@
-function validation(stingParse, code){
-    let flag = true
-    stingParse.forEach(element => {
-        flag = /(\s+)|((?!\W|@#))|[\/;.,2'"]/.test(element)
-        if (flag === true){ // если есть недопустимый символ
-            break
-        }
-
-        const len = element.length
-        if (len < 5){
-            flag = false // может убрать?
-            break // сообщить об ошибке ввода
-        }
-    })
-    if (flag === true){
-        return 'ok'
+// проверка длины входящей строки
+function checkLength(args) {
+    let str = args.value;
+    if (str.length <= 0) {
+        generateError(args);
+        return false;
     }
-}
+    else {
+        return true;
+    }
+};
 
-exports.validation = validation()
-// module.exports = validation()
+// подключение ошибок полям
+function generateError(element) {
+    console.log(element)
+    element.classList.add('error');
+    return;
+};
+
+// удаление ошибок у полей
+function removeValidation() {
+    const errors = document.querySelectorAll('.error');
+
+    for (var i = 0; i < errors.length; i++) {
+        errors[i].classList.remove('error');
+    };
+};
