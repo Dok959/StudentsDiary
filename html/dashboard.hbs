@@ -127,11 +127,37 @@
                             </div>
 
                             <div class="element__info__block" id="action">
-                                {{!-- Большой отступ перед label-ом --}}
-                                <label for="">Укажите срок выполнения задачи</label>
-                                <input type="date" name="date">
-                                <textarea class="element__task__area action" type="text" name="action"
-                                    placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
+                                <div class="date">
+                                    <label>Укажите срок выполнения задачи</label>
+                                    <input type="datetime" name="date">
+                                </div>
+                                <div class="repetition">
+                                    <div class="repetition__block">
+                                        <label>Будет ли повторение задачи</label>
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="yes">
+                                            <label>Да</label>
+                                        </div>
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="no" checked>
+                                            <label>Нет</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="select__block">
+                                        <select name="frequency">
+                                            <option value="1" selected>Каждый</option>
+                                            <option value="2">Через</option>
+                                        </select>
+
+                                        <select name="unit">
+                                            <option value="1" selected>День</option>
+                                            <option value="2">Неделю</option>
+                                            <option value="3">Месяц</option>
+                                            <option value="4">Год</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

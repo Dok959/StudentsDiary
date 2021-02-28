@@ -251,7 +251,39 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
                         </div>
 
                         <div class="element__info__block" id="action">
-                            <textarea class="element__task__area action" type="text" name="action" placeholder="Действия" maxlength=600>hjkhjkjhkjhk</textarea>
+                            <div class="date">
+                                <label>Укажите срок выполнения задачи</label>
+                                <input class="datetime-local" type="datetime-local" name="date">
+                            </div>
+                            <div class="repetition">
+                                <div class="repetition__block">
+                                    <label>Будет ли повторение задачи</label>
+                                    <div class="repetition__elements">
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
+                                            <label>Да</label>
+                                        </div>
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="no" checked onchange="javascript:changeRepetition()">
+                                            <label>Нет</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="select__block">
+                                    <select name="frequency">
+                                        <option value="1" selected>Каждый</option>
+                                        <option value="2">Через</option>
+                                    </select>
+
+                                    <select name="unit">
+                                        <option value="1" selected>День</option>
+                                        <option value="2">Неделю</option>
+                                        <option value="3">Месяц</option>
+                                        <option value="4">Год</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -292,6 +324,21 @@ function openAction() {
         element = document.getElementById('action');
         element.setAttribute('style', 'display: flow-root; margin: 0 auto 10px;');
     } catch (error) { }
+}
+
+function changeRepetition () {
+    let radios = document.getElementsByClassName('radio');
+    for (var i = 0; i < radios.length; i++){
+        if (radios[i].checked === true && i === 0){
+            let element = document.getElementsByClassName('select__block')[0];
+            element.setAttribute('style', 'display: flex;');
+            break;
+        }
+        else{
+            let element = document.getElementsByClassName('select__block')[0];
+            element.setAttribute('style', 'display: none;');
+        }
+    }
 }
 
 // обновление в базе
