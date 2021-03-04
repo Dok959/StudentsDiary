@@ -88,13 +88,13 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
         request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
     };
 
-    console.log('Запрос:')
-    console.log(request.body)
+    // console.log('Запрос:')
+    // console.log(request.body)
 
     await buildingQueryForDB(request.body)
         .then(result => {
-            console.log('Ответ:'),
-                console.log(result),
+            // console.log('Ответ:'),
+            //     console.log(result),
             response.send(result)
         })
         .catch(error => console.log(error));
@@ -130,6 +130,8 @@ async function checkUser(request, flag = true) {
                 if (result[0] !== undefined) {
                     if (flag) {
                         user.table = 'SETTINGS';
+                        user.id_owner = id_user;
+                        delete user.id;
                         return buildingQueryForDB(user)
                             .then(settings => {
                                 try {

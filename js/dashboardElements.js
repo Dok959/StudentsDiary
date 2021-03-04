@@ -247,7 +247,7 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
                         </div>
 
                         <div class="element__info__block" id="description">
-                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${description}</textarea>
+                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${description ? description : ''}</textarea>
                         </div>
 
                         <div class="element__info__block" id="action">

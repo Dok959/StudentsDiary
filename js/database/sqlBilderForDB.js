@@ -125,8 +125,6 @@ async function buildingQueryForDB(args) {
         query = query.substr(0, query.length - 4);
         query += ';';
 
-        // let result = {};
-
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));
 

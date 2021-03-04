@@ -18,29 +18,22 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `projects`
+-- Table structure for table `settings`
 --
 
-DROP TABLE IF EXISTS `projects`;
+DROP TABLE IF EXISTS `settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `projects` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ проекта',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца проекта',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название проекта',
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание проекта',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица проектов';
+CREATE TABLE `settings` (
+  `id_owner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
+  `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
+  `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
+  `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
+  `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
+  KEY `id_owner_idx` (`id_owner`),
+  CONSTRAINT `id_owner` FOREIGN KEY (`id_owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `projects`
---
-
-LOCK TABLES `projects` WRITE;
-/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -51,4 +44,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-27 18:39:07
+-- Dump completed on 2021-03-04 19:18:01
