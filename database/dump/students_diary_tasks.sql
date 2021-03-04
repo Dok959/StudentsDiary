@@ -28,11 +28,11 @@ CREATE TABLE `tasks` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
   `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Название задачи',
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
   `date` date DEFAULT NULL COMMENT 'Срок выполнения данной задачи',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Это первая задача написанная мной в данном сервисе. Сам сервис также разработал я сам и частично уже','бла-бла-бла',NULL),(2,1,NULL,'тест а это задача на 100 знаков но пока не удается это adsd asdasd asdasd ',NULL,'2021-01-29'),(3,1,NULL,'ТЕКСТ','новый',NULL),(4,1,NULL,'fsdhfsjdf','sdhfsdjkfh','2021-02-07');
+INSERT INTO `tasks` VALUES (1,1,NULL,'Привет мир!)','Это первая тестовая задача доступная пользователю под ником admin',NULL),(2,1,NULL,'Купить билеты в кино новые','gdfads','2021-01-28'),(3,1,NULL,'asdasd','dasdasdasdasd',NULL),(5,1,NULL,'sdfdsf','sdfsd',NULL),(6,1,NULL,'dsfsdf','vcbcv',NULL),(7,1,NULL,'ghfgh','gfhgf',NULL),(8,1,NULL,'xvc',NULL,NULL),(9,1,NULL,'dsad',NULL,NULL),(10,1,NULL,'asd',NULL,NULL),(11,1,NULL,'ads',NULL,NULL),(12,1,NULL,'asdd',NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-19 11:09:42
+-- Dump completed on 2021-03-04 21:19:31

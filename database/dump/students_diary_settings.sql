@@ -25,12 +25,13 @@ DROP TABLE IF EXISTS `settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
-  `id` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
+  `id_owner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
   `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
   `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
   `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
-  PRIMARY KEY (`id`)
+  KEY `id_owner_idx` (`id_owner`),
+  CONSTRAINT `id_owner` FOREIGN KEY (`id_owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,7 +41,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'Саша',NULL,NULL,'light'),(12,'Doktor',NULL,NULL,'light'),(13,NULL,NULL,NULL,'light');
+INSERT INTO `settings` VALUES (1,NULL,NULL,NULL,'light'),(2,'Doktor',NULL,NULL,'light');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-19 11:09:42
+-- Dump completed on 2021-03-04 21:19:31
