@@ -190,8 +190,8 @@ class Task {
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            // $(".element__info").show(); // тестовая штука
-            renderTask(element);
+            $(".element__info").show(); // тестовая штука
+            // renderTask(element);
             openDescription();
         }
     })

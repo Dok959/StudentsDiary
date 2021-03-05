@@ -22,11 +22,22 @@
 
         <div class="header">
 
+            <div class="menu-burger__header">
+                <span></span>
+            </div>
+
             <div class="hello">
                 <h1>Здравствуйте, {{user}}!</h1>
             </div>
 
             <nav class="menu">
+                <div class="menu__element__title">
+                    <img class="link__img__title" src="/img/pac1/tasks.png" alt="Задачи">
+                    <span class="title__description">
+                        ЗАДАЧИ
+                    </span>
+                </div>
+
                 <div class="menu__element">
                     <a class="link__element" href="javascript:inbox()">
                         <img class="link__img" src="/img/pac1/inbox.png" alt="Входящие">
@@ -53,6 +64,14 @@
                         </span>
                     </a>
                 </div>
+
+                <div class="menu__element__title">
+                    <img class="link__img__title" src="/img/pac1/projects.png" alt="Проекты">
+                    <span class="title__description">
+                        ПРОЕКТЫ
+                    </span>
+                </div>
+
 
                 <div class="bottom__menu__element">
                     <a class="link__element" href="./personPage.html">
@@ -128,19 +147,22 @@
 
                             <div class="element__info__block" id="action">
                                 <div class="date">
-                                    <label>Укажите срок выполнения задачи</label>
-                                    <input type="datetime" name="date">
+                                    <label class="date__title">Укажите срок выполнения задачи</label>
+                                    <input class="datetime-local" type="datetime-local" name="date">
                                 </div>
+
                                 <div class="repetition">
                                     <div class="repetition__block">
                                         <label>Будет ли повторение задачи</label>
-                                        <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="yes">
-                                            <label>Да</label>
-                                        </div>
-                                        <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="no" checked>
-                                            <label>Нет</label>
+                                        <div class="repetition__elements">
+                                            <div class="repetition__element">
+                                                <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
+                                                <label>Да</label>
+                                            </div>
+                                            <div class="repetition__element">
+                                                <input class="radio" type="radio" name="repetition" value="no" checked onchange="javascript:changeRepetition()">
+                                                <label>Нет</label>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -157,6 +179,16 @@
                                             <option value="4">Год</option>
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class="priority__block">
+                                    <label>Укажите приоритет задачи</label>
+                                    <select name="priority" class="priority__select__block">
+                                        <option value="1">Высший</option>
+                                        <option value="2">Средний</option>
+                                        <option value="3">Низкий</option>
+                                        <option value="4" selected>Нет</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

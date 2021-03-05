@@ -2,6 +2,10 @@ const cookie = getCookie(document.cookie, 'USER');
 
 document.addEventListener("DOMContentLoaded", function () {
     today();
+    $('.menu-burger__header').click(function() {
+        $('.menu-burger__header').toggleClass('open-menu');
+        $('.menu').toggleClass('open__menu');
+    });
 });
 
 // Входящие

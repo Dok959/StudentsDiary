@@ -21,6 +21,43 @@ h2{
     background-color:#C3DAF0;
 }
 
+.menu-burger__header span, .menu-burger__header:after, .menu-burger__header:before{
+    height: 3px;
+    width: 100%;
+    position: absolute;
+    background: #00ACEA;
+    margin: 0 auto;
+    transition: all 0.5s ease;
+}
+.menu-burger__header span{
+    background: #00EFD1;
+    top: 9px;
+}
+.menu-burger__header:after, .menu-burger__header:before{
+    content: '';
+}
+.menu-burger__header:after{
+    bottom: 0;
+}
+.menu-burger__header{
+    display: none;
+}
+
+.menu-burger__header.open-menu span {
+    opacity:0; 
+    transition: 0.5s; 
+}
+.menu-burger__header.open-menu:before {
+    transform: rotate(38deg);
+    top: 7px;
+    transition: 0.4s;
+}
+.menu-burger__header.open-menu:after {
+    transform: rotate(-38deg);
+    bottom: 10px;
+    transition: 0.4s;
+}
+
 .hello{
     margin: 0 auto;
     text-align: center;
@@ -31,6 +68,11 @@ h2{
 .menu{
     margin: 5px;
     line-height: 2;
+    transition: all 0.5s;
+}
+
+.menu.open__menu {
+    display: block;
 }
 
 .menu__element{
@@ -40,6 +82,18 @@ h2{
     display: flex;
     align-items: center;
     border-bottom: 2px solid transparent;
+}
+
+.menu__element__title{
+    margin: 10px auto;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.link__img__title{
+    display: none;
 }
 
 .link__element{
@@ -52,6 +106,13 @@ h2{
 .link__img{
     max-width: 28px;
     max-height: 28px;
+}
+
+.title__description{
+    margin: auto;
+    font-size: 20px;
+    font-weight: 400;
+    color: #C10FB3;
 }
 
 .link__description{
@@ -345,6 +406,10 @@ label {
     margin: 0;
 }
 
+.date__title{
+    margin: 0;
+}
+
 .datetime-local{
     width: fit-content;
     margin: 0;
@@ -394,6 +459,18 @@ select{
 .error{
     color:red;
     outline: 2px solid red;
+}
+
+.priority__block{
+    display: flex;
+    justify-content: space-around;
+    margin: 10px;
+}
+
+.priority__select__block{
+    display: flex;
+    justify-content: space-around;
+    margin: 5px;
 }
 
 @media (max-width: 1430px){
@@ -539,8 +616,11 @@ select{
         margin: 5px auto;
     }
 
-    label{
+    .date__title{
         margin: auto;
+    }
+
+    label{
         font-size: 18px;
     }
 
@@ -591,6 +671,10 @@ select{
     .repetition__element{
         margin-left: 5px;
     }
+
+    label {
+        margin: auto;
+    }
 }
 
 @media (max-width: 650px){
@@ -630,7 +714,20 @@ select{
     }
 }
 
+@media (max-width: 620px){
+    .priority__block{
+        display: block;
+    }
+    .priority__select__block{
+        margin: auto;
+    }
+}
+
 @media (max-width: 600px){
+    .title__description{
+        font-size: 18px;
+    }
+
     .link__element{
         padding: 0;
     }
@@ -662,6 +759,10 @@ select{
 }
 
 @media (max-width: 500px){
+    .menu__element__title{
+        display: none;
+    }
+
     .link__img{
         margin: 0 5px;
         display: inline-block;
@@ -702,12 +803,17 @@ select{
         min-height: min-content;
     }
 
-    .menu{
-        display: flex;
+    .menu-burger__header {
+        position: relative; /* задаем относительное позиционирование */
+        width: 40px; /* определяем размеры блока */
+        height: 20px;
+        display: block;
+        margin-left: 10px;
     }
 
-    .menu__element{
-        width: min-content;
+    .menu{
+        /* display: flex; */
+        display: none;
     }
 
     .bottom__menu__element{
@@ -723,12 +829,8 @@ select{
         padding: 0;
     }
 
-    .link__element{
-        display: inline;
-    }
-
     .link__description{
-        display: none;
+        display: block;
     }
 
     .bord{
