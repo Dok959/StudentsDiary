@@ -12,7 +12,6 @@ function checkLength(args) {
 
 // подключение ошибок полям
 function generateError(element) {
-    console.log(element)
     element.classList.add('error');
     return;
 };

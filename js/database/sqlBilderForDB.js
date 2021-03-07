@@ -111,7 +111,7 @@ async function buildingQueryForDB(args) {
                 }
                 else {
                     if (element === 'date') {
-                        query += ` ${element} < '${iSValue}' and`;
+                        query += ` ${element} <= '${iSValue}' and`;
                     }
                     else {
                         query += ` ${element} = '${iSValue}' and`;
@@ -124,6 +124,7 @@ async function buildingQueryForDB(args) {
         };
         query = query.substr(0, query.length - 4);
         query += ';';
+        // console.log(query)
 
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));

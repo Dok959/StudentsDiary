@@ -115,7 +115,7 @@
 
                     <div class="element__info__more">
                         <nav class="element__menu">
-                            <a class="link__element tab" href="javascript:openSubtasks()">
+                            <a class="link__element tab" id="close" href="javascript:openSubtasks()">
                                 <span class="link__description link_tab">
                                     Подзадачи
                                 </span>
@@ -136,8 +136,12 @@
 
                         <div class="element__bord">
                             <div class="element__info__block" id="subtasks">
-                                <textarea class="element__task__area subtasks" type="text" name="subtasks"
-                                    placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
+                                <div class="block__subtasks">
+                                    <a class="add__subtasks" href="javascript:addSubtasks()">
+                                        <img class="link__element__img" src="/img/pac1/add_subtasks.png" alt="Укажите действия">
+                                        <span class="add__subtasks__text">Укажите действия</span>
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="element__info__block" id="description">

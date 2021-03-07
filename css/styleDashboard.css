@@ -381,11 +381,42 @@ li{
     display: flex;
 }
 
+.block__subtasks{
+    margin: 0;
+    background: inherit;
+    color: #263849;
+    border: none;
+    max-width: 100%;
+    width: 100%;
+    max-height: 60px;
+    resize: none;
+    outline: none;
+}
+
+.add__subtasks{
+    text-decoration: none;
+    color: #263849;
+    height: 32px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.add__subtasks__text{
+    margin-left: 15px;
+}
+
 .description{
+    font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-size: 16px;
     min-height: 202px;
     padding: 10px;
+}
+
+#close{
+    display: none;
 }
 
 #subtasks, #description, #action{

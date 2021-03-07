@@ -143,10 +143,34 @@ class Tasks {
         }
     }
 
-    localUpdateTask = (id, title, description) => {
+    localUpdateTask = (id, title, description, date) => {
         let task = this.getIdTask(id);
         task.setTitle(title);
         task.setDescription(description);
+        task.setDate(date);
+
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = now.getMonth();
+        let day = now.getDate();
+        if (year <= date.slice(0, 4)) {
+            if (month <= date.slice(5, 7)) {
+                if (day < date.slice(8, 10) && $(".upcoming").is(':hidden')) {
+                    taskList.list.localDeleteTask(id);
+                    $('.element__info').remove();
+                }
+                else if (day >= date.slice(8, 10)){
+                    taskList.list.localDeleteTask(id);
+                    $('.element__info').remove();
+                }
+                // else if (day === date.slice(8, 10) && $(".upcoming").is(':visible')) {
+                //     taskList.list.localDeleteTask(id);
+                //     $('.element__info').remove();
+                // }
+            }
+        }
+        console.log(date)
+
         taskList.showTasks();
     }
 
@@ -164,13 +188,14 @@ class Tasks {
 }
 
 class Task {
-    constructor({ id, id_owner, id_project = '', title = '', description = '', date = '' }) {
+    constructor({ id, id_owner, id_project = '', title = '', description = '', date = '', time = '' }) {
         this.id = id;
         this.id_owner = id_owner;
         this.id_project = id_project;
         this.title = title;
         this.description = description;
         this.date = date;
+        this.time = time;
     };
 
     getTitle() {
@@ -184,21 +209,39 @@ class Task {
     setDescription(description) {
         this.description = description;
     };
+
+    setDate(date) {
+        this.date = date;
+    };
 };
 
 // открытие окна с выбранной задачей
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            $(".element__info").show(); // тестовая штука
-            // renderTask(element);
+            // $(".element__info").show(); // тестовая штука
+            renderTask(element);
             openDescription();
         }
     })
 }
 
 // в процессе доработки
-function renderTask({ id, id_project = '', title, description = '', date = '' } = {}) {
+function renderTask({ id, id_project = '', title, description = '', date = '', time = '' } = {}) {
+    if (date != null) {
+        let dates = new Date(date);
+        let year = dates.getFullYear();
+        let month = dates.getMonth();
+        if (month < 9){
+            month = '0' + month;
+        }
+        let day = dates.getDate();
+        if (day < 10){
+            day = '0' + day;
+        }
+        date = year + "-" + month + "-" + day;
+    }
+
     $('.element__info').remove();
     let node = `
         <div class="element__info" id="task">
@@ -222,7 +265,7 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
 
                 <div class="element__info__more">
                     <nav class="element__menu">
-                        <a class="link__element tab" href="javascript:openSubtasks()">
+                        <a class="link__element tab" id="close" href="javascript:openSubtasks()">
                             <span class="link__description link_tab">
                                 Подзадачи
                             </span>
@@ -243,7 +286,12 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
 
                     <div class="element__bord">
                         <div class="element__info__block" id="subtasks">
-                            <textarea class="element__task__area subtasks" type="text" name="subtasks" placeholder="Подзадачи" maxlength=600>dasdasd</textarea>
+                            <div class="block__subtasks">
+                                <a class="add__subtasks" href="javascript:addSubtasks()">
+                                    <img class="link__element__img" src="/img/pac1/add_subtasks.png" alt="Укажите действия">
+                                    <span class="add__subtasks__text">Укажите действия</span>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="element__info__block" id="description">
@@ -253,8 +301,10 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
                         <div class="element__info__block" id="action">
                             <div class="date">
                                 <label>Укажите срок выполнения задачи</label>
-                                <input class="datetime-local" type="datetime-local" name="date">
+                                <input class="datetime-local" type="date" name="date" value="${date ? date : ''}">
+                                <input class="datetime-local" type="time" name="time" value="${time ? time : ''}">
                             </div>
+
                             <div class="repetition">
                                 <div class="repetition__block">
                                     <label>Будет ли повторение задачи</label>
@@ -283,6 +333,16 @@ function renderTask({ id, id_project = '', title, description = '', date = '' } 
                                         <option value="4">Год</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <div class="priority__block">
+                                <label>Укажите приоритет задачи</label>
+                                <select name="priority" class="priority__select__block">
+                                    <option value="1">Высший</option>
+                                    <option value="2">Средний</option>
+                                    <option value="3">Низкий</option>
+                                    <option value="4" selected>Нет</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -323,7 +383,25 @@ function openAction() {
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('action');
         element.setAttribute('style', 'display: flow-root; margin: 0 auto 10px;');
+
+        element = document.getElementsByName('date')[0];
+        let date = new Date();
+        let month = date.getMonth() + 1;
+        if (month < 9){
+            month = '0' + month;
+        }
+        let day = date.getDate();
+        if (day < 10){
+            day = '0' + day;
+        }
+        date = date.getFullYear() + "-" + month + "-" + day;
+        element.setAttribute('min', `${date}`);
     } catch (error) { }
+}
+
+function addSubtasks() {
+    let element = document.getElementsByClassName('add__subtasks');
+    element.setAttribute('style', 'display: none;');
 }
 
 function changeRepetition () {
@@ -355,11 +433,36 @@ async function updateTask() {
         description = null;
     }
 
+
+    let date = document.getElementsByName('date')[0];
+
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let day = now.getDate();
+    if (year <= date.value.slice(0, 4)) {
+        if (month <= date.value.slice(5, 7)) {
+            if (day > date.value.slice(8, 10)) {
+                flag = false;
+                generateError(date);
+            }
+        }
+        else {
+            flag = false;
+            generateError(date);
+        }
+    }
+    else {
+        flag = false;
+        generateError(date);
+    }
+
+
     // если все ок, сохраняем
     if (flag) {
         removeValidation(); // удаление ошибочного выделения
         // обновление данных локально
-        taskList.list.localUpdateTask(id, title, description);
+        taskList.list.localUpdateTask(id, title, description, date.value);
 
         // формируем набор для отправки на сервер
         let data = JSON.stringify({
@@ -367,7 +470,8 @@ async function updateTask() {
             'table': 'TASKS',
             'id': Number.parseInt(id),
             'title': title,
-            'description': description
+            'description': description,
+            'date': date.value
         });
 
         let fetchData = new FetchData();
