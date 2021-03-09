@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `students_diary` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `students_diary`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: students_diary
@@ -30,7 +28,8 @@ CREATE TABLE `tasks` (
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
-  `date` date DEFAULT NULL COMMENT 'Срок выполнения данной задачи',
+  `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
+  `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -41,7 +40,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Привет мир!)','Это первая тестовая задача доступная пользователю под ником admin',NULL),(2,1,NULL,'Купить билеты в кино новые','gdfads','2021-01-28'),(3,1,NULL,'asdasd','dasdasdasdasd',NULL),(5,1,NULL,'sdfdsf','sdfsd',NULL),(6,1,NULL,'dsfsdf','vcbcv',NULL),(7,1,NULL,'ghfgh','gfhgf',NULL),(8,1,NULL,'xvc',NULL,NULL),(9,1,NULL,'dsad',NULL,NULL),(10,1,NULL,'asd',NULL,NULL),(11,1,NULL,'ads',NULL,NULL),(12,1,NULL,'asdd',NULL,NULL);
+INSERT INTO `tasks` VALUES (1,1,NULL,'Привет мир!)','Это первая тестовая задача доступная пользователю под ником admin',NULL,NULL),(2,1,NULL,'Купить билеты в кино новые','gdfads','2021-01-28',NULL),(3,1,NULL,'asdasd','dasdasdasdasd',NULL,NULL),(5,1,NULL,'sdfdsf','sdfsd',NULL,NULL),(6,1,NULL,'dsfsdf','vcbcv',NULL,NULL),(7,1,NULL,'ghfgh','gfhgf',NULL,NULL),(8,1,NULL,'xvc',NULL,NULL,NULL),(9,1,NULL,'dsad',NULL,NULL,NULL),(10,1,NULL,'asd',NULL,NULL,NULL),(11,1,NULL,'ads',NULL,NULL,NULL),(12,1,NULL,'asdd',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-04 21:19:31
+-- Dump completed on 2021-03-09  9:21:34

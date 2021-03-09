@@ -159,17 +159,12 @@ class Tasks {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
                 }
-                else if (day >= date.slice(8, 10)){
+                else if (day >= date.slice(8, 10) && $(".today").is(':hidden')){
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
                 }
-                // else if (day === date.slice(8, 10) && $(".upcoming").is(':visible')) {
-                //     taskList.list.localDeleteTask(id);
-                //     $('.element__info').remove();
-                // }
             }
         }
-        console.log(date)
 
         taskList.showTasks();
     }
@@ -219,8 +214,8 @@ class Task {
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            // $(".element__info").show(); // тестовая штука
-            renderTask(element);
+            $(".element__info").show(); // тестовая штука
+            // renderTask(element);
             openDescription();
         }
     })
@@ -231,8 +226,8 @@ function renderTask({ id, id_project = '', title, description = '', date = '', t
     if (date != null) {
         let dates = new Date(date);
         let year = dates.getFullYear();
-        let month = dates.getMonth();
-        if (month < 9){
+        let month = dates.getMonth() + 1;
+        if (month < 10){
             month = '0' + month;
         }
         let day = dates.getDate();
@@ -255,7 +250,7 @@ function renderTask({ id, id_project = '', title, description = '', date = '', t
                     <a type="submit" id="updateElement" href="javascript:updateTask()">
                         <span>Изменить</span>
                     </a>
-                    <a type="submit" id="readyElement" href="#">
+                    <a type="submit" id="readyElement" href="javascript:taskReady()">
                         <span>Выполнено</span>
                     </a>
                     <a type="submit" id="deleteElement" href="javascript:deleteTask()">
@@ -424,6 +419,8 @@ async function updateTask() {
     let flag = true; // отвечает за валидность изменённых данных
     let id = getTask();
 
+    flag = checkValidation();
+
     let title = document.getElementsByName('title')[0];
     // проверка на пустоту
     checkLength(title) ? title = title.value : flag = false;
@@ -433,7 +430,37 @@ async function updateTask() {
         description = null;
     }
 
+    // дата
+    let date = document.getElementsByName('date')[0];
 
+
+
+    // если все ок, сохраняем
+    if (flag) {
+        removeValidation(); // удаление ошибочного выделения
+        // обновление данных локально
+        taskList.list.localUpdateTask(id, title, description, date.value);
+
+        // формируем набор для отправки на сервер
+        let data = JSON.stringify({
+            'code': 2,
+            'table': 'TASKS',
+            'id': Number.parseInt(id),
+            'title': title,
+            'description': description,
+            'date': date.value
+        });
+
+        let fetchData = new FetchData();
+        fetchData.getElements(data);
+    }
+}
+
+// проверка валидности
+async function checkValidation() {
+    let flag = true; // отвечает за валидность изменённых данных
+
+    // дата
     let date = document.getElementsByName('date')[0];
 
     let now = new Date();
@@ -457,26 +484,25 @@ async function updateTask() {
         generateError(date);
     }
 
+    return flag;
+}
 
-    // если все ок, сохраняем
-    if (flag) {
-        removeValidation(); // удаление ошибочного выделения
-        // обновление данных локально
-        taskList.list.localUpdateTask(id, title, description, date.value);
+// выполнение задачи в базе
+async function taskReady() {    
+    let id = getTask();
 
-        // формируем набор для отправки на сервер
-        let data = JSON.stringify({
-            'code': 2,
-            'table': 'TASKS',
-            'id': Number.parseInt(id),
-            'title': title,
-            'description': description,
-            'date': date.value
-        });
+    // удаление задачи локально
+    taskList.list.localUpdateTask(id);
 
-        let fetchData = new FetchData();
-        fetchData.getElements(data);
-    }
+    // формируем набор для отправки на сервер
+    let data = JSON.stringify({
+        'code': 3,
+        'table': 'TASKS',
+        'id': Number.parseInt(id),
+    });
+
+    let fetchData = new FetchData();
+    fetchData.getElements(data);
 }
 
 

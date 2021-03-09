@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `students_diary` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `students_diary`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: students_diary
@@ -30,9 +28,10 @@ CREATE TABLE `tasks` (
   `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
-  `date` date DEFAULT NULL COMMENT 'Срок выполнения данной задачи',
+  `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
+  `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -44,4 +43,4 @@ CREATE TABLE `tasks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-04 19:18:01
+-- Dump completed on 2021-03-09  9:23:03

@@ -415,7 +415,7 @@ li{
     padding: 10px;
 }
 
-#close{
+#clear{
     display: none;
 }
 
@@ -441,9 +441,52 @@ label {
     margin: 0;
 }
 
+.date__and__time__block{
+    display: flex;
+    justify-content: space-around;
+}
+
+.date__and__time{
+    position: relative;
+    margin-left: 10px;
+}
+
 .datetime-local{
     width: fit-content;
     margin: 0;
+}
+
+.clear {
+    position: absolute;
+    margin-top: 2px;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.clear:hover {
+    opacity: 1;
+}
+.clear:before, .clear:after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 25px;
+    width: 2px;
+    background-color: #C10FB3;
+}
+.clear:before {
+    transform: rotate(45deg);
+}
+.clear:after {
+    transform: rotate(-45deg);
+}
+
+.date__clear{
+    margin-left: 135px;
+}
+
+.time__clear{
+    margin-left: 40px;
 }
 
 .repetition{
@@ -524,6 +567,30 @@ select{
     }
 }
 
+@media (max-width: 1330px){
+    .date{
+        display: block;
+    }
+
+    .date__title{
+        margin: auto;
+    }
+
+    .date__and__time__block{
+        margin: 5px;
+    }
+}
+
+@media (max-width: 1300px){
+    .date__clear{
+        margin-left: 120px;
+    }
+    
+    .time__clear{
+        margin-left: 35px;
+    }
+}
+
 @media (max-width: 1250px){
     label{
         font-size: 18px;
@@ -583,6 +650,22 @@ select{
     .datetime-local{
         font-size: 16px;
     }
+
+    .clear{
+        margin-top: 4px;
+    }
+
+    .clear:after, .clear:before {
+        height: 20px;
+    }
+
+    .date__clear{
+        margin-left: 110px;
+    }
+    
+    .time__clear{
+        margin-left: 30px;
+    }
 }
 
 @media (max-width: 1050px){
@@ -617,10 +700,6 @@ select{
 
     .element__info{
         width: 80%;
-    }
-
-    .datetime-local{
-        width: 180px;
     }
 }
 
@@ -660,6 +739,10 @@ select{
         margin: auto;
         margin-top: 5px;
         font-size: 17px;
+    }
+
+    .clear{
+        top: 5px;
     }
 }
 
