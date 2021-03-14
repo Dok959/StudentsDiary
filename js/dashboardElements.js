@@ -214,15 +214,15 @@ class Task {
 openTask = id => {
     taskList.list.tasks.forEach(element => {
         if (element.id === id) {
-            $(".element__info").show(); // тестовая штука
-            // renderTask(element);
+            // $(".element__info").show(); // тестовая штука
+            renderTask(element);
             openDescription();
         }
     })
 }
 
 // в процессе доработки
-function renderTask({ id, id_project = '', title, description = '', date = '', time = '' } = {}) {
+function renderTask({ id, id_project = '', title, description = '', date, time = '' } = {}) {
     if (date != null) {
         let dates = new Date(date);
         let year = dates.getFullYear();
@@ -295,9 +295,17 @@ function renderTask({ id, id_project = '', title, description = '', date = '', t
 
                         <div class="element__info__block" id="action">
                             <div class="date">
-                                <label>Укажите срок выполнения задачи</label>
-                                <input class="datetime-local" type="date" name="date" value="${date ? date : ''}">
-                                <input class="datetime-local" type="time" name="time" value="${time ? time : ''}">
+                                <label class="date__title">Укажите срок выполнения задачи</label>
+                                <div class="date__and__time__block">
+                                    <div class="date__and__time">
+                                        <a href="javascript:clearElement("date")" class="clear date__clear"></a>
+                                        <input class="datetime-local" type="date" name="date" value="${date ? date : ''}">
+                                    </div>
+                                    <div class="date__and__time">
+                                        <a href="javascript:clearElement("time")" class="clear time__clear"></a>
+                                        <input class="datetime-local time" type="time" name="time" value="${time ? time : ''}">
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="repetition">
@@ -419,8 +427,6 @@ async function updateTask() {
     let flag = true; // отвечает за валидность изменённых данных
     let id = getTask();
 
-    flag = checkValidation();
-
     let title = document.getElementsByName('title')[0];
     // проверка на пустоту
     checkLength(title) ? title = title.value : flag = false;
@@ -432,7 +438,10 @@ async function updateTask() {
 
     // дата
     let date = document.getElementsByName('date')[0];
+    flag = await checkValidation(date);
 
+    // время
+    let time = document.getElementsByName('time')[0];
 
 
     // если все ок, сохраняем
@@ -448,7 +457,8 @@ async function updateTask() {
             'id': Number.parseInt(id),
             'title': title,
             'description': description,
-            'date': date.value
+            'date': date.value,
+            'time': time.value
         });
 
         let fetchData = new FetchData();
@@ -457,31 +467,28 @@ async function updateTask() {
 }
 
 // проверка валидности
-async function checkValidation() {
+async function checkValidation(element) {
     let flag = true; // отвечает за валидность изменённых данных
-
-    // дата
-    let date = document.getElementsByName('date')[0];
 
     let now = new Date();
     let year = now.getFullYear();
     let month = now.getMonth();
     let day = now.getDate();
-    if (year <= date.value.slice(0, 4)) {
-        if (month <= date.value.slice(5, 7)) {
-            if (day > date.value.slice(8, 10)) {
+    if (year <= Number.parseInt(element.value.slice(0, 4))) {
+        if (month <= Number.parseInt(element.value.slice(5, 7))) {
+            if (day > Number.parseInt(element.value.slice(8, 10))) {
                 flag = false;
-                generateError(date);
+                generateError(element);
             }
         }
         else {
             flag = false;
-            generateError(date);
+            generateError(element);
         }
     }
     else {
         flag = false;
-        generateError(date);
+        generateError(element);
     }
 
     return flag;
@@ -522,6 +529,11 @@ function deleteTask() {
 
     let fetchData = new FetchData();
     fetchData.getElements(data);
+}
+
+// сброс даты и времени
+function clearElement(name) {
+    document.getElementsByName(name)[0].value=null;
 }
 
 function getTask() {
