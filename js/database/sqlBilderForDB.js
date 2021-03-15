@@ -6,17 +6,27 @@ async function buildingQueryForDB(args) {
     let query = '';
     let request, response;
     let result = {};
-    if (args.code === 1) {
+    if (args.code === 1) {            
         args.code = 4;
         request = await buildingQueryForDB(args);
         if (request[0] === undefined) { // если записи не существует
-            query = `INSERT INTO ${args.table} () VALUES (DEFAULT`;
+            query = `INSERT INTO ${args.table} () VALUES (`;
+
+            if (args.table === 'USERS'){
+                query += 'DEFAULT, '
+            }
 
             for (let element in args) {
-                if (element !== 'code' && element !== 'table') {
-                    query += `, '${args[element]}'`;
+                if (element !== 'code' && element !== 'table' && element !== 'id') {
+                    query += `'${args[element]}', `;
                 };
             };
+
+            if (args.table === 'HISTORY'){
+                query += 'DEFAULT, '
+            }
+
+            query = query.substring(0, query.length - 2);
             query += ');';
 
             // выполняем запрос к базе и обрабатываем результат
@@ -29,11 +39,18 @@ async function buildingQueryForDB(args) {
                 let id_owner = response.id;
                 query = `INSERT INTO SETTINGS () VALUES (` + id_owner + ', NULL, NULL, NULL, DEFAULT);';
                 await pool.execute(query);
-            }
 
-            return buildingQueryForDB(args);
+                return buildingQueryForDB(args);
+            }
+            
+            return result.el = undefined;
         }
         else { // если запись уже есть
+            if (args.table === 'HISTORY'){
+                args.count = request[0].count + 1;
+                args.code = 2;
+                return buildingQueryForDB(args);
+            }
             return request;
         };
     }
@@ -45,7 +62,7 @@ async function buildingQueryForDB(args) {
         query = `UPDATE ${args.table} SET `;
 
         for (let element in args) {
-            if (element !== 'code' && element !== 'table' && element !== 'id') {
+            if (element !== 'code' && element !== 'table' && element !== 'id' && element !== 'id_owner') {
                 const iSValue = eval('args.' + `${element}`);
                 if (iSValue === null) {
                     query += `${element} is ${iSValue}, `;
@@ -56,14 +73,35 @@ async function buildingQueryForDB(args) {
             };
         };
         query = query.substring(0, query.length - 2);
-        query += ` WHERE id = '${args.id}';`;
+        if (args.table === 'HISTORY') {
+            query += ` WHERE id_owner = '${args.id_owner}' and date = '${args.date}';`;
+        }
+        else{
+            query += ` WHERE id = '${args.id}';`;
+        }
 
         request = await pool.execute(query);
+
+        if (args.table === 'HISTORY') {
+            delete args.count;
+            args.code = 3;
+            args.table = 'TASKS';
+            
+            return buildingQueryForDB(args);
+        }
 
         result.el = undefined;
         return result;
     }
     else if (args.code === 3) {
+        
+        if (args.table === 'TASKS'){
+            console.log(args);
+
+            return result.el = undefined;
+            // не доделано
+        }
+
         query = `DELETE FROM ${args.table} WHERE `;
 
         for (let element in args) {
@@ -111,7 +149,12 @@ async function buildingQueryForDB(args) {
                 }
                 else {
                     if (element === 'date') {
-                        query += ` ${element} <= '${iSValue}' and`;
+                        if (args.table === 'HISTORY') {
+                            query += ` ${element} = '${iSValue}' and`;
+                        }
+                        else {
+                            query += ` ${element} <= '${iSValue}' and`;
+                        }
                     }
                     else {
                         query += ` ${element} = '${iSValue}' and`;
@@ -124,7 +167,6 @@ async function buildingQueryForDB(args) {
         };
         query = query.substr(0, query.length - 4);
         query += ';';
-        // console.log(query)
 
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));

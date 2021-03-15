@@ -498,14 +498,28 @@ async function checkValidation(element) {
 async function taskReady() {    
     let id = getTask();
 
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 9){
+        month = '0' + month;
+    }
+    let day = date.getDate();
+    if (day < 10){
+        day = '0' + day;
+    }
+    date = date.getFullYear() + "-" + month + "-" + day;
+
     // удаление задачи локально
-    taskList.list.localUpdateTask(id);
+    taskList.list.localDeleteTask(id);
+    $('.element__info').remove();
 
     // формируем набор для отправки на сервер
     let data = JSON.stringify({
-        'code': 3,
-        'table': 'TASKS',
-        'id': Number.parseInt(id),
+        'code': 1,
+        'table': 'HISTORY',
+        'id_owner': cookie,
+        'date': date,
+        'id': Number.parseInt(id)
     });
 
     let fetchData = new FetchData();
