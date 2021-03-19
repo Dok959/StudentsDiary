@@ -64,8 +64,11 @@ async function buildingQueryForDB(args) {
         for (let element in args) {
             if (element !== 'code' && element !== 'table' && element !== 'id' && element !== 'id_owner') {
                 const iSValue = eval('args.' + `${element}`);
+                // if (iSValue === null) {
+                //     query += `${element} is ${iSValue}, `;
+                // }
                 if (iSValue === null) {
-                    query += `${element} is ${iSValue}, `;
+                    query += `${element} = DEFAULT, `;
                 }
                 else {
                     query += `${element} = '${iSValue}', `;
@@ -79,6 +82,8 @@ async function buildingQueryForDB(args) {
         else{
             query += ` WHERE id = '${args.id}';`;
         }
+        
+        console.log(query)
 
         request = await pool.execute(query);
 

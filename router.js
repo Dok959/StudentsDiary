@@ -88,8 +88,8 @@ router.post('/database/buildingQueryForDB', jsonParser, async function (request,
         request.body.id_owner = key.decrypt(getCookie(request.headers.cookie, 'USER'), 'utf8');
     };
 
-    console.log('Запрос:')
-    console.log(request.body)
+    // console.log('Запрос:');
+    // console.log(request.body);
 
     await buildingQueryForDB(request.body)
         .then(result => {

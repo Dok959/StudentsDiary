@@ -143,11 +143,12 @@ class Tasks {
         }
     }
 
-    localUpdateTask = (id, title, description, date) => {
+    localUpdateTask = (id, title, description, date, time) => {
         let task = this.getIdTask(id);
         task.setTitle(title);
         task.setDescription(description);
         task.setDate(date);
+        task.setTime(time);
 
         let now = new Date();
         let year = now.getFullYear();
@@ -207,6 +208,10 @@ class Task {
 
     setDate(date) {
         this.date = date;
+    };
+
+    setTime(time) {
+        this.time = time;
     };
 };
 
@@ -298,11 +303,11 @@ function renderTask({ id, id_project = '', title, description = '', date, time =
                                 <label class="date__title">Укажите срок выполнения задачи</label>
                                 <div class="date__and__time__block">
                                     <div class="date__and__time">
-                                        <a href="javascript:clearElement("date")" class="clear date__clear"></a>
+                                        <a href="javascript:clearElement('date')" class="clear date__clear"></a>
                                         <input class="datetime-local" type="date" name="date" value="${date ? date : ''}">
                                     </div>
                                     <div class="date__and__time">
-                                        <a href="javascript:clearElement("time")" class="clear time__clear"></a>
+                                        <a href="javascript:clearElement('time')" class="clear time__clear"></a>
                                         <input class="datetime-local time" type="time" name="time" value="${time ? time : ''}">
                                     </div>
                                 </div>
@@ -441,27 +446,48 @@ async function updateTask() {
     flag = await checkValidation(date);
 
     // время
-    let time = document.getElementsByName('time')[0];
+    let time = document.getElementsByName('time')[0].value ? 
+        document.getElementsByName('time')[0].value : null;
 
+    // повторяется ли задача и если да то когда
+    let frequency = null;
+    let period = document.getElementsByName('repetition')[0].checked ?
+        (frequency = document.getElementsByName('frequency')[0].value,
+        document.getElementsByName('unit')[0].value) : null;
 
     // если все ок, сохраняем
     if (flag) {
         removeValidation(); // удаление ошибочного выделения
         // обновление данных локально
-        taskList.list.localUpdateTask(id, title, description, date.value);
+        taskList.list.localUpdateTask(id, title, description, date.value, time);
+
+        // формируем набор для проверки периодичности задачи
+        let data = JSON.stringify({
+            'code': 4,
+            'table': 'REPETITION',
+            'frequency': frequency,
+            'period': period,
+        });
+
+        let fetchData = new FetchData();
+        period = await fetchData.getElements(data);
+        period = period[0] ? period[0].id : null;
+
+        // возможно нужна задержка
 
         // формируем набор для отправки на сервер
-        let data = JSON.stringify({
+        data = JSON.stringify({
             'code': 2,
             'table': 'TASKS',
             'id': Number.parseInt(id),
             'title': title,
             'description': description,
             'date': date.value,
-            'time': time.value
+            'time': time,
+            'period': period
         });
 
-        let fetchData = new FetchData();
+        fetchData = new FetchData();
         fetchData.getElements(data);
     }
 }

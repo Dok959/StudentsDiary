@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `students_diary` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `students_diary`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: students_diary
@@ -16,26 +18,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tasks`
+-- Table structure for table `period`
 --
 
-DROP TABLE IF EXISTS `tasks`;
+DROP TABLE IF EXISTS `period`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tasks` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
-  `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
-  `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
-  `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
-  `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
-  PRIMARY KEY (`id`),
-  KEY `id_period_idx` (`period`),
-  CONSTRAINT `id_period_task` FOREIGN KEY (`period`) REFERENCES `period` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+CREATE TABLE `period` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ периода',
+  `value` varchar(45) NOT NULL COMMENT 'Значение отвечающее за период',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `period`
+--
+
+LOCK TABLES `period` WRITE;
+/*!40000 ALTER TABLE `period` DISABLE KEYS */;
+INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
+/*!40000 ALTER TABLE `period` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -46,4 +50,4 @@ CREATE TABLE `tasks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-18 12:09:55
+-- Dump completed on 2021-03-18 11:54:06
