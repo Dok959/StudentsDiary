@@ -33,10 +33,8 @@ CREATE TABLE `tasks` (
   `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
   `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
   `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
-  PRIMARY KEY (`id`),
-  KEY `id_period_idx` (`period`),
-  CONSTRAINT `id_period_task` FOREIGN KEY (`period`) REFERENCES `period` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица задач'
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +43,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-03-18',NULL,NULL),(3,1,NULL,'Купить хлеб','','2021-03-20','13:15:00',NULL),(4,1,NULL,'апро','вкапрол',NULL,NULL,NULL);
+INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-03-18',NULL,3),(3,1,NULL,'Купить хлеб','','2021-03-20','13:15:00',NULL),(4,1,NULL,'апро','вкапрол',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

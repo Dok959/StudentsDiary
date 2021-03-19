@@ -31,10 +31,8 @@ CREATE TABLE `tasks` (
   `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
   `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
   `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
-  PRIMARY KEY (`id`),
-  KEY `id_period_idx` (`period`),
-  CONSTRAINT `id_period_task` FOREIGN KEY (`period`) REFERENCES `period` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач'
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -6,13 +6,13 @@ async function buildingQueryForDB(args) {
     let query = '';
     let request, response;
     let result = {};
-    if (args.code === 1) {            
+    if (args.code === 1) {
         args.code = 4;
         request = await buildingQueryForDB(args);
         if (request[0] === undefined) { // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (`;
 
-            if (args.table === 'USERS'){
+            if (args.table === 'USERS') {
                 query += 'DEFAULT, '
             }
 
@@ -22,7 +22,7 @@ async function buildingQueryForDB(args) {
                 };
             };
 
-            if (args.table === 'HISTORY'){
+            if (args.table === 'HISTORY') {
                 query += 'DEFAULT, '
             }
 
@@ -42,11 +42,11 @@ async function buildingQueryForDB(args) {
 
                 return buildingQueryForDB(args);
             }
-            
+
             return result.el = undefined;
         }
         else { // если запись уже есть
-            if (args.table === 'HISTORY'){
+            if (args.table === 'HISTORY') {
                 args.count = request[0].count + 1;
                 args.code = 2;
                 return buildingQueryForDB(args);
@@ -75,14 +75,16 @@ async function buildingQueryForDB(args) {
                 }
             };
         };
+
         query = query.substring(0, query.length - 2);
+
         if (args.table === 'HISTORY') {
             query += ` WHERE id_owner = '${args.id_owner}' and date = '${args.date}';`;
         }
-        else{
+        else {
             query += ` WHERE id = '${args.id}';`;
         }
-        
+
         console.log(query)
 
         request = await pool.execute(query);
@@ -91,7 +93,7 @@ async function buildingQueryForDB(args) {
             delete args.count;
             args.code = 3;
             args.table = 'TASKS';
-            
+
             return buildingQueryForDB(args);
         }
 
@@ -99,8 +101,8 @@ async function buildingQueryForDB(args) {
         return result;
     }
     else if (args.code === 3) {
-        
-        if (args.table === 'TASKS'){
+
+        if (args.table === 'TASKS') {
             console.log(args);
 
             return result.el = undefined;

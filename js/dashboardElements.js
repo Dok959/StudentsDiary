@@ -143,26 +143,35 @@ class Tasks {
         }
     }
 
-    localUpdateTask = (id, title, description, date, time) => {
+    localUpdateTask = (id, title, description, date, time, period) => {
         let task = this.getIdTask(id);
         task.setTitle(title);
         task.setDescription(description);
         task.setDate(date);
         task.setTime(time);
+        task.setPeriod(period);
 
         let now = new Date();
         let year = now.getFullYear();
         let month = now.getMonth();
         let day = now.getDate();
-        if (year <= date.slice(0, 4)) {
+        if (date === null && $(".inbox").is(':hidden')) {
+            taskList.list.localDeleteTask(id);
+            $('.element__info').remove();
+        }
+        else if (year <= date.slice(0, 4)) {
             if (month <= date.slice(5, 7)) {
                 if (day < date.slice(8, 10) && $(".upcoming").is(':hidden')) {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
                 }
-                else if (day >= date.slice(8, 10) && $(".today").is(':hidden')){
+                else if (day >= date.slice(8, 10) && $(".today").is(':hidden')) {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
+                }
+                else if (day == date.slice(8, 10) && $(".today").is(':visible')) {
+                    //$('.element__info').remove();
+                    // !!! БАГ; не удаётся перерисовать дату без закрытия окна
                 }
             }
         }
@@ -184,7 +193,7 @@ class Tasks {
 }
 
 class Task {
-    constructor({ id, id_owner, id_project = '', title = '', description = '', date = '', time = '' }) {
+    constructor({ id, id_owner, id_project = '', title = '', description = '', date = '', time = '', period = null }) {
         this.id = id;
         this.id_owner = id_owner;
         this.id_project = id_project;
@@ -192,6 +201,7 @@ class Task {
         this.description = description;
         this.date = date;
         this.time = time;
+        this.period = period;
     };
 
     getTitle() {
@@ -213,6 +223,10 @@ class Task {
     setTime(time) {
         this.time = time;
     };
+
+    setPeriod(period) {
+        this.period = period;
+    };
 };
 
 // открытие окна с выбранной задачей
@@ -221,25 +235,41 @@ openTask = id => {
         if (element.id === id) {
             // $(".element__info").show(); // тестовая штука
             renderTask(element);
-            openDescription();
+            // openDescription();
         }
     })
 }
 
 // в процессе доработки
-function renderTask({ id, id_project = '', title, description = '', date, time = '' } = {}) {
+async function renderTask({ id, id_project = '', title, description = '', date, time = '',
+    period = null } = {}) {
     if (date != null) {
         let dates = new Date(date);
         let year = dates.getFullYear();
         let month = dates.getMonth() + 1;
-        if (month < 10){
+        if (month < 10) {
             month = '0' + month;
         }
         let day = dates.getDate();
-        if (day < 10){
+        if (day < 10) {
             day = '0' + day;
         }
         date = year + "-" + month + "-" + day;
+    }
+
+    let frequency;
+    if (period !== null) {
+        // набор для проверки повторяемости задачи
+        let data = JSON.stringify({
+            'code': 4,
+            'table': 'REPETITION',
+            'id': period
+        });
+
+        let fetchData = new FetchData();
+        period = await fetchData.getElements(data);
+        frequency = period[0].frequency;
+        period = period[0].period;
     }
 
     $('.element__info').remove();
@@ -318,11 +348,11 @@ function renderTask({ id, id_project = '', title, description = '', date, time =
                                     <label>Будет ли повторение задачи</label>
                                     <div class="repetition__elements">
                                         <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
+                                            <input class="radio" type="radio" name="repetition" value="yes" ${period ? 'checked' : ''} onchange="javascript:changeRepetition()">
                                             <label>Да</label>
                                         </div>
                                         <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="no" checked onchange="javascript:changeRepetition()">
+                                            <input class="radio" type="radio" name="repetition" value="no" ${period ? '' : 'checked'} onchange="javascript:changeRepetition()">
                                             <label>Нет</label>
                                         </div>
                                     </div>
@@ -330,12 +360,12 @@ function renderTask({ id, id_project = '', title, description = '', date, time =
 
                                 <div class="select__block">
                                     <select name="frequency">
-                                        <option value="1" selected>Каждый</option>
+                                        <option value="1">Каждый</option>
                                         <option value="2">Через</option>
                                     </select>
 
                                     <select name="unit">
-                                        <option value="1" selected>День</option>
+                                        <option value="1">День</option>
                                         <option value="2">Неделю</option>
                                         <option value="3">Месяц</option>
                                         <option value="4">Год</option>
@@ -359,6 +389,30 @@ function renderTask({ id, id_project = '', title, description = '', date, time =
         </div>`
 
     $('.bord').append(node);
+
+    if (frequency !== undefined) {
+        changeRepetition();
+        document.getElementsByName('frequency')[0].value = frequency;
+        document.getElementsByName('unit')[0].value = period;
+    }
+    else {
+        document.getElementsByName('frequency')[0].value = 1;
+        document.getElementsByName('unit')[0].value = 1;
+    }
+
+    if (description === '') {
+        openAction();
+    }
+    else {
+        openDescription();
+    }
+}
+
+function renderPeriod(frequency, period) {
+    console.log(frequency);
+    console.log(period);
+    document.getElementsByName('frequency')[0].value = frequency;
+    document.getElementsByName('unit')[0].value = period;
 }
 
 function openSubtasks() {
@@ -395,15 +449,17 @@ function openAction() {
         element = document.getElementsByName('date')[0];
         let date = new Date();
         let month = date.getMonth() + 1;
-        if (month < 9){
+        if (month < 9) {
             month = '0' + month;
         }
         let day = date.getDate();
-        if (day < 10){
+        if (day < 10) {
             day = '0' + day;
         }
         date = date.getFullYear() + "-" + month + "-" + day;
         element.setAttribute('min', `${date}`);
+
+        changeRepetition();
     } catch (error) { }
 }
 
@@ -412,15 +468,15 @@ function addSubtasks() {
     element.setAttribute('style', 'display: none;');
 }
 
-function changeRepetition () {
+function changeRepetition() {
     let radios = document.getElementsByClassName('radio');
-    for (var i = 0; i < radios.length; i++){
-        if (radios[i].checked === true && i === 0){
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked === true && i === 0) {
             let element = document.getElementsByClassName('select__block')[0];
             element.setAttribute('style', 'display: flex;');
             break;
         }
-        else{
+        else {
             let element = document.getElementsByClassName('select__block')[0];
             element.setAttribute('style', 'display: none;');
         }
@@ -444,22 +500,29 @@ async function updateTask() {
     // дата
     let date = document.getElementsByName('date')[0];
     flag = await checkValidation(date);
+    date = document.getElementsByName('date')[0].value ?
+        document.getElementsByName('date')[0].value : null;
 
     // время
-    let time = document.getElementsByName('time')[0].value ? 
+    let time = document.getElementsByName('time')[0].value ?
         document.getElementsByName('time')[0].value : null;
+
+    // если время задано, а дата нет, то она будет установлена на сегодня
+    if (time !== null && date === null) {
+        let now = new Date();
+        date = now.getFullYear() + '-' +
+            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+    }
 
     // повторяется ли задача и если да то когда
     let frequency = null;
     let period = document.getElementsByName('repetition')[0].checked ?
         (frequency = document.getElementsByName('frequency')[0].value,
-        document.getElementsByName('unit')[0].value) : null;
+            document.getElementsByName('unit')[0].value) : null;
 
     // если все ок, сохраняем
     if (flag) {
-        removeValidation(); // удаление ошибочного выделения
-        // обновление данных локально
-        taskList.list.localUpdateTask(id, title, description, date.value, time);
+        removeValidation(); // удаление ошибочного выделения;
 
         // формируем набор для проверки периодичности задачи
         let data = JSON.stringify({
@@ -473,7 +536,8 @@ async function updateTask() {
         period = await fetchData.getElements(data);
         period = period[0] ? period[0].id : null;
 
-        // возможно нужна задержка
+        // обновление данных локально
+        taskList.list.localUpdateTask(id, title, description, date, time, period);
 
         // формируем набор для отправки на сервер
         data = JSON.stringify({
@@ -482,7 +546,7 @@ async function updateTask() {
             'id': Number.parseInt(id),
             'title': title,
             'description': description,
-            'date': date.value,
+            'date': date,
             'time': time,
             'period': period
         });
@@ -495,6 +559,11 @@ async function updateTask() {
 // проверка валидности
 async function checkValidation(element) {
     let flag = true; // отвечает за валидность изменённых данных
+
+    // если дата не задана
+    if (element.value === '') {
+        return flag;
+    }
 
     let now = new Date();
     let year = now.getFullYear();
@@ -521,16 +590,16 @@ async function checkValidation(element) {
 }
 
 // выполнение задачи в базе
-async function taskReady() {    
+async function taskReady() {
     let id = getTask();
 
     let date = new Date();
     let month = date.getMonth() + 1;
-    if (month < 9){
+    if (month < 9) {
         month = '0' + month;
     }
     let day = date.getDate();
-    if (day < 10){
+    if (day < 10) {
         day = '0' + day;
     }
     date = date.getFullYear() + "-" + month + "-" + day;
@@ -573,7 +642,7 @@ function deleteTask() {
 
 // сброс даты и времени
 function clearElement(name) {
-    document.getElementsByName(name)[0].value=null;
+    document.getElementsByName(name)[0].value = null;
 }
 
 function getTask() {
