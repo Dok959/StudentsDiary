@@ -12,12 +12,20 @@ async function buildingQueryForDB(args) {
         if (request[0] === undefined) { // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (`;
 
-            if (args.table === 'USERS') { // геренация id пользователя
+            if (args.table === 'USERS' || args.table === 'TASKS') { // геренация id пользователя
                 query += 'DEFAULT, ';
             };
 
             for (let element in args) { // формирование запроса
-                if (element !== 'code' && element !== 'table' && element !== 'id') {
+                if (element === 'id_project' || element === 'date' || element === 'time' || element === 'period') { 
+                    if (args[element] === null) {
+                        query += `DEFAULT, `;
+                    }
+                    else {
+                        query += `'${args[element]}', `;
+                    }
+                }
+                else if (element !== 'code' && element !== 'table' && element !== 'id') {
                     query += `'${args[element]}', `;
                 };
             };
@@ -50,7 +58,8 @@ async function buildingQueryForDB(args) {
                 return await buildingQueryForDB(args);
             };
 
-            return result.el = undefined;
+            result.el = undefined;
+            return result;
         }
         else {
             // если запись об активности уже есть

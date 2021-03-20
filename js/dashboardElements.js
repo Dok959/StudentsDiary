@@ -480,21 +480,18 @@ function changeRepetition() {
 
 // обновление в базе
 async function updateTask() {
-    let flag = true; // отвечает за валидность изменённых данных
+    let availabilityTitle = true; // флаг проверки названия
     let id = getTask();
 
     let title = document.getElementsByName('title')[0];
     // проверка на пустоту
-    checkLength(title) ? title = title.value : flag = false;
+    checkLength(title) ? title = title.value : availabilityTitle = false;
 
     let description = document.getElementsByName('description')[0].value;
-    if (description === null) {
-        description = null;
-    }
 
     // дата
     let date = document.getElementsByName('date')[0];
-    flag = await checkValidation(date);
+    let availabilityDate = await checkValidation(date); // флаг проверки даты
     date = document.getElementsByName('date')[0].value ?
         document.getElementsByName('date')[0].value : null;
 
@@ -532,7 +529,7 @@ async function updateTask() {
     }
 
     // если все ок, сохраняем
-    if (flag) {
+    if (availabilityTitle && availabilityDate) {
         removeValidation(); // удаление ошибочного выделения;
 
         // формируем набор для проверки периодичности задачи
@@ -670,6 +667,226 @@ function clearElement(name) {
 function getTask() {
     let task = document.forms[0].name;
     return task;
+}
+
+async function createTask() {
+    $('.element__info').remove();
+    let node = `
+        <div class="element__info" id="task">
+            <form class="element__task" name="" method="get">
+
+                <div class="element__info__block">
+                    <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100></textarea>
+                </div>
+
+                <div class="element__btn">
+                    <a type="submit" id="readyElement" href="javascript:readyCreateTask()">
+                        <span>Создать</span>
+                    </a>
+                    <a type="submit" id="deleteElement" href="javascript:cancelCreateTask()">
+                        <span>Удалить</span>
+                    </a>
+                </div>
+
+                <div class="element__info__more">
+                    <nav class="element__menu">
+                        <a class="link__element tab" id="close" href="javascript:openSubtasks()">
+                            <span class="link__description link_tab">
+                                Подзадачи
+                            </span>
+                        </a>
+
+                        <a class="link__element tab" href="javascript:openDescription()">
+                            <span class="link__description link_tab">
+                                Описание
+                            </span>
+                        </a>
+
+                        <a class="link__element tab" href="javascript:openAction()">
+                            <span class="link__description link_tab">
+                                Действия
+                            </span>
+                        </a>
+                    </nav>
+
+                    <div class="element__bord">
+                        <div class="element__info__block" id="subtasks">
+                            <div class="block__subtasks">
+                                <a class="add__subtasks" href="javascript:addSubtasks()">
+                                    <img class="link__element__img" src="/img/pac1/add_subtasks.png" alt="Укажите действия">
+                                    <span class="add__subtasks__text">Укажите действия</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="element__info__block" id="description">
+                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
+                        </div>
+
+                        <div class="element__info__block" id="action">
+                            <div class="date">
+                                <label class="date__title">Укажите срок выполнения задачи</label>
+                                <div class="date__and__time__block">
+                                    <div class="date__and__time">
+                                        <a href="javascript:clearElement('date')" class="clear date__clear"></a>
+                                        <input class="datetime-local" type="date" name="date" value="">
+                                    </div>
+                                    <div class="date__and__time">
+                                        <a href="javascript:clearElement('time')" class="clear time__clear"></a>
+                                        <input class="datetime-local time" type="time" name="time" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="repetition">
+                                <div class="repetition__block">
+                                    <label>Будет ли повторение задачи</label>
+                                    <div class="repetition__elements">
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
+                                            <label>Да</label>
+                                        </div>
+                                        <div class="repetition__element">
+                                            <input class="radio" type="radio" name="repetition" value="no" checked onchange="javascript:changeRepetition()">
+                                            <label>Нет</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="select__block">
+                                    <select name="frequency">
+                                        <option value="1">Каждый</option>
+                                        <option value="2">Через</option>
+                                    </select>
+
+                                    <select name="unit">
+                                        <option value="1">День</option>
+                                        <option value="2">Неделю</option>
+                                        <option value="3">Месяц</option>
+                                        <option value="4">Год</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="priority__block">
+                                <label>Укажите приоритет задачи</label>
+                                <select name="priority" class="priority__select__block">
+                                    <option value="1">Высший</option>
+                                    <option value="2">Средний</option>
+                                    <option value="3">Низкий</option>
+                                    <option value="4" selected>Нет</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>`
+
+    $('.bord').append(node);
+
+    openAction();
+}
+
+async function readyCreateTask() {
+    let availabilityTitle = true; // флаг проверки названия
+
+    let title = document.getElementsByName('title')[0];
+    // проверка на пустоту
+    checkLength(title) ? title = title.value : availabilityTitle = false;
+
+    let description = document.getElementsByName('description')[0].value;
+
+    // дата
+    let date = document.getElementsByName('date')[0];
+    let availabilityDate = await checkValidation(date); // флаг проверки даты
+    date = document.getElementsByName('date')[0].value ?
+        document.getElementsByName('date')[0].value : null;
+
+    // время
+    let time = document.getElementsByName('time')[0].value ?
+        document.getElementsByName('time')[0].value : null;
+
+    // если время задано, а дата нет, то она будет установлена на сегодня
+    if (time !== null && date === null) {
+        let now = new Date();
+        date = now.getFullYear() + '-' +
+            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+    }
+
+    // повторяется ли задача и если да то когда
+    let frequency = null;
+    let period = null;
+    let radios = document.getElementsByClassName('radio');
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked === true && i === 0) { // если установлено повторение
+            if (date === null && document.getElementsByName('unit')[0].value !== null) {
+                console.log('+');
+                frequency = document.getElementsByName('frequency')[0].value;
+                let now = new Date();
+                date = now.getFullYear() + '-' +
+                    ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+                period = document.getElementsByName('unit')[0].value;
+            }
+            else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
+                console.log('-');
+                frequency = document.getElementsByName('frequency')[0].value;
+                period = document.getElementsByName('unit')[0].value;
+            }
+        }
+    }
+
+    // если все ок, сохраняем
+    if (availabilityTitle && availabilityDate) {
+        removeValidation(); // удаление ошибочного выделения;
+
+        // формируем набор для проверки периодичности задачи
+        let data = JSON.stringify({
+            'code': 4,
+            'table': 'REPETITION',
+            'frequency': frequency,
+            'period': period,
+        });
+
+        let fetchData = new FetchData();
+        period = await fetchData.getElements(data);
+        period = period[0] ? period[0].id : null;
+
+        // формируем набор для отправки на сервер
+        data = JSON.stringify({
+            'code': 1,
+            'table': 'TASKS',
+            'id_owner': cookie,
+            'id_project': null,
+            'title': title,
+            'description': description,
+            'date': date,
+            'time': time,
+            'period': period
+        });
+
+        console.log(data)
+
+        fetchData = new FetchData();
+        await fetchData.getElements(data);
+
+        let now = new Date();
+        now = now.getFullYear() + '-' +
+            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+        if (date === null) {
+            inbox();
+        }
+        else if (date === now) {
+            today();
+        }
+        else if (date >= now) {
+            upcoming();
+        }
+    }
+}
+
+function cancelCreateTask() {
+    $('.element__info').remove();
 }
 
 const taskList = new Bord({
