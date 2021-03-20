@@ -12,23 +12,24 @@ async function buildingQueryForDB(args) {
         if (request[0] === undefined) { // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (`;
 
-            if (args.table === 'USERS') {
-                query += 'DEFAULT, '
-            }
+            if (args.table === 'USERS') { // геренация id пользователя
+                query += 'DEFAULT, ';
+            };
 
-            for (let element in args) {
+            for (let element in args) { // формирование запроса
                 if (element !== 'code' && element !== 'table' && element !== 'id') {
                     query += `'${args[element]}', `;
                 };
             };
 
-            if (args.table === 'HISTORY') {
-                query += 'DEFAULT, '
-            }
+            if (args.table === 'HISTORY') { // геренация количества выполненных задач
+                query += 'DEFAULT, ';
+            };
 
             query = query.substring(0, query.length - 2);
             query += ');';
 
+            console.log('Запрос на добавление: ' + query);
             // выполняем запрос к базе и обрабатываем результат
             await pool.execute(query);
 
@@ -42,14 +43,21 @@ async function buildingQueryForDB(args) {
 
                 return buildingQueryForDB(args);
             }
+            // если создалась запись об активности, то происходит проверка повторяемости задачи
+            else if (args.table === 'HISTORY') {
+                args.code = 3;
+                args.table = 'TASKS';
+                return await buildingQueryForDB(args);
+            };
 
             return result.el = undefined;
         }
-        else { // если запись уже есть
+        else {
+            // если запись об активности уже есть
             if (args.table === 'HISTORY') {
                 args.count = request[0].count + 1;
                 args.code = 2;
-                return buildingQueryForDB(args);
+                return await buildingQueryForDB(args);
             }
             return request;
         };
@@ -72,7 +80,7 @@ async function buildingQueryForDB(args) {
                 }
                 else {
                     query += `${element} = '${iSValue}', `;
-                }
+                };
             };
         };
 
@@ -83,31 +91,88 @@ async function buildingQueryForDB(args) {
         }
         else {
             query += ` WHERE id = '${args.id}';`;
-        }
-
-        console.log(query)
-
+        };
+        console.log('Запрос на обновление: ' + query);
         request = await pool.execute(query);
 
-        if (args.table === 'HISTORY') {
+        if (args.table === 'HISTORY') { // проверка периодчиности и удаление выполненной задачи
             delete args.count;
+            delete args.date;
             args.code = 3;
             args.table = 'TASKS';
 
-            return buildingQueryForDB(args);
-        }
+            return await buildingQueryForDB(args);
+        };
 
         result.el = undefined;
         return result;
     }
     else if (args.code === 3) {
 
+        // проверка повторимости задач
         if (args.table === 'TASKS') {
-            console.log(args);
+            args.code = 4;
+            result = await buildingQueryForDB(args);
 
-            return result.el = undefined;
-            // не доделано
-        }
+            // если повторяется задача
+            if (result[0].period !== null) {
+                args.code = 4;
+                args.table = 'REPETITION';
+                let task_id = args.id;
+                let id_owner = args.id_owner;
+                let date = new Date(result[0].date);
+                delete args.id_owner;
+                args.id = result[0].period;
+
+                result = await buildingQueryForDB(args);
+
+                // определяем периодичность
+                if (result[0].period !== null) {
+                    let frequency = result[0].frequency;
+                    let period = result[0].period;
+
+                    // увеличение даты
+                    if (frequency === 2 && period === 1) {
+                        date.setDate(date.getDate() + 2);
+                    }
+                    else {
+                        if (period === 1) {
+                            date.setDate(date.getDate() + 1);
+                        }
+                        else if (period === 2) {
+                            date.setDate(date.getDate() + 7);
+                        }
+                        else if (period === 3) {
+                            date.setMonth(date.getMonth() + 1);
+                        }
+                        else if (period === 4) {
+                            date.setFullYear(date.getFullYear() + 1);
+                        };
+                    };
+
+                    // определение новой даты
+                    let year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    if (month < 9) {
+                        month = '0' + month;
+                    }
+                    let day = date.getDate();
+                    if (day < 10) {
+                        day = '0' + day;
+                    }
+                    date = year + '-' + month + '-' + day;
+
+                    args.code = 2;
+                    args.table = 'TASKS';
+                    args.id = task_id;
+                    args.id_owner = id_owner;
+                    args.date = date;
+
+                    // обновление задачи, так она повторяется
+                    return await buildingQueryForDB(args);
+                }
+            };
+        };
 
         query = `DELETE FROM ${args.table} WHERE `;
 
@@ -124,7 +189,7 @@ async function buildingQueryForDB(args) {
         };
         query = query.substring(0, query.length - 5);
         query += ';';
-        console.log(query)
+        console.log('Запрос на удаление: ' + query);
 
         request = await pool.execute(query);
 
@@ -174,6 +239,7 @@ async function buildingQueryForDB(args) {
         };
         query = query.substr(0, query.length - 4);
         query += ';';
+        console.log('Запрос на поиск: ' + query);
 
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));

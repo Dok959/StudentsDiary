@@ -73,26 +73,21 @@ class Bord {
                     + '.' + (month < 9 ? '0' + (month + 1) : month + 1)
                     + '.' + year;
 
+                // выделение просроченных задач
                 let now = new Date();
-                if (year >= now.getFullYear()) {
-                    if (month >= now.getMonth()) {
+                if (year <= now.getFullYear()) {
+                    if (month <= now.getMonth()) {
                         if (day < now.getDate()) {
                             expired = 'expired';
                         }
                     }
-                    else {
-                        expired = 'expired';
-                    }
-                }
-                else {
-                    expired = 'expired';
                 }
             }
 
             let node = `<li>
                             <article class="task ${expired}">
                                 <div class="row">
-                                    <a class="task__ready" href="#">
+                                    <a class="task__ready" href="javascript:taskReady(${element.id})">
                                         <img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">
                                     </a>
                                     <div class="task__wrapper">
@@ -169,10 +164,10 @@ class Tasks {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
                 }
-                else if (day == date.slice(8, 10) && $(".today").is(':visible')) {
-                    //$('.element__info').remove();
-                    // !!! БАГ; не удаётся перерисовать дату без закрытия окна
-                }
+                // !!! БАГ; не удаётся перерисовать дату без закрытия окна
+                // else if (day == date.slice(8, 10) && $(".today").is(':visible')) {
+                //$('.element__info').remove();
+                // }
             }
         }
 
@@ -516,9 +511,25 @@ async function updateTask() {
 
     // повторяется ли задача и если да то когда
     let frequency = null;
-    let period = document.getElementsByName('repetition')[0].checked ?
-        (frequency = document.getElementsByName('frequency')[0].value,
-            document.getElementsByName('unit')[0].value) : null;
+    let period = null;
+    let radios = document.getElementsByClassName('radio');
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked === true && i === 0) { // если установлено повторение
+            if (date === null && document.getElementsByName('unit')[0].value !== null) {
+                console.log('+');
+                frequency = document.getElementsByName('frequency')[0].value;
+                let now = new Date();
+                date = now.getFullYear() + '-' +
+                    ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+                period = document.getElementsByName('unit')[0].value;
+            }
+            else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
+                console.log('-');
+                frequency = document.getElementsByName('frequency')[0].value;
+                period = document.getElementsByName('unit')[0].value;
+            }
+        }
+    }
 
     // если все ок, сохраняем
     if (flag) {
@@ -590,8 +601,8 @@ async function checkValidation(element) {
 }
 
 // выполнение задачи в базе
-async function taskReady() {
-    let id = getTask();
+async function taskReady(id_task = null) {
+    let id = id_task ? id_task : getTask();
 
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -604,9 +615,16 @@ async function taskReady() {
     }
     date = date.getFullYear() + "-" + month + "-" + day;
 
-    // удаление задачи локально
-    taskList.list.localDeleteTask(id);
-    $('.element__info').remove();
+    if ($(".upcoming").is(':hidden')) {
+        // удаление задачи локально
+        taskList.list.localDeleteTask(id);
+        $('.element__info').remove();
+    }
+    else {
+        // обновление задачи локально
+        // taskList.list.localUpdateTask(id);
+        $('.element__info').remove();
+    }
 
     // формируем набор для отправки на сервер
     let data = JSON.stringify({
@@ -619,6 +637,10 @@ async function taskReady() {
 
     let fetchData = new FetchData();
     fetchData.getElements(data);
+
+    if ($(".upcoming").is(':visible')) {
+        upcoming();
+    }
 }
 
 

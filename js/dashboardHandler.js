@@ -78,12 +78,20 @@ function upcoming() {
     $(".upcoming").show();
 
     // формируем набор данных
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const startDate = year + '-' + month + '-' + (day + 1);
-    const endDate = year + '-' + month + '-' + (day + 6);
+    let now = new Date();
+    now.setDate(now.getDate() + 1);
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
+    // определение начальной даты
+    const startDate = year + '-' + month + '-' + day;
+
+    // определение конечной даты
+    now.setDate(now.getDate() + 6);
+    year = now.getFullYear();
+    month = now.getMonth() + 1;
+    day = now.getDate();
+    const endDate = year + '-' + month + '-' + day;
 
     const data = JSON.stringify({
         'code': 4,
