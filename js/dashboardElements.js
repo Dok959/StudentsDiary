@@ -49,7 +49,24 @@ class Bord {
     }
 
     renderTasks(tasks) {
+        let dateDay = null;
         tasks.forEach((element) => {
+
+            // формируем и выводим разделитель на будущие даты
+            if ($(".upcoming").is(':visible')) {
+                if (dateDay === null || dateDay !== element.date){
+                    dateDay = new Date(element.date);
+                    let day = dateDay.getDate();
+                    let month = dateDay.getMonth() + 1;
+                    month = month > 10 ? month : '0' + month;
+                    let year = dateDay.getFullYear();
+                    let node = `<li>
+                        <span><h3>Планы на ${day}.${month}.${year}</h3></span>
+                    </li>`;
+
+                    $('.bord__list').append(node);
+                }
+            }
 
             let title = element.title;
             if (title && title.length > 70) {
@@ -513,7 +530,6 @@ async function updateTask() {
     for (var i = 0; i < radios.length; i++) {
         if (radios[i].checked === true && i === 0) { // если установлено повторение
             if (date === null && document.getElementsByName('unit')[0].value !== null) {
-                console.log('+');
                 frequency = document.getElementsByName('frequency')[0].value;
                 let now = new Date();
                 date = now.getFullYear() + '-' +
@@ -521,7 +537,6 @@ async function updateTask() {
                 period = document.getElementsByName('unit')[0].value;
             }
             else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
-                console.log('-');
                 frequency = document.getElementsByName('frequency')[0].value;
                 period = document.getElementsByName('unit')[0].value;
             }
@@ -684,7 +699,7 @@ async function createTask() {
                         <span>Создать</span>
                     </a>
                     <a type="submit" id="deleteElement" href="javascript:cancelCreateTask()">
-                        <span>Удалить</span>
+                        <span>Отмена</span>
                     </a>
                 </div>
 

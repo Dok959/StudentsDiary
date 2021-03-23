@@ -247,6 +247,10 @@ async function buildingQueryForDB(args) {
             query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
         };
         query = query.substr(0, query.length - 4);
+        // сортировка по возрастанию дат
+        if (args.table === 'TASKS' && (args.date !== null || args.startDate !== undefined)) {
+            query += ' ORDER BY date'
+        }
         query += ';';
         console.log('Запрос на поиск: ' + query);
 

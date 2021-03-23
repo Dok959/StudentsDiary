@@ -31,51 +31,60 @@
             </div>
 
             <nav class="menu">
-                <div class="menu__element__title">
-                    <img class="link__img__title" src="/img/pac1/tasks.png" alt="Задачи">
-                    <span class="title__description">
-                        ЗАДАЧИ
-                    </span>
+                <div class="block__elements">
+                    <div class="block__tasks">
+                        <div class="menu__element__title">
+                            <img class="link__img__title" src="/img/pac1/tasks.png" alt="Задачи">
+                            <span class="title__description">
+                                ЗАДАЧИ
+                            </span>
 
-                    <a class="" href="javascript:createTask()">
-                        <img style="width: 20px;" src="/img/pac1/add_subtasks.png" alt="Создать задачу">
-                    </a>
+                            <a class="link__add__element" href="javascript:createTask()">
+                                <img class="img__add__element" src="/img/pac1/add_subtasks.png" alt="Создать задачу">
+                            </a>
+                        </div>
+
+                        <div class="menu__element">
+                            <a class="link__element" href="javascript:inbox()">
+                                <img class="link__img" src="/img/pac1/inbox.png" alt="Входящие">
+                                <span class="link__description">
+                                    Входящие
+                                </span>
+                            </a>
+                        </div>
+
+                        <div class="menu__element">
+                            <a class="link__element" href="javascript:today()">
+                                <img class="link__img" src="/img/pac1/today.png" alt="Сегодня">
+                                <span class="link__description">
+                                    Сегодня
+                                </span>
+                            </a>
+                        </div>
+
+                        <div class="menu__element">
+                            <a class="link__element" href="javascript:upcoming()">
+                                <img class="link__img" src="/img/pac1/calendar.png" alt="Планируемые">
+                                <span class="link__description">
+                                    Предстоящие
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="block__projects">
+                        <div class="menu__element__title">
+                            <img class="link__img__title" src="/img/pac1/projects.png" alt="Проекты">
+                            <span class="title__description">
+                                ПРОЕКТЫ
+                            </span>
+
+                            <a class="link__add__element" href="#">
+                                <img class="img__add__element" src="/img/pac1/add_subtasks.png" alt="Создать проект">
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="menu__element">
-                    <a class="link__element" href="javascript:inbox()">
-                        <img class="link__img" src="/img/pac1/inbox.png" alt="Входящие">
-                        <span class="link__description">
-                            Входящие
-                        </span>
-                    </a>
-                </div>
-
-                <div class="menu__element">
-                    <a class="link__element" href="javascript:today()">
-                        <img class="link__img" src="/img/pac1/today.png" alt="Сегодня">
-                        <span class="link__description">
-                            Сегодня
-                        </span>
-                    </a>
-                </div>
-
-                <div class="menu__element">
-                    <a class="link__element" href="javascript:upcoming()">
-                        <img class="link__img" src="/img/pac1/calendar.png" alt="Планируемые">
-                        <span class="link__description">
-                            Предстоящие
-                        </span>
-                    </a>
-                </div>
-
-                <div class="menu__element__title">
-                    <img class="link__img__title" src="/img/pac1/projects.png" alt="Проекты">
-                    <span class="title__description">
-                        ПРОЕКТЫ
-                    </span>
-                </div>
-
 
                 <div class="bottom__menu__element">
                     <a class="link__element" href="./personPage.html">
@@ -97,7 +106,7 @@
                 <h2 class="upcoming">Предстоящие</h2>
             </div>
 
-            <div class="element__info">
+            {{!-- <div class="element__info">
                 <form class="element__task" name="id_task" method="get">
 
                     <div class="element__info__block" id="title">
@@ -211,7 +220,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> --}}
 
             <section class="bord__tasks">
                 <ul class="bord__list">
@@ -220,15 +229,10 @@
             </section>
         </div>
 
-        {{!-- <time class="task-author__add task__date">11 января</time> --}}
-        {{!-- <div class="task-post">
-            <p class="task-post__text">Сообщение Марии Lorem ipsum dolor sit amet, consectetur.</p>
-            <figure class="task-post__image">
-                <img src="#" alt="Сообщение Марии Lorem ipsum dolor sit amet, consectetur.">
-            </figure>
-        </div> --}}
+        <a class="link__add__element big" href="#">
+            <img class="img__add__element big" src="/img/pac1/add_subtasks.png" alt="Создать элемент">
+        </a>
 
-        {{!-- {{> menu}} --}}
     </div>
 </body>
 

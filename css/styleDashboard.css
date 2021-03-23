@@ -142,6 +142,26 @@ h2{
     border-color: #C10FB3;
 }
 
+.link__add__element{
+    height: min-content;
+    display: flex;
+    align-items: center;
+}
+
+.img__add__element{
+    width: 21px;
+}
+
+.link__add__element.big{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.img__add__element.big{
+    width: 30px;
+}
+
 .bord{
     display:inline-block;
     height: 100%;
@@ -855,7 +875,15 @@ select{
         padding-left: 5px;
         font-size: 16px;
     }
-    
+
+    .link__add__element{
+        display: none;
+    }
+
+    .link__add__element.big{
+        display: block;
+    }
+
     .bord{
         margin: 0;
     }
@@ -929,6 +957,26 @@ select{
     .menu{
         /* display: flex; */
         display: none;
+    }
+
+    .block__elements{
+        display: flex;
+    }
+
+    .block__tasks, .block__projects{
+        width: 50%;
+    }
+
+    .link__img{
+        display: none;
+    }
+
+    .link__add__element{
+        display: flex;
+    }
+
+    .menu__element__title{
+        display: flex;
     }
 
     .bottom__menu__element{
