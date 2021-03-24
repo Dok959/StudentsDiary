@@ -78,3 +78,7 @@ input{
     font-family: 'Roboto';
     font-weight: 300;
 }
+
+textarea{
+	font-family: 'Roboto', sans-serif;
+}

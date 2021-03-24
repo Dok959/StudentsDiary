@@ -18,23 +18,18 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tasks`
+-- Table structure for table `universities`
 --
 
-DROP TABLE IF EXISTS `tasks`;
+DROP TABLE IF EXISTS `universities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tasks` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
-  `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
-  `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
-  `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
-  `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
+CREATE TABLE `universities` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ университета',
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Название университета',
+  `address` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Адрес сайта расписания',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая информацю о вузах и сайтах расписания учебных занятий';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

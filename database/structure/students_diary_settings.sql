@@ -30,6 +30,9 @@ CREATE TABLE `settings` (
   `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
   `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
+  `role` int DEFAULT NULL COMMENT 'Указывает на роль пользователя при формировании учебного расписания',
+  `university` int DEFAULT NULL COMMENT 'Ключ указывающий на принадлежность к конкретному университету',
+  `group` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название группы обучения',
   KEY `id_owner_idx` (`id_owner`),
   CONSTRAINT `id_owner` FOREIGN KEY (`id_owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
@@ -44,4 +47,4 @@ CREATE TABLE `settings` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-18 11:52:10
+-- Dump completed on 2021-03-24 16:34:23

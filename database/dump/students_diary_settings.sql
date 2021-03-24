@@ -30,6 +30,9 @@ CREATE TABLE `settings` (
   `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
   `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
+  `role` int DEFAULT NULL COMMENT 'Указывает на роль пользователя при формировании учебного расписания',
+  `university` int DEFAULT NULL COMMENT 'Ключ указывающий на принадлежность к конкретному университету',
+  `group` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название группы обучения',
   KEY `id_owner_idx` (`id_owner`),
   CONSTRAINT `id_owner` FOREIGN KEY (`id_owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
@@ -41,7 +44,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,NULL,NULL,NULL,'light'),(2,'Doktor',NULL,NULL,'light'),(3,NULL,NULL,NULL,'light');
+INSERT INTO `settings` VALUES (1,NULL,NULL,NULL,'light',1,1,'ДИТ41'),(2,'Doktor',NULL,NULL,'light',NULL,NULL,NULL),(3,NULL,NULL,NULL,'light',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-18 12:16:46
+-- Dump completed on 2021-03-24 16:33:34

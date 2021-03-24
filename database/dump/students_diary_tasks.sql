@@ -34,7 +34,7 @@ CREATE TABLE `tasks` (
   `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
   `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-03-19','14:01:00',6),(3,1,NULL,'Купить хлеб','','2021-03-20','13:15:00',NULL),(4,1,NULL,'апро','вкапрол',NULL,NULL,NULL);
+INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-03-21','14:01:00',7),(3,1,NULL,'Купить хлеб','','2021-03-23','13:15:00',1),(8,1,NULL,'Созданная задача','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-20  9:21:21
+-- Dump completed on 2021-03-24 16:33:33

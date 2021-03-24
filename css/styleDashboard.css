@@ -162,6 +162,44 @@ h2{
     width: 30px;
 }
 
+.block__tasks {
+    margin-bottom: 5px;
+}
+
+.search__block {
+    height: fit-content;
+    margin: 15px auto;
+    text-align: center;
+}
+
+.picker {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.date__picker {
+    width: fit-content;
+    margin: 5px 0;
+}
+
+.search {
+    height: min-content;
+    display: flex;
+    align-items: center;
+}
+
+.img__search{
+    width: 25px;
+}
+
+.search__title {
+    margin: auto;
+    font-size: 16px;
+    font-weight: 400;
+    color: #C10FB3;
+}
+
 .bord{
     display:inline-block;
     height: 100%;
@@ -174,7 +212,7 @@ h2{
     padding: 15px;
 }
 
-.inbox, .upcoming{
+.inbox, .upcoming, .request_search{
     display: none;
 }
 

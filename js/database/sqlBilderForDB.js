@@ -233,6 +233,9 @@ async function buildingQueryForDB(args) {
                         if (args.table === 'HISTORY') {
                             query += ` ${element} = '${iSValue}' and`;
                         }
+                        else if (iSValue.slice(0, 1) === '=') {
+                            query += ` ${element} = '${iSValue.slice(1)}' and`;
+                        }
                         else {
                             query += ` ${element} <= '${iSValue}' and`;
                         }

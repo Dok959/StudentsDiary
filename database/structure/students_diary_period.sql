@@ -30,16 +30,6 @@ CREATE TABLE `period` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `period`
---
-
-LOCK TABLES `period` WRITE;
-/*!40000 ALTER TABLE `period` DISABLE KEYS */;
-INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
-/*!40000 ALTER TABLE `period` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +40,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-18 11:54:06
+-- Dump completed on 2021-03-24 16:34:23
