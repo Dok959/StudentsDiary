@@ -17,7 +17,7 @@ async function buildingQueryForDB(args) {
             };
 
             for (let element in args) { // формирование запроса
-                if (element === 'id_project' || element === 'date' || element === 'time' || element === 'period') { 
+                if (element === 'id_project' || element === 'date' || element === 'time' || element === 'period') {
                     if (args[element] === null) {
                         query += `DEFAULT, `;
                     }

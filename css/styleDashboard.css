@@ -92,10 +92,6 @@ h2{
     align-items: center;
 }
 
-.link__img__title{
-    display: none;
-}
-
 .link__element{
     padding: 0 10px;
     display: flex;
@@ -327,9 +323,7 @@ li{
 }
 
 .element__info{
-    /* display: none;*/ /*ОКЛЮЧИТЬ ПОСЛЕ СОЗДАНИЯ ФОРМЫ ВЫВОДА ЗАДАЧИ */
     position:absolute;
-    /* left: 10%; */
     left: 5%;
     z-index: 1;
     width: 65%;
@@ -360,7 +354,6 @@ li{
     max-width: 100%;
     width: 100%;
     max-height: 60px;
-    /* height: fit-content; */
     resize: none;
     outline: none;
 }
@@ -439,32 +432,6 @@ li{
     display: flex;
 }
 
-.block__subtasks{
-    margin: 0;
-    background: inherit;
-    color: #263849;
-    border: none;
-    max-width: 100%;
-    width: 100%;
-    max-height: 60px;
-    resize: none;
-    outline: none;
-}
-
-.add__subtasks{
-    text-decoration: none;
-    color: #263849;
-    height: 32px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    margin-left: 30px;
-}
-
-.add__subtasks__text{
-    margin-left: 15px;
-}
-
 .description{
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
@@ -473,11 +440,7 @@ li{
     padding: 10px;
 }
 
-#close{
-    display: none;
-}
-
-#subtasks, #description, #action{
+#description, #action{
     display: none;
 }
 
@@ -528,6 +491,7 @@ label {
 .clear:hover {
     opacity: 1;
 }
+
 .clear:before, .clear:after {
     position: absolute;
     left: 15px;
@@ -536,9 +500,11 @@ label {
     width: 2px;
     background-color: #C10FB3;
 }
+
 .clear:before {
     transform: rotate(45deg);
 }
+
 .clear:after {
     transform: rotate(-45deg);
 }
@@ -579,7 +545,6 @@ label {
 }
 
 .select__block{
-    /* display: flex; */
     justify-content: space-around;
     margin: 5px;
     display: none;
@@ -985,15 +950,14 @@ select{
     }
 
     .menu-burger__header {
-        position: relative; /* задаем относительное позиционирование */
-        width: 40px; /* определяем размеры блока */
+        position: relative;
+        width: 40px;
         height: 20px;
         display: block;
         margin-left: 10px;
     }
 
     .menu{
-        /* display: flex; */
         display: none;
     }
 

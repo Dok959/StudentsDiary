@@ -54,7 +54,7 @@ class Bord {
 
             // формируем и выводим разделитель на будущие даты
             if ($(".upcoming").is(':visible')) {
-                if (dateDay === null || dateDay !== element.date){
+                if (dateDay === null || dateDay !== element.date) {
                     dateDay = new Date(element.date);
                     let day = dateDay.getDate();
                     let month = dateDay.getMonth() + 1;
@@ -105,7 +105,7 @@ class Bord {
                             <article class="task ${expired}">
                                 <div class="row">
                                     <a class="task__ready" href="javascript:taskReady(${element.id})">
-                                        <img class="link__element__img" src="/img/pac1/ready1.png" alt="Выполнено">
+                                        <img class="link__element__img" src="/img/ready1.png" alt="Выполнено">
                                     </a>
                                     <div class="task__wrapper">
                                         <a class="link__task" href="javascript:openTask(${element.id})">
@@ -122,7 +122,7 @@ class Bord {
                                             ${date ? date : ''}
                                         </time>
                                         <a class="task__more" href="#">
-                                            <img class="link__element__img" src="/img/pac1/more1.svg" alt="Дополнительно">
+                                            <img class="link__element__img" src="/img/more1.svg" alt="Дополнительно">
                                         </a>
                                     </div>
                                 </div>
@@ -307,12 +307,6 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
 
                 <div class="element__info__more">
                     <nav class="element__menu">
-                        <a class="link__element tab" id="close" href="javascript:openSubtasks()">
-                            <span class="link__description link_tab">
-                                Подзадачи
-                            </span>
-                        </a>
-
                         <a class="link__element tab" href="javascript:openDescription()">
                             <span class="link__description link_tab">
                                 Описание
@@ -327,15 +321,6 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
                     </nav>
 
                     <div class="element__bord">
-                        <div class="element__info__block" id="subtasks">
-                            <div class="block__subtasks">
-                                <a class="add__subtasks" href="javascript:addSubtasks()">
-                                    <img class="link__element__img" src="/img/pac1/add_subtasks.png" alt="Укажите действия">
-                                    <span class="add__subtasks__text">Укажите действия</span>
-                                </a>
-                            </div>
-                        </div>
-
                         <div class="element__info__block" id="description">
                             <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${description ? description : ''}</textarea>
                         </div>
@@ -427,17 +412,6 @@ function renderPeriod(frequency, period) {
     document.getElementsByName('unit')[0].value = period;
 }
 
-function openSubtasks() {
-    try {
-        let element = document.getElementById('description');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('action');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('subtasks');
-        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
-    } catch (error) { }
-}
-
 function openDescription() {
     try {
         let element = document.getElementById('subtasks');
@@ -473,11 +447,6 @@ function openAction() {
 
         changeRepetition();
     } catch (error) { }
-}
-
-function addSubtasks() {
-    let element = document.getElementsByClassName('add__subtasks');
-    element.setAttribute('style', 'display: none;');
 }
 
 function changeRepetition() {
@@ -579,39 +548,6 @@ async function updateTask() {
     }
 }
 
-// проверка валидности
-async function checkValidation(element) {
-    let flag = true; // отвечает за валидность изменённых данных
-
-    // если дата не задана
-    if (element.value === '') {
-        return flag;
-    }
-
-    let now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-    let day = now.getDate();
-    if (year <= Number.parseInt(element.value.slice(0, 4))) {
-        if (month <= Number.parseInt(element.value.slice(5, 7))) {
-            if (day > Number.parseInt(element.value.slice(8, 10))) {
-                flag = false;
-                generateError(element);
-            }
-        }
-        else {
-            flag = false;
-            generateError(element);
-        }
-    }
-    else {
-        flag = false;
-        generateError(element);
-    }
-
-    return flag;
-}
-
 // выполнение задачи в базе
 async function taskReady(id_task = null) {
     let id = id_task ? id_task : getTask();
@@ -633,8 +569,6 @@ async function taskReady(id_task = null) {
         $('.element__info').remove();
     }
     else {
-        // обновление задачи локально
-        // taskList.list.localUpdateTask(id);
         $('.element__info').remove();
     }
 
@@ -654,7 +588,6 @@ async function taskReady(id_task = null) {
         upcoming();
     }
 }
-
 
 function deleteTask() {
     let id = getTask();
@@ -705,12 +638,6 @@ async function createTask() {
 
                 <div class="element__info__more">
                     <nav class="element__menu">
-                        <a class="link__element tab" id="close" href="javascript:openSubtasks()">
-                            <span class="link__description link_tab">
-                                Подзадачи
-                            </span>
-                        </a>
-
                         <a class="link__element tab" href="javascript:openDescription()">
                             <span class="link__description link_tab">
                                 Описание
@@ -725,15 +652,6 @@ async function createTask() {
                     </nav>
 
                     <div class="element__bord">
-                        <div class="element__info__block" id="subtasks">
-                            <div class="block__subtasks">
-                                <a class="add__subtasks" href="javascript:addSubtasks()">
-                                    <img class="link__element__img" src="/img/pac1/add_subtasks.png" alt="Укажите действия">
-                                    <span class="add__subtasks__text">Укажите действия</span>
-                                </a>
-                            </div>
-                        </div>
-
                         <div class="element__info__block" id="description">
                             <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600></textarea>
                         </div>

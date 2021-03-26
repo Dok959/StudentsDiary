@@ -10,10 +10,7 @@ const router = express.Router();
 // определяем обработчик для ведения лога вызовов сервера
 router.use(function (request, response, next) {
     let now = new Date();
-    let hour = now.getHours();
-    let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
-    let data = `${hour}:${minutes}:${seconds} ${request.method} ${request.url} ${request.get('user-agent')}`;
+    let data = `${now} ${request.method} ${request.url}`;
     fs.appendFile('server.log', data + '\n', function () { });
     next();
 });
