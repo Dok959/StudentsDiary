@@ -625,6 +625,37 @@ select{
     margin-top: 5px;
 }
 
+.search__form{
+    position: absolute;
+    left: 23%;
+    z-index: 1;
+    width: 300px;
+    margin: 0 auto;
+    height: 190px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #000;
+    top: 100px;
+    background: #C3DAF0;
+    display: none;
+}
+
+
+.search__form .title{
+    font-size: 20px;
+    margin: auto;
+    text-align: center;
+    display: block;
+}
+
+.search__form .date__picker{
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 20px;
+    max-width: fit-content;
+}
+
 @media (max-width: 1430px){
     .repetition__element{
         margin-left: 15px;
@@ -1040,6 +1071,10 @@ select{
     .create__form{
         left: 15%;
     }
+
+    .search__form{
+        left: 15%;
+    }
 }
 
 @media (max-width: 425px){
@@ -1151,10 +1186,18 @@ select{
     .create__form{
         left: 10%;
     }
+
+    .search__form{
+        left: 10%;
+    }
 }
 
 @media (max-width: 380px){
     .create__form{
+        left: 3%;
+    }
+
+    .search__form{
         left: 3%;
     }
 }

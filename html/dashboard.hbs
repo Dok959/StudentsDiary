@@ -80,7 +80,7 @@
                                     <img class="img__search" src="/img/search.png" alt="Поиск по дате">
                                 </a>
                             </div>
-                            <a class="search_image" href="#">
+                            <a class="search_image" href="javascript:searchForm()">
                                 <span class="search__title">
                                     Поиск по дате
                                 </span>
@@ -255,6 +255,17 @@
             <a class="create_btn" href="javascript:createTask()"><span>Задача</span></a>
             <a class="create_btn project" href="#"><span>Проект</span></a>
             <a class="create_btn cancel" href="javascript:cancelCreateTask()"><span>Отмена</span></a>
+        </div>
+
+        <div class="search__form">
+            <span class="title">Поиск по дате:</span>
+            <input class="date__picker" type="date">
+            <a class="create_btn project" href="javascript:search()">
+                <span>Поиск</span>
+            </a>
+            <a class="create_btn cancel" href="javascript:cancelCreateTask()">
+                <span>Отмена</span>
+            </a>
         </div>
 
     </div>

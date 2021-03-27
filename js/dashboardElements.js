@@ -617,6 +617,8 @@ async function createTask() {
     $('.element__info').remove();
     let element = document.getElementsByClassName('create__form')[0];
     element.setAttribute('style', 'display: none;');
+    element = document.getElementsByClassName('search__form')[0];
+    element.setAttribute('style', 'display: none;');
 
     let node = `
         <div class="element__info" id="task">
@@ -821,6 +823,9 @@ function cancelCreateTask() {
     $('.element__info').remove();
     let element = document.getElementsByClassName('create__form')[0];
     element.setAttribute('style', 'display: none;');
+    
+    element = document.getElementsByClassName('search__form')[0];
+    element.setAttribute('style', 'display: none;');
 }
 
 const taskList = new Bord({
@@ -837,8 +842,14 @@ document.addEventListener('click', function (event) {
             $('.element__info').remove();
         }
     } catch (error) { }
-    try {        
+    try {
         let node = document.getElementsByClassName('create__form')[0];
+        if (!node.contains(event.target)) {
+            node.setAttribute('style', 'display: none;');
+        }
+    } catch (error) { }
+    try {
+        let node = document.getElementsByClassName('search__form')[0];
         if (!node.contains(event.target)) {
             node.setAttribute('style', 'display: none;');
         }
