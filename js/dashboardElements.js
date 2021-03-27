@@ -105,7 +105,7 @@ class Bord {
                             <article class="task ${expired}">
                                 <div class="row">
                                     <a class="task__ready" href="javascript:taskReady(${element.id})">
-                                        <img class="link__element__img" src="/img/ready1.png" alt="Выполнено">
+                                        <img class="link__element__img" src="/img/ready.png" alt="Выполнено">
                                     </a>
                                     <div class="task__wrapper">
                                         <a class="link__task" href="javascript:openTask(${element.id})">
@@ -414,9 +414,7 @@ function renderPeriod(frequency, period) {
 
 function openDescription() {
     try {
-        let element = document.getElementById('subtasks');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('action');
+        let element = document.getElementById('action');
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('description');
         element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
@@ -425,9 +423,7 @@ function openDescription() {
 
 function openAction() {
     try {
-        let element = document.getElementById('subtasks');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('description');
+        let element = document.getElementById('description');
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('action');
         element.setAttribute('style', 'display: flow-root; margin: 0 auto 10px;');
@@ -619,6 +615,9 @@ function getTask() {
 
 async function createTask() {
     $('.element__info').remove();
+    let element = document.getElementsByClassName('create__form')[0];
+    element.setAttribute('style', 'display: none;');
+
     let node = `
         <div class="element__info" id="task">
             <form class="element__task" name="" method="get">
@@ -820,6 +819,8 @@ async function readyCreateTask() {
 
 function cancelCreateTask() {
     $('.element__info').remove();
+    let element = document.getElementsByClassName('create__form')[0];
+    element.setAttribute('style', 'display: none;');
 }
 
 const taskList = new Bord({
@@ -834,6 +835,12 @@ document.addEventListener('click', function (event) {
         let node = document.getElementById('task');
         if (!node.contains(event.target)) {
             $('.element__info').remove();
+        }
+    } catch (error) { }
+    try {        
+        let node = document.getElementsByClassName('create__form')[0];
+        if (!node.contains(event.target)) {
+            node.setAttribute('style', 'display: none;');
         }
     } catch (error) { }
 });

@@ -143,9 +143,15 @@ async function checkRaspisanie() {
 
         // по полученным данным делаем запрос к сайту
         response = new XMLHttpRequest();
-        await response.open('POST', 'http://' + address_res);
+        await response.open('POST', 'https://' + address_res);
         response.send();
 
+        // переотправка если произошла ошибка
+        response.onerror = async function() {
+            await response.open('POST', 'http://' + address_res);
+            response.send();
+        };
+        
         // парсим ответ
         response.onload = async function () {
             // console.log(response);
@@ -166,7 +172,6 @@ async function checkRaspisanie() {
                 console.log(raspisanie);
             };
         };
-
     } catch (error) {
         return;
     }
@@ -210,6 +215,17 @@ function search() {
 
     taskList.list.clearTasks();
     taskList.getTasks(data);
+}
+
+// Поиск по дате
+function searchForm() {
+    
+}
+
+// Поиск по дате
+function createForm() {
+    let element = document.getElementsByClassName('create__form')[0];
+    element.setAttribute('style', 'display: block;');
 }
 
 // Функция для открытия и закрытия заголовков вкладок

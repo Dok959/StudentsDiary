@@ -80,6 +80,12 @@
                                     <img class="img__search" src="/img/search.png" alt="Поиск по дате">
                                 </a>
                             </div>
+                            <a class="search_image" href="#">
+                                <span class="search__title">
+                                    Поиск по дате
+                                </span>
+                                <img class="img__search" src="/img/search.png" alt="Поиск по дате">
+                            </a>
                         </div>
                     </div>
 
@@ -240,9 +246,16 @@
             </section>
         </div>
 
-        <a class="link__add__element big" href="#">
+        <a class="link__add__element big" href="javascript:createForm()">
             <img class="img__add__element big" src="/img/add.png" alt="Создать элемент">
         </a>
+
+        <div class="create__form">
+            <span class="title">Выберите объект для создания:</span>
+            <a class="create_btn" href="javascript:createTask()"><span>Задача</span></a>
+            <a class="create_btn project" href="#"><span>Проект</span></a>
+            <a class="create_btn cancel" href="javascript:cancelCreateTask()"><span>Отмена</span></a>
+        </div>
 
     </div>
 </body>
