@@ -159,17 +159,51 @@ async function checkRaspisanie() {
                 let result = await response.response;
                 // определяем неделю
                 let week = result.indexOf('ЗНАМЕНАТЕЛЬ');
+                let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
                 if (week === -1) {
-                    week = 'td_style2_ch'
+                    week = 'td_style2_ch';
+                    if (now === 0) {
+                        week = 'td_style2_zn';
+                    }
                 }
                 else {
-                    week = 'td_style2_zn'
+                    week = 'td_style2_zn';
+                    if (now === 0) {
+                        week = 'td_style2_ch';
+                    }
                 };
 
                 // получаем пары на неделю
                 let raspisanie = new DOMParser().parseFromString(result, "text/html")
                     .getElementsByClassName("table_style")[0];
-                console.log(raspisanie);
+
+                let day;
+                for (var i = 2, row; row = raspisanie.rows[i]; i++) {
+                    let para, predmet, teacher, auditoria;
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined) {
+                            para = col.textContent;
+                            para = para.length > 2 ? (day = para, para = undefined) : para;
+                        }
+                        else if (col === row.getElementsByClassName(week)[0]) {
+                            predmet = col.getElementsByClassName('naz_disc')[0];
+                            if (predmet !== undefined) {
+                                predmet = predmet.textContent;
+                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                            }
+                        }
+                    }
+
+                    if (predmet !== undefined) {
+                        console.log(day);
+                        console.log(para);
+                        console.log(predmet);
+                        console.log(teacher);
+                        console.log(auditoria);
+                        console.log("-------------");
+                    }
+                }
             };
         };
     } catch (error) {
