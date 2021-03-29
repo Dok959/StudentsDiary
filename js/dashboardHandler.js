@@ -101,6 +101,9 @@ function upcoming() {
 // Проверка расписания
 async function checkRaspisanie() {
     try {
+        $('.day').remove();
+        $('.day__element').remove();
+
         // определяем является ли пользователь привязанным к университету
         let data = JSON.stringify({
             'code': 4,
@@ -115,97 +118,113 @@ async function checkRaspisanie() {
         let university = result[0].university; // код универа
         let group = result[0].group; // код группы
 
+        // проверка на наличие даннных
+        if (role !== null || university !== null || group !== null) {
+            // если данные указаны то отрисовать область
+            let element = document.getElementsByClassName('block__raspisanie')[0];
+            element.setAttribute('style', 'display: inline-block;');
 
-        // проверяем университет и узнаем первичный путь
-        data = JSON.stringify({
-            'code': 4,
-            'table': 'UNIVERSITIES',
-            'id': university
-        });
+            // проверяем университет и узнаем первичный путь
+            data = JSON.stringify({
+                'code': 4,
+                'table': 'UNIVERSITIES',
+                'id': university
+            });
 
-        result = await performanceQuery(data);
+            result = await performanceQuery(data);
 
-        let address_main = result[0].address; // первичный электронный адрес
-
-
-        // проверяем роль пользователя и формируем остаток пути
-        data = JSON.stringify({
-            'code': 4,
-            'table': 'ROLES',
-            'id': role
-        });
-
-        result = await performanceQuery(data);
-
-        let address = result[0].address; // вторичный электронный адрес
-        let address_res = address_main + address + group; // истоговый путь к сайту расписания
+            let address_main = result[0].address; // первичный электронный адрес
 
 
-        // по полученным данным делаем запрос к сайту
-        response = new XMLHttpRequest();
-        await response.open('POST', 'https://' + address_res);
-        response.send();
+            // проверяем роль пользователя и формируем остаток пути
+            data = JSON.stringify({
+                'code': 4,
+                'table': 'ROLES',
+                'id': role
+            });
 
-        // переотправка если произошла ошибка
-        response.onerror = async function() {
-            await response.open('POST', 'http://' + address_res);
+            result = await performanceQuery(data);
+
+            let address = result[0].address; // вторичный электронный адрес
+            let address_res = address_main + address + group; // истоговый путь к сайту расписания
+
+
+            // по полученным данным делаем запрос к сайту
+            response = new XMLHttpRequest();
+            await response.open('POST', 'https://' + address_res);
             response.send();
-        };
-        
-        // парсим ответ
-        response.onload = async function () {
-            // console.log(response);
-            if (response.status === 200) {
-                let result = await response.response;
-                // определяем неделю
-                let week = result.indexOf('ЗНАМЕНАТЕЛЬ');
-                let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
-                if (week === -1) {
-                    week = 'td_style2_ch';
-                    if (now === 0) {
-                        week = 'td_style2_zn';
-                    }
-                }
-                else {
-                    week = 'td_style2_zn';
-                    if (now === 0) {
+
+            // переотправка если произошла ошибка
+            response.onerror = async function() {
+                await response.open('POST', 'http://' + address_res);
+                response.send();
+            };
+            
+            // парсим ответ
+            response.onload = async function () {
+                // console.log(response);
+                if (response.status === 200) {
+                    let result = await response.response;
+                    // определяем неделю
+                    let week = result.indexOf('ЗНАМЕНАТЕЛЬ');
+                    let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
+                    if (week === -1) {
                         week = 'td_style2_ch';
-                    }
-                };
-
-                // получаем пары на неделю
-                let raspisanie = new DOMParser().parseFromString(result, "text/html")
-                    .getElementsByClassName("table_style")[0];
-
-                let day;
-                for (var i = 2, row; row = raspisanie.rows[i]; i++) {
-                    let para, predmet, teacher, auditoria;
-                    for (var j = 0, col; col = row.cells[j]; j++) {
-                        if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined) {
-                            para = col.textContent;
-                            para = para.length > 2 ? (day = para, para = undefined) : para;
+                        if (now === 0) {
+                            week = 'td_style2_zn';
                         }
-                        else if (col === row.getElementsByClassName(week)[0]) {
-                            predmet = col.getElementsByClassName('naz_disc')[0];
-                            if (predmet !== undefined) {
-                                predmet = predmet.textContent;
-                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                    }
+                    else {
+                        week = 'td_style2_zn';
+                        if (now === 0) {
+                            week = 'td_style2_ch';
+                        }
+                    };
+
+                    // получаем пары на неделю
+                    let raspisanie = new DOMParser().parseFromString(result, "text/html")
+                        .getElementsByClassName("table_style")[0];
+
+                    let day, dayOld;
+                    for (var i = 2, row; row = raspisanie.rows[i]; i++) {
+                        let para, predmet, teacher, auditoria;
+                        for (var j = 0, col; col = row.cells[j]; j++) {
+                            if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined) {
+                                para = col.textContent;
+                                para = para.length > 2 ? (day = para, para = undefined) : para;
+                            }
+                            else if (col === row.getElementsByClassName(week)[0]) {
+                                predmet = col.getElementsByClassName('naz_disc')[0];
+                                if (predmet !== undefined) {
+                                    predmet = predmet.textContent;
+                                    teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                    auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                                }
                             }
                         }
-                    }
 
-                    if (predmet !== undefined) {
-                        console.log(day);
-                        console.log(para);
-                        console.log(predmet);
-                        console.log(teacher);
-                        console.log(auditoria);
-                        console.log("-------------");
+                        if (predmet !== undefined) {
+                            if (dayOld === undefined || dayOld !== day){
+                                let node = `<li class="day"><span class="title">${day}</span></li>`;
+                                $('.raspisanie').append(node);
+                                dayOld = day;
+                            }
+                            node = `<li class="day__element">
+                                    <div class="schedule__item">
+                                        <div class="item__title">
+                                            <span class="para">Пара № ${para}</span>
+                                            <span class="auditoria">Аудитория ${auditoria}</span>
+                                        </div>
+                                            <span class="predmet">${predmet}</span>
+                                            <span class="teacher">${teacher}</span>
+                                    </div>
+                                </li>`;
+                            $('.raspisanie').append(node);
+                        }
                     }
-                }
+                };
             };
-        };
+        }
     } catch (error) {
         return;
     }

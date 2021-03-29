@@ -40,7 +40,7 @@ class Bord {
 
     showTasks() {
         $('.task__empty').remove();
-        $('li').remove();
+        $('.element_task').remove();
 
         if (this.list.tasks.length !== 0)
             this.renderTasks(this.list.tasks);
@@ -60,7 +60,7 @@ class Bord {
                     let month = dateDay.getMonth() + 1;
                     month = month > 10 ? month : '0' + month;
                     let year = dateDay.getFullYear();
-                    let node = `<li>
+                    let node = `<li class="element_task">
                         <span><h3>Планы на ${day}.${month}.${year}</h3></span>
                     </li>`;
 
@@ -101,11 +101,11 @@ class Bord {
                 }
             }
 
-            let node = `<li>
+            let node = `<li class="element_task">
                             <article class="task ${expired}">
                                 <div class="row">
                                     <a class="task__ready" href="javascript:taskReady(${element.id})">
-                                        <img class="link__element__img" src="/img/ready.png" alt="Выполнено">
+                                        <img class="link__element__img" src="/img/ready.svg" alt="Выполнено">
                                     </a>
                                     <div class="task__wrapper">
                                         <a class="link__task" href="javascript:openTask(${element.id})">
@@ -122,7 +122,7 @@ class Bord {
                                             ${date ? date : ''}
                                         </time>
                                         <a class="task__more" href="#">
-                                            <img class="link__element__img" src="/img/more1.svg" alt="Дополнительно">
+                                            <img class="link__element__img" src="/img/more.svg" alt="Дополнительно">
                                         </a>
                                     </div>
                                 </div>
