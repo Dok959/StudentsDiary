@@ -126,13 +126,18 @@ h2{
 .bottom__menu__element{
     position: absolute;
     bottom: 10px;
-    left: 4%;
+    left: 3%;
     max-width: inherit;
+    padding-bottom: 5px;
+}
+
+.bottom_element{
+    margin-bottom: 5px;
     padding-bottom: 5px;
     border-bottom: 2px solid transparent;
 }
 
-.bottom__menu__element:hover { 
+.bottom_element:hover { 
     transition: border linear 1s;
     border-color: #C10FB3;
 }
@@ -149,8 +154,8 @@ h2{
 
 .link__add__element.big{
     position: absolute;
-    bottom: 10px;
-    right: 21%;
+    bottom: 15px;
+    right: 15%;
     /* right:10px; */
 }
 
@@ -257,7 +262,8 @@ li{
 }
 
 .task__more{
-    display: flex;
+    /* display: flex; */
+    display: none;
     align-items: center;
     margin-right: 5px;
 }
@@ -297,7 +303,7 @@ li{
 
 .task__time{
     position: absolute;
-    right: 150px;
+    right: 5%;
     font-weight: 300;
     font-size: 16px;
 }
@@ -705,6 +711,24 @@ select{
     font-weight: 400;
 }
 
+.btn__raspisanie{
+    text-transform: uppercase;
+}
+
+.btn__raspisanie .link__img{
+    display: none;
+}
+
+.btn__raspisanie .link__element{
+    margin: auto;
+}
+
+@media (max-width: 2000px){
+    .link__add__element.big{
+        right: 17%;
+    }
+}
+
 @media (max-width: 1800px){
     .picker{
         display: block;
@@ -719,6 +743,12 @@ select{
         width: fit-content;
         margin: auto;
         margin-top: 3px;
+    }
+}
+
+@media (max-width: 1700px){
+    .link__add__element.big{
+        right: 20%;
     }
 }
 
@@ -749,6 +779,12 @@ select{
 
     .repetition__block {
         justify-content: space-around;
+    }
+}
+
+@media (max-width: 1350px){
+    .link__add__element.big{
+        right: 22%;
     }
 }
 
@@ -839,11 +875,11 @@ select{
     }
 
     .bottom__menu__element{
-        left: 3%;
+        left: 2%;
     }
 
     .task__time{
-        right: 70px;
+        /* right: 70px; */
     }
 
     label{
@@ -934,6 +970,10 @@ select{
         font-size: 14px;
         min-height: 250px;
     }
+    
+    .link__add__element.big{
+        right: 25%;
+    }
 }
 
 @media (max-width: 850px){
@@ -1007,6 +1047,10 @@ select{
     .element__info{
         left: 3%;
         width: 94%;
+    }
+
+    .bottom__menu__element {
+        left: 3%;
     }
 }
 
@@ -1115,6 +1159,10 @@ select{
     select {
         margin: 0;
     }
+
+    .bottom__menu__element {
+        left: 10%;
+    }
 }
 
 @media (max-width: 550px){
@@ -1125,6 +1173,22 @@ select{
 
 @media (max-width: 500px){
     .menu__element__title{
+        display: none;
+    }
+
+    .btn__raspisanie .link__img{
+        display: block;
+    }
+
+    .bottom__menu__element {
+        left: 3%;
+    }
+
+    .bottom_element{
+        padding-bottom: 5px;
+    }
+
+    .close__btn{
         display: none;
     }
 
@@ -1205,6 +1269,14 @@ select{
 
     .menu{
         display: none;
+    }
+
+    .btn__raspisanie .link__img{
+        display: none;
+    }
+    
+    .btn__raspisanie .link__element{
+        margin: auto;
     }
 
     .search_image .search__title{

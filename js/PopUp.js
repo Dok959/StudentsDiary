@@ -1,34 +1,30 @@
-$(document).ready(function(){
-    //Скрыть PopUp при загрузке страницы    
-    // PopUpHide();
-});
 //Функция отображения PopUp
-function PopUpShow(){
-    $(".b-popup").show();
-    PopUpShowRegistration()
+function PopUpShow() {
+    $('.b-popup').show();
+    PopUpShowRegistration();
 }
 
-function PopUpShowAuthorization(){
-    PopUpHideRegistration()
-    $(".authorization").show();
+function PopUpShowAuthorization() {
+    PopUpHideRegistration();
+    $('.authorization').show();
     $('.authorization .login').focus();
 }
 
-function PopUpShowRegistration(){
-    PopUpHideAuthorization()
-    $(".registration").show();
+function PopUpShowRegistration() {
+    PopUpHideAuthorization();
+    $('.registration').show();
     $('.registration .login').focus();
 }
 
-function PopUpHideAuthorization(){
-    $(".authorization").hide();
+function PopUpHideAuthorization() {
+    $('.authorization').hide();
 }
 
-function PopUpHideRegistration(){
-    $(".registration").hide();
+function PopUpHideRegistration() {
+    $('.registration').hide();
 }
 
 //Функция скрытия PopUp
-function PopUpHide(){
-    $(".b-popup").hide();
+function PopUpHide() {
+    $('.b-popup').hide();
 }

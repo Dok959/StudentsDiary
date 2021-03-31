@@ -4,11 +4,10 @@ function checkLength(args) {
     if (str.length <= 0) {
         generateError(args);
         return false;
-    }
-    else {
+    } else {
         return true;
     }
-};
+}
 
 // проверка валидности
 async function checkValidation(element) {
@@ -29,25 +28,23 @@ async function checkValidation(element) {
                 flag = false;
                 generateError(element);
             }
-        }
-        else {
+        } else {
             flag = false;
             generateError(element);
-        };
-    }
-    else {
+        }
+    } else {
         flag = false;
         generateError(element);
-    };
+    }
 
     return flag;
-};
+}
 
 // подключение ошибок полям
 function generateError(element) {
     element.classList.add('error');
     return;
-};
+}
 
 // удаление ошибок у полей
 function removeValidation() {
@@ -55,5 +52,5 @@ function removeValidation() {
 
     for (var i = 0; i < errors.length; i++) {
         errors[i].classList.remove('error');
-    };
-};
+    }
+}

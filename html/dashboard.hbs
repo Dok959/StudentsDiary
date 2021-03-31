@@ -99,11 +99,20 @@
                                 <img class="img__add__element" src="/img/add.png" alt="Создать проект">
                             </a>
                         </div>
+                        
+                        <div class="menu__element btn__raspisanie" value="true">
+                            <a class="link__element" href="javascript:openOrCloseFormRaspisanie()">
+                                <img class="link__img img__raspisanie"  src="/img/raspisanie.svg" alt="Расписание">
+                                <span class="link__description">
+                                    Расписание
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="bottom__menu__element">
-                    <a class="link__element" href="./personPage.html">
+                    <a class="link__element bottom_element" href="./personPage.html">
                         <img class="link__img" src="/img/settings.svg" alt="Настройки">
                         <span class="link__description">
                             Настройки
@@ -232,7 +241,7 @@
             </section>
         </div>
 
-        <a class="link__add__element big" href="javascript:createForm()">
+        <a class="link__add__element big" id="add_element" href="javascript:createForm()" value="">
             <img class="img__add__element big" src="/img/add.png" alt="Создать элемент">
         </a>
 

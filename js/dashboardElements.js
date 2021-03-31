@@ -7,16 +7,17 @@ class FetchData {
         }
 
         return res.json();
-    }
+    };
 
-    getElements = data => this.getResourse('./database/buildingQueryForDB', {
-        method: 'POST',
-        body: data,
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    })
+    getElements = (data) =>
+        this.getResourse('./database/buildingQueryForDB', {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
 }
 
 class Bord {
@@ -24,36 +25,32 @@ class Bord {
         this.fetchData = new FetchData();
         this.list = new Tasks({});
         this.elements = {
-            listElements: document.querySelector(listElements)
+            listElements: document.querySelector(listElements),
         };
     }
 
     getTasks(data) {
-        this.fetchData.getElements(data)
-            .then(data => {
-                for (let element in data) {
-                    this.list.addTask(data[element])
-                };
-                this.showTasks()
-            });
+        this.fetchData.getElements(data).then((data) => {
+            for (let element in data) {
+                this.list.addTask(data[element]);
+            }
+            this.showTasks();
+        });
     }
 
     showTasks() {
         $('.task__empty').remove();
         $('.element_task').remove();
 
-        if (this.list.tasks.length !== 0)
-            this.renderTasks(this.list.tasks);
-        else
-            emptyTasks({ title: 'Дел на горизонте не видно' });
+        if (this.list.tasks.length !== 0) this.renderTasks(this.list.tasks);
+        else emptyTasks({ title: 'Дел на горизонте не видно' });
     }
 
     renderTasks(tasks) {
         let dateDay = null;
         tasks.forEach((element) => {
-
             // формируем и выводим разделитель на будущие даты
-            if ($(".upcoming").is(':visible')) {
+            if ($('.upcoming').is(':visible')) {
                 if (dateDay === null || dateDay !== element.date) {
                     dateDay = new Date(element.date);
                     let day = dateDay.getDate();
@@ -82,13 +79,16 @@ class Bord {
             let expired = '';
             if (date) {
                 date = new Date(date);
-                let year = date.getFullYear()
-                let month = date.getMonth()
-                let day = date.getDate()
+                let year = date.getFullYear();
+                let month = date.getMonth();
+                let day = date.getDate();
 
-                date = (day < 10 ? '0' + day : day)
-                    + '.' + (month < 9 ? '0' + (month + 1) : month + 1)
-                    + '.' + year;
+                date =
+                    (day < 10 ? '0' + day : day) +
+                    '.' +
+                    (month < 9 ? '0' + (month + 1) : month + 1) +
+                    '.' +
+                    year;
 
                 // выделение просроченных задач
                 let now = new Date();
@@ -104,56 +104,66 @@ class Bord {
             let node = `<li class="element_task">
                             <article class="task ${expired}">
                                 <div class="row">
-                                    <a class="task__ready" href="javascript:taskReady(${element.id})">
+                                    <a class="task__ready" href="javascript:taskReady(${
+                                        element.id
+                                    })">
                                         <img class="link__element__img" src="/img/ready.svg" alt="Выполнено">
                                     </a>
                                     <div class="task__wrapper">
-                                        <a class="link__task" href="javascript:openTask(${element.id})">
+                                        <a class="link__task" href="javascript:openTask(${
+                                            element.id
+                                        })">
                                             <header class="task__header">
                                                 <h3 class="task__title">
-                                                    ${title ? title : 'Без названия ...'}
+                                                    ${
+                                                        title
+                                                            ? title
+                                                            : 'Без названия ...'
+                                                    }
                                                 </h3>
                                                 <span class="task__description">
-                                                    ${description ? description : ''}
+                                                    ${
+                                                        description
+                                                            ? description
+                                                            : ''
+                                                    }
                                                 </span>
                                             </header>
                                         </a>
                                         <time class="task__time">
                                             ${date ? date : ''}
                                         </time>
-                                        <a class="task__more" href="#">
-                                            <img class="link__element__img" src="/img/more.svg" alt="Дополнительно">
-                                        </a>
+                                        
                                     </div>
                                 </div>
                             </article>
                         </li>`;
 
             $('.bord__list').append(node);
-        })
+        });
     }
-};
+}
 
 class Tasks {
     constructor({ tasks = [] } = {}) {
         this.tasks = tasks;
     }
 
-    addTask = element => {
+    addTask = (element) => {
         this.tasks.push(new Task(element));
-    }
+    };
 
     clearTasks({ tasks = [] } = {}) {
         this.tasks = tasks;
     }
 
-    getIdTask = id => {
+    getIdTask = (id) => {
         for (let element = 0; element < this.tasks.length; element++) {
             if (this.tasks[element].id == id) {
                 return this.tasks[element];
             }
         }
-    }
+    };
 
     localUpdateTask = (id, title, description, date, time, period) => {
         let task = this.getIdTask(id);
@@ -167,17 +177,18 @@ class Tasks {
         let year = now.getFullYear();
         let month = now.getMonth();
         let day = now.getDate();
-        if (date === null && $(".inbox").is(':hidden')) {
+        if (date === null && $('.inbox').is(':hidden')) {
             taskList.list.localDeleteTask(id);
             $('.element__info').remove();
-        }
-        else if (year <= date.slice(0, 4)) {
+        } else if (year <= date.slice(0, 4)) {
             if (month <= date.slice(5, 7)) {
-                if (day < date.slice(8, 10) && $(".upcoming").is(':hidden')) {
+                if (day < date.slice(8, 10) && $('.upcoming').is(':hidden')) {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
-                }
-                else if (day >= date.slice(8, 10) && $(".today").is(':hidden')) {
+                } else if (
+                    day >= date.slice(8, 10) &&
+                    $('.today').is(':hidden')
+                ) {
                     taskList.list.localDeleteTask(id);
                     $('.element__info').remove();
                 }
@@ -189,23 +200,32 @@ class Tasks {
         }
 
         taskList.showTasks();
-    }
+    };
 
-    localDeleteTask = id => {
+    localDeleteTask = (id) => {
         let index;
         for (let element = 0; element < this.tasks.length; element++) {
             if (this.tasks[element].id == id) {
                 index = element;
                 break;
             }
-        };
+        }
         this.tasks.splice(index, 1);
         taskList.showTasks();
-    }
+    };
 }
 
 class Task {
-    constructor({ id, id_owner, id_project = '', title = '', description = '', date = '', time = '', period = null }) {
+    constructor({
+        id,
+        id_owner,
+        id_project = '',
+        title = '',
+        description = '',
+        date = '',
+        time = '',
+        period = null,
+    }) {
         this.id = id;
         this.id_owner = id_owner;
         this.id_project = id_project;
@@ -214,47 +234,54 @@ class Task {
         this.date = date;
         this.time = time;
         this.period = period;
-    };
+    }
 
     getTitle() {
         return this.title;
-    };
+    }
 
     setTitle(title) {
         this.title = title;
-    };
+    }
 
     setDescription(description) {
         this.description = description;
-    };
+    }
 
     setDate(date) {
         this.date = date;
-    };
+    }
 
     setTime(time) {
         this.time = time;
-    };
+    }
 
     setPeriod(period) {
         this.period = period;
-    };
-};
+    }
+}
 
 // открытие окна с выбранной задачей
-openTask = id => {
-    taskList.list.tasks.forEach(element => {
+openTask = (id) => {
+    taskList.list.tasks.forEach((element) => {
         if (element.id === id) {
             // $(".element__info").show(); // тестовая штука
             renderTask(element);
             // openDescription();
         }
-    })
-}
+    });
+};
 
 // в процессе доработки
-async function renderTask({ id, id_project = '', title, description = '', date, time = '',
-    period = null } = {}) {
+async function renderTask({
+    id,
+    id_project = '',
+    title,
+    description = '',
+    date,
+    time = '',
+    period = null,
+} = {}) {
     if (date != null) {
         let dates = new Date(date);
         let year = dates.getFullYear();
@@ -266,16 +293,16 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
         if (day < 10) {
             day = '0' + day;
         }
-        date = year + "-" + month + "-" + day;
+        date = year + '-' + month + '-' + day;
     }
 
     let frequency;
     if (period !== null) {
         // набор для проверки повторяемости задачи
         let data = JSON.stringify({
-            'code': 4,
-            'table': 'REPETITION',
-            'id': period
+            code: 4,
+            table: 'REPETITION',
+            id: period,
         });
 
         let fetchData = new FetchData();
@@ -322,7 +349,9 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
 
                     <div class="element__bord">
                         <div class="element__info__block" id="description">
-                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${description ? description : ''}</textarea>
+                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${
+                                description ? description : ''
+                            }</textarea>
                         </div>
 
                         <div class="element__info__block" id="action">
@@ -331,11 +360,15 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
                                 <div class="date__and__time__block">
                                     <div class="date__and__time">
                                         <a href="javascript:clearElement('date')" class="clear date__clear"></a>
-                                        <input class="datetime-local" type="date" name="date" value="${date ? date : ''}">
+                                        <input class="datetime-local" type="date" name="date" value="${
+                                            date ? date : ''
+                                        }">
                                     </div>
                                     <div class="date__and__time">
                                         <a href="javascript:clearElement('time')" class="clear time__clear"></a>
-                                        <input class="datetime-local time" type="time" name="time" value="${time ? time : ''}">
+                                        <input class="datetime-local time" type="time" name="time" value="${
+                                            time ? time : ''
+                                        }">
                                     </div>
                                 </div>
                             </div>
@@ -345,11 +378,15 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
                                     <label>Будет ли повторение задачи</label>
                                     <div class="repetition__elements">
                                         <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="yes" ${period ? 'checked' : ''} onchange="javascript:changeRepetition()">
+                                            <input class="radio" type="radio" name="repetition" value="yes" ${
+                                                period ? 'checked' : ''
+                                            } onchange="javascript:changeRepetition()">
                                             <label>Да</label>
                                         </div>
                                         <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="no" ${period ? '' : 'checked'} onchange="javascript:changeRepetition()">
+                                            <input class="radio" type="radio" name="repetition" value="no" ${
+                                                period ? '' : 'checked'
+                                            } onchange="javascript:changeRepetition()">
                                             <label>Нет</label>
                                         </div>
                                     </div>
@@ -383,7 +420,7 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
                     </div>
                 </div>
             </form>
-        </div>`
+        </div>`;
 
     $('.bord').append(node);
 
@@ -391,16 +428,14 @@ async function renderTask({ id, id_project = '', title, description = '', date, 
         changeRepetition();
         document.getElementsByName('frequency')[0].value = frequency;
         document.getElementsByName('unit')[0].value = period;
-    }
-    else {
+    } else {
         document.getElementsByName('frequency')[0].value = 1;
         document.getElementsByName('unit')[0].value = 1;
     }
 
     if (description === '') {
         openAction();
-    }
-    else {
+    } else {
         openDescription();
     }
 }
@@ -418,7 +453,7 @@ function openDescription() {
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('description');
         element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
-    } catch (error) { }
+    } catch (error) {}
 }
 
 function openAction() {
@@ -426,7 +461,10 @@ function openAction() {
         let element = document.getElementById('description');
         element.setAttribute('style', 'display: none; margin: 0;');
         element = document.getElementById('action');
-        element.setAttribute('style', 'display: flow-root; margin: 0 auto 10px;');
+        element.setAttribute(
+            'style',
+            'display: flow-root; margin: 0 auto 10px;'
+        );
 
         element = document.getElementsByName('date')[0];
         let date = new Date();
@@ -438,11 +476,11 @@ function openAction() {
         if (day < 10) {
             day = '0' + day;
         }
-        date = date.getFullYear() + "-" + month + "-" + day;
+        date = date.getFullYear() + '-' + month + '-' + day;
         element.setAttribute('min', `${date}`);
 
         changeRepetition();
-    } catch (error) { }
+    } catch (error) {}
 }
 
 function changeRepetition() {
@@ -452,8 +490,7 @@ function changeRepetition() {
             let element = document.getElementsByClassName('select__block')[0];
             element.setAttribute('style', 'display: flex;');
             break;
-        }
-        else {
+        } else {
             let element = document.getElementsByClassName('select__block')[0];
             element.setAttribute('style', 'display: none;');
         }
@@ -467,25 +504,33 @@ async function updateTask() {
 
     let title = document.getElementsByName('title')[0];
     // проверка на пустоту
-    checkLength(title) ? title = title.value : availabilityTitle = false;
+    checkLength(title) ? (title = title.value) : (availabilityTitle = false);
 
     let description = document.getElementsByName('description')[0].value;
 
     // дата
     let date = document.getElementsByName('date')[0];
     let availabilityDate = await checkValidation(date); // флаг проверки даты
-    date = document.getElementsByName('date')[0].value ?
-        document.getElementsByName('date')[0].value : null;
+    date = document.getElementsByName('date')[0].value
+        ? document.getElementsByName('date')[0].value
+        : null;
 
     // время
-    let time = document.getElementsByName('time')[0].value ?
-        document.getElementsByName('time')[0].value : null;
+    let time = document.getElementsByName('time')[0].value
+        ? document.getElementsByName('time')[0].value
+        : null;
 
     // если время задано, а дата нет, то она будет установлена на сегодня
     if (time !== null && date === null) {
         let now = new Date();
-        date = now.getFullYear() + '-' +
-            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+        date =
+            now.getFullYear() +
+            '-' +
+            (now.getMonth() + 1 < 10
+                ? '0' + (now.getMonth() + 1)
+                : now.getMonth() + 1) +
+            '-' +
+            (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
     }
 
     // повторяется ли задача и если да то когда
@@ -493,15 +538,27 @@ async function updateTask() {
     let period = null;
     let radios = document.getElementsByClassName('radio');
     for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked === true && i === 0) { // если установлено повторение
-            if (date === null && document.getElementsByName('unit')[0].value !== null) {
+        if (radios[i].checked === true && i === 0) {
+            // если установлено повторение
+            if (
+                date === null &&
+                document.getElementsByName('unit')[0].value !== null
+            ) {
                 frequency = document.getElementsByName('frequency')[0].value;
                 let now = new Date();
-                date = now.getFullYear() + '-' +
-                    ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+                date =
+                    now.getFullYear() +
+                    '-' +
+                    (now.getMonth() + 1 < 10
+                        ? '0' + (now.getMonth() + 1)
+                        : now.getMonth() + 1) +
+                    '-' +
+                    (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
                 period = document.getElementsByName('unit')[0].value;
-            }
-            else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
+            } else if (
+                date !== null &&
+                document.getElementsByName('unit')[0].value !== null
+            ) {
                 frequency = document.getElementsByName('frequency')[0].value;
                 period = document.getElementsByName('unit')[0].value;
             }
@@ -514,10 +571,10 @@ async function updateTask() {
 
         // формируем набор для проверки периодичности задачи
         let data = JSON.stringify({
-            'code': 4,
-            'table': 'REPETITION',
-            'frequency': frequency,
-            'period': period,
+            code: 4,
+            table: 'REPETITION',
+            frequency: frequency,
+            period: period,
         });
 
         let fetchData = new FetchData();
@@ -525,18 +582,25 @@ async function updateTask() {
         period = period[0] ? period[0].id : null;
 
         // обновление данных локально
-        taskList.list.localUpdateTask(id, title, description, date, time, period);
+        taskList.list.localUpdateTask(
+            id,
+            title,
+            description,
+            date,
+            time,
+            period
+        );
 
         // формируем набор для отправки на сервер
         data = JSON.stringify({
-            'code': 2,
-            'table': 'TASKS',
-            'id': Number.parseInt(id),
-            'title': title,
-            'description': description,
-            'date': date,
-            'time': time,
-            'period': period
+            code: 2,
+            table: 'TASKS',
+            id: Number.parseInt(id),
+            title: title,
+            description: description,
+            date: date,
+            time: time,
+            period: period,
         });
 
         fetchData = new FetchData();
@@ -557,30 +621,29 @@ async function taskReady(id_task = null) {
     if (day < 10) {
         day = '0' + day;
     }
-    date = date.getFullYear() + "-" + month + "-" + day;
+    date = date.getFullYear() + '-' + month + '-' + day;
 
-    if ($(".upcoming").is(':hidden')) {
+    if ($('.upcoming').is(':hidden')) {
         // удаление задачи локально
         taskList.list.localDeleteTask(id);
         $('.element__info').remove();
-    }
-    else {
+    } else {
         $('.element__info').remove();
     }
 
     // формируем набор для отправки на сервер
     let data = JSON.stringify({
-        'code': 1,
-        'table': 'HISTORY',
-        'id_owner': cookie,
-        'date': date,
-        'id': Number.parseInt(id)
+        code: 1,
+        table: 'HISTORY',
+        id_owner: cookie,
+        date: date,
+        id: Number.parseInt(id),
     });
 
     let fetchData = new FetchData();
     fetchData.getElements(data);
 
-    if ($(".upcoming").is(':visible')) {
+    if ($('.upcoming').is(':visible')) {
         upcoming();
     }
 }
@@ -594,9 +657,9 @@ function deleteTask() {
 
     // формируем набор для отправки на сервер
     let data = JSON.stringify({
-        'code': 3,
-        'table': 'TASKS',
-        'id': Number.parseInt(id)
+        code: 3,
+        table: 'TASKS',
+        id: Number.parseInt(id),
     });
 
     let fetchData = new FetchData();
@@ -715,7 +778,7 @@ async function createTask() {
                     </div>
                 </div>
             </form>
-        </div>`
+        </div>`;
 
     $('.bord').append(node);
 
@@ -727,25 +790,33 @@ async function readyCreateTask() {
 
     let title = document.getElementsByName('title')[0];
     // проверка на пустоту
-    checkLength(title) ? title = title.value : availabilityTitle = false;
+    checkLength(title) ? (title = title.value) : (availabilityTitle = false);
 
     let description = document.getElementsByName('description')[0].value;
 
     // дата
     let date = document.getElementsByName('date')[0];
     let availabilityDate = await checkValidation(date); // флаг проверки даты
-    date = document.getElementsByName('date')[0].value ?
-        document.getElementsByName('date')[0].value : null;
+    date = document.getElementsByName('date')[0].value
+        ? document.getElementsByName('date')[0].value
+        : null;
 
     // время
-    let time = document.getElementsByName('time')[0].value ?
-        document.getElementsByName('time')[0].value : null;
+    let time = document.getElementsByName('time')[0].value
+        ? document.getElementsByName('time')[0].value
+        : null;
 
     // если время задано, а дата нет, то она будет установлена на сегодня
     if (time !== null && date === null) {
         let now = new Date();
-        date = now.getFullYear() + '-' +
-            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+        date =
+            now.getFullYear() +
+            '-' +
+            (now.getMonth() + 1 < 10
+                ? '0' + (now.getMonth() + 1)
+                : now.getMonth() + 1) +
+            '-' +
+            (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
     }
 
     // повторяется ли задача и если да то когда
@@ -753,16 +824,28 @@ async function readyCreateTask() {
     let period = null;
     let radios = document.getElementsByClassName('radio');
     for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked === true && i === 0) { // если установлено повторение
-            if (date === null && document.getElementsByName('unit')[0].value !== null) {
+        if (radios[i].checked === true && i === 0) {
+            // если установлено повторение
+            if (
+                date === null &&
+                document.getElementsByName('unit')[0].value !== null
+            ) {
                 console.log('+');
                 frequency = document.getElementsByName('frequency')[0].value;
                 let now = new Date();
-                date = now.getFullYear() + '-' +
-                    ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+                date =
+                    now.getFullYear() +
+                    '-' +
+                    (now.getMonth() + 1 < 10
+                        ? '0' + (now.getMonth() + 1)
+                        : now.getMonth() + 1) +
+                    '-' +
+                    (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
                 period = document.getElementsByName('unit')[0].value;
-            }
-            else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
+            } else if (
+                date !== null &&
+                document.getElementsByName('unit')[0].value !== null
+            ) {
                 console.log('-');
                 frequency = document.getElementsByName('frequency')[0].value;
                 period = document.getElementsByName('unit')[0].value;
@@ -776,10 +859,10 @@ async function readyCreateTask() {
 
         // формируем набор для проверки периодичности задачи
         let data = JSON.stringify({
-            'code': 4,
-            'table': 'REPETITION',
-            'frequency': frequency,
-            'period': period,
+            code: 4,
+            table: 'REPETITION',
+            frequency: frequency,
+            period: period,
         });
 
         let fetchData = new FetchData();
@@ -788,32 +871,36 @@ async function readyCreateTask() {
 
         // формируем набор для отправки на сервер
         data = JSON.stringify({
-            'code': 1,
-            'table': 'TASKS',
-            'id_owner': cookie,
-            'id_project': null,
-            'title': title,
-            'description': description,
-            'date': date,
-            'time': time,
-            'period': period
+            code: 1,
+            table: 'TASKS',
+            id_owner: cookie,
+            id_project: null,
+            title: title,
+            description: description,
+            date: date,
+            time: time,
+            period: period,
         });
 
-        console.log(data)
+        console.log(data);
 
         fetchData = new FetchData();
         await fetchData.getElements(data);
 
         let now = new Date();
-        now = now.getFullYear() + '-' +
-            ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + (now.getDate()) : (now.getDate()));
+        now =
+            now.getFullYear() +
+            '-' +
+            (now.getMonth() + 1 < 10
+                ? '0' + (now.getMonth() + 1)
+                : now.getMonth() + 1) +
+            '-' +
+            (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
         if (date === null) {
             inbox();
-        }
-        else if (date === now) {
+        } else if (date === now) {
             today();
-        }
-        else if (date >= now) {
+        } else if (date >= now) {
             upcoming();
         }
     }
@@ -823,14 +910,14 @@ function cancelCreateTask() {
     $('.element__info').remove();
     let element = document.getElementsByClassName('create__form')[0];
     element.setAttribute('style', 'display: none;');
-    
+
     element = document.getElementsByClassName('search__form')[0];
     element.setAttribute('style', 'display: none;');
 }
 
 const taskList = new Bord({
-    listElem: '.bord__list'
-})
+    listElem: '.bord__list',
+});
 
 //нужно ли сохранение при закрытии области задачи?
 
@@ -841,17 +928,17 @@ document.addEventListener('click', function (event) {
         if (!node.contains(event.target)) {
             $('.element__info').remove();
         }
-    } catch (error) { }
+    } catch (error) {}
     try {
         let node = document.getElementsByClassName('create__form')[0];
         if (!node.contains(event.target)) {
             node.setAttribute('style', 'display: none;');
         }
-    } catch (error) { }
+    } catch (error) {}
     try {
         let node = document.getElementsByClassName('search__form')[0];
         if (!node.contains(event.target)) {
             node.setAttribute('style', 'display: none;');
         }
-    } catch (error) { }
+    } catch (error) {}
 });
