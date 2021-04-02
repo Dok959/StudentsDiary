@@ -5,13 +5,13 @@ function setCookie(name, value, options = {}) {
     };
 
     let updatedCookie =
-        encodeURIComponent(name) + '=' + encodeURIComponent(value);
+        `${encodeURIComponent(name)  }=${  encodeURIComponent(value)}`;
 
-    for (let optionKey in options) {
-        updatedCookie += '; ' + optionKey;
-        let optionValue = options[optionKey];
+    for (const optionKey in options) {
+        updatedCookie += `; ${  optionKey}`;
+        const optionValue = options[optionKey];
         if (optionValue !== true) {
-            updatedCookie += '=' + optionValue;
+            updatedCookie += `=${  optionValue}`;
         }
     }
 
@@ -20,11 +20,11 @@ function setCookie(name, value, options = {}) {
 
 // получение куки
 function getCookie(request, name) {
-    let matches = request.match(
+    const matches = request.match(
         new RegExp(
-            '(?:^|; )' +
-                name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
-                '=([^;]*)'
+            `(?:^|; )${
+                name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1')
+                }=([^;]*)`
         )
     );
     return matches ? decodeURIComponent(matches[1]) : undefined;

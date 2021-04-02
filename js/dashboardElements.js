@@ -18,6 +18,28 @@ class FetchData {
                 Accept: 'application/json',
             },
         });
+
+    // todo функции не стрелочные
+    // async getResourse (url, options) {
+    //     const res = await fetch(url, options);
+
+    //     if (!res.ok) {
+    //         throw new Error('Произошла ошибка: ' + res.status);
+    //     }
+
+    //     return res.json();
+    // };
+
+    // getElements (data) {
+    //     this.getResourse('./database/buildingQueryForDB', {
+    //         method: 'POST',
+    //         body: data,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             Accept: 'application/json',
+    //         },
+    //     });
+    // }
 }
 
 class Bord {
@@ -36,6 +58,12 @@ class Bord {
             }
             this.showTasks();
         });
+        this.getT(data);
+    }
+
+    async getT(data) {
+        let result = await this.fetchData.getElements(data)
+        console.log(result)
     }
 
     showTasks() {
@@ -133,7 +161,7 @@ class Bord {
                                         <time class="task__time">
                                             ${date ? date : ''}
                                         </time>
-                                        
+
                                     </div>
                                 </div>
                             </article>

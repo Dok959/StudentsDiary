@@ -8,6 +8,49 @@ const key = new NodeRSA({ b: 512 }); // создание обработчика 
 
 const router = express.Router();
 
+// * Функции для работы маршрутизатора
+
+// проверка начилия пользователя и его настроек
+// flag  флаг равный false проверяет только существование пользователя
+async function checkUser(request, flag = true) {
+    try {
+        const idUser = key.decrypt(
+            getCookie(request.headers.cookie, 'USER'),
+            'utf8'
+        );
+        const user = {
+            code: 4,
+            table: 'USERS',
+            id: idUser,
+        };
+
+        return await buildingQueryForDB(user)
+            .then((result) => {
+                if (result[0] !== undefined) {
+                    if (flag) {
+                        user.table = 'SETTINGS';
+                        user.id_owner = idUser;
+                        delete user.id;
+                        return buildingQueryForDB(user).then((settings) => {
+                            try {
+                                return settings[0].first_name;
+                            } catch (error) {
+                                return null;
+                            }
+                        });
+                    }
+                    return true;
+                }
+                return false;
+            })
+            .catch((error) => console.log(error));
+    } catch (error) {
+        return false;
+    }
+}
+
+// * МАРШРУТИЗАЦИЯ
+
 // определяем обработчик для ведения лога вызовов сервера
 router.use((request, _response, next) => {
     const now = new Date();
@@ -21,8 +64,6 @@ router.use(express.static(__dirname));
 
 // создаем парсер для данных в формате json
 const jsonParser = express.json();
-
-// Обработчики на маршруты
 
 // определяем обработчики для маршрута на главную страницу, '/'
 router.get('/', (request, response) => {
@@ -42,8 +83,10 @@ router.get('/homePage(.html)?', (request, response) => {
 router.post('/queryForUser', jsonParser, async (request, response) => {
     await buildingQueryForDB(request.body)
         .then((result) => {
-            result[0].id = key.encrypt(result[0].id, 'base64'); // шифруем id
-            response.send(result); // возврат информации на страницу запроса
+            if (result[0] !== undefined){ // если пользователь существует
+                result[0].id = key.encrypt(result[0].id, 'base64'); // шифруем id
+            }
+            response.send(result); // возврат результата
         })
         .catch((error) => console.log(error));
 });
@@ -109,45 +152,6 @@ router.use('/personPage(.html)?', jsonParser, async (request, response) => {
         }
     });
 });
-
-// проверка начилия пользователя и его настроек
-// флаг равный false проверяет только существование пользователя
-async function checkUser(request, flag = true) {
-    try {
-        const id_user = key.decrypt(
-            getCookie(request.headers.cookie, 'USER'),
-            'utf8'
-        );
-        const user = {
-            code: 4,
-            table: 'USERS',
-            id: id_user,
-        };
-
-        return await buildingQueryForDB(user)
-            .then((result) => {
-                if (result[0] !== undefined) {
-                    if (flag) {
-                        user.table = 'SETTINGS';
-                        user.id_owner = id_user;
-                        delete user.id;
-                        return buildingQueryForDB(user).then((settings) => {
-                            try {
-                                return settings[0].first_name;
-                            } catch (error) {
-                                return null;
-                            }
-                        });
-                    }
-                    return true;
-                }
-                return false;
-            })
-            .catch((error) => console.log(error));
-    } catch (error) {
-        return false;
-    }
-}
 
 // переадресация если страниц несуществует
 router.use((request, response) => {

@@ -45,6 +45,9 @@ function visibleTime() {
             elements[index].setAttribute('style', 'display: inline-block;');
         }
     }
+    else if (element === 'none'){
+        reRenderIconAddElements(true);
+    }
 }
 
 // Входящие
@@ -87,7 +90,7 @@ function today() {
             ? '0' + (now.getMonth() + 1)
             : now.getMonth() + 1) +
         '-' +
-        now.getDate();
+        (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
 
     // устанавливаем минимальную дату поиска по дате
     let element = document.getElementsByClassName('date__picker')[0];
@@ -370,24 +373,35 @@ function createForm() {
 
 // Функция для открытия и закрытия блока расписания
 function openOrCloseFormRaspisanie() {
-    let element = document.getElementsByClassName('btn__raspisanie')[0];
-    let value = element.getAttribute('value');
-    if (value === true.toString()){
-        element.setAttribute('value', 'false');
-        element = document.getElementsByClassName('block__raspisanie')[0];
-        element.setAttribute('style', 'display: none;');
+    let element = document.getElementsByClassName('raspisanie')[0];
+    if (element.innerText.trim() !== ''){
+        element = document.getElementsByClassName('btn__raspisanie')[0];
+        let value = element.getAttribute('value');
+        if (value === true.toString()){
+            element.setAttribute('value', 'false');
+            element = document.getElementsByClassName('block__raspisanie')[0];
+            element.setAttribute('style', 'display: none;');
+            
+            reRenderIconAddElements(true);
+        }
+        else{
+            element.setAttribute('value', 'true');
+            element = document.getElementsByClassName('block__raspisanie')[0];
+            element.setAttribute('style', 'display: flex;');
+            
+            reRenderIconAddElements(false);
+        }
+    }
+}
 
-        element = document.getElementById('add_element');
+function reRenderIconAddElements(flag){
+    const element = document.getElementById('add_element');
+    if (flag){
         element.setAttribute('value', getComputedStyle(element).right);
         element.setAttribute('style', 'right: 1%;');
     }
     else{
-        element.setAttribute('value', 'true');
-        element = document.getElementsByClassName('block__raspisanie')[0];
-        element.setAttribute('style', 'display: flex;');
-
-        element = document.getElementById('add_element');
-        value = element.getAttribute('value');
+        const value = element.getAttribute('value');
         element.setAttribute('value', '');
         element.setAttribute('style', `right: ${value}px;`);
     }

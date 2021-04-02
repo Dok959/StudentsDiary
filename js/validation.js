@@ -1,12 +1,16 @@
+// выделение ошибочных данных в полях
+function generateError(element) {
+    element.classList.add('error');
+}
+
 // проверка длины входящей строки
 function checkLength(args) {
-    let str = args.value;
+    const str = args.value;
     if (str.length <= 0) {
         generateError(args);
         return false;
-    } else {
-        return true;
     }
+    return true;
 }
 
 // проверка валидности
@@ -18,13 +22,13 @@ async function checkValidation(element) {
         return flag;
     }
 
-    let now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-    let day = now.getDate();
-    if (year <= Number.parseInt(element.value.slice(0, 4))) {
-        if (month <= Number.parseInt(element.value.slice(5, 7))) {
-            if (day > Number.parseInt(element.value.slice(8, 10))) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const day = now.getDate();
+    if (year <= Number.parseInt(element.value.slice(0, 4), 10)) {
+        if (month <= Number.parseInt(element.value.slice(5, 7), 10)) {
+            if (day > Number.parseInt(element.value.slice(8, 10), 10)) {
                 flag = false;
                 generateError(element);
             }
@@ -40,17 +44,11 @@ async function checkValidation(element) {
     return flag;
 }
 
-// подключение ошибок полям
-function generateError(element) {
-    element.classList.add('error');
-    return;
-}
-
 // удаление ошибок у полей
 function removeValidation() {
     const errors = document.querySelectorAll('.error');
 
-    for (var i = 0; i < errors.length; i++) {
+    for (let i = 0; i < errors.length; i += i + 1) {
         errors[i].classList.remove('error');
     }
 }

@@ -1,21 +1,3 @@
-//Функция отображения PopUp
-function PopUpShow() {
-    $('.b-popup').show();
-    PopUpShowRegistration();
-}
-
-function PopUpShowAuthorization() {
-    PopUpHideRegistration();
-    $('.authorization').show();
-    $('.authorization .login').focus();
-}
-
-function PopUpShowRegistration() {
-    PopUpHideAuthorization();
-    $('.registration').show();
-    $('.registration .login').focus();
-}
-
 function PopUpHideAuthorization() {
     $('.authorization').hide();
 }
@@ -24,7 +6,25 @@ function PopUpHideRegistration() {
     $('.registration').hide();
 }
 
-//Функция скрытия PopUp
+function PopUpShowRegistration() {
+    PopUpHideAuthorization();
+    $('.registration').show();
+    $('.registration .login').focus();
+}
+
+function PopUpShowAuthorization() {
+    PopUpHideRegistration();
+    $('.authorization').show();
+    $('.authorization .login').focus();
+}
+
+// Отрисовка формы
+function PopUpShow() {
+    $('.b-popup').show();
+    PopUpShowRegistration();
+}
+
+// Скрытие формы
 function PopUpHide() {
     $('.b-popup').hide();
 }
