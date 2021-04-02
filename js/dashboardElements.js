@@ -1,26 +1,5 @@
 class FetchData {
-    getResourse = async (url, options) => {
-        const res = await fetch(url, options);
-
-        if (!res.ok) {
-            throw new Error('Произошла ошибка: ' + res.status);
-        }
-
-        return res.json();
-    };
-
-    getElements = (data) =>
-        this.getResourse('./database/buildingQueryForDB', {
-            method: 'POST',
-            body: data,
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        });
-
-    // todo функции не стрелочные
-    // async getResourse (url, options) {
+    // getResourse = async (url, options) => {
     //     const res = await fetch(url, options);
 
     //     if (!res.ok) {
@@ -30,7 +9,7 @@ class FetchData {
     //     return res.json();
     // };
 
-    // getElements (data) {
+    // getElements = (data) =>
     //     this.getResourse('./database/buildingQueryForDB', {
     //         method: 'POST',
     //         body: data,
@@ -39,8 +18,52 @@ class FetchData {
     //             Accept: 'application/json',
     //         },
     //     });
-    // }
+
+    // todo функции не стрелочные
+    async getResourse (url, options) {
+        const res = await fetch(url, options);
+
+        if (!res.ok) {
+            throw new Error('Произошла ошибка: ' + res.status);
+        }
+
+        // let result = await res.json()
+        // console.log(result)
+        return res;
+    };
+
+    async getElements (data) {
+        this.getResourse('./database/buildingQueryForDB', {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
+    }
 }
+
+async function getResourse (data) {
+    options = {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    }
+
+    const res = await fetch('./database/buildingQueryForDB', options);
+
+    if (!res.ok) {
+        throw new Error('Произошла ошибка: ' + res.status);
+    }
+
+    let result = await res.json()
+    console.log(result)
+    return result;
+};
 
 class Bord {
     constructor({ listElements }) {
@@ -51,19 +74,13 @@ class Bord {
         };
     }
 
-    getTasks(data) {
-        this.fetchData.getElements(data).then((data) => {
-            for (let element in data) {
-                this.list.addTask(data[element]);
+    async getTasks(data) {
+        await getResourse(data).then((res) => {
+            for (let element in res) {
+                this.list.addTask(res[element]);
             }
-            this.showTasks();
         });
-        this.getT(data);
-    }
-
-    async getT(data) {
-        let result = await this.fetchData.getElements(data)
-        console.log(result)
+        this.showTasks();
     }
 
     showTasks() {
@@ -177,7 +194,7 @@ class Tasks {
         this.tasks = tasks;
     }
 
-    addTask = (element) => {
+    addTask (element) {
         this.tasks.push(new Task(element));
     };
 

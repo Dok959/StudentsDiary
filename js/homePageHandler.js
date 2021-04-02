@@ -62,7 +62,6 @@ async function checkErrors(code, table, form, args) {
 
         if (response.ok) {
             const result = await response.json();
-            console.log(result[0] !== undefined)
             if (result[0] !== undefined) {
                 setCookie('USER', result[0].id, {
                     secure: false,

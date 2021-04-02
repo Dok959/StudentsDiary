@@ -1,15 +1,15 @@
 const cookie = getCookie(document.cookie, 'USER');
 
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async () => {
     today();
-    $('.menu-burger__header').click(function () {
+    $('.menu-burger__header').click(() => {
         $('.menu-burger__header').toggleClass('open-menu');
         $('.menu').toggleClass('open__menu');
     });
     await checkRaspisanie();
 
     // функция отвечающая за скрытие и отображение даты на задачах при изменении размера экрана
-    $(window).resize(function () { 
+    $(window).resize(() => { 
         let element = document.getElementsByClassName('block__raspisanie')[0];
         element = getComputedStyle(element).display;
         if (element === 'block' && window.innerWidth <= 1040) {
@@ -75,7 +75,7 @@ function today() {
     // определяем текущую дату
     const now = new Date();
     // Запрашиваем день недели вместе с коротким форматом даты
-    var options = { weekday: 'long', month: 'short', day: 'numeric' };
+    const options = { weekday: 'long', month: 'short', day: 'numeric' };
     let date = now.toLocaleDateString('ru-RU', options);
     date = date[0].toUpperCase() + date.slice(1);
 
@@ -84,16 +84,16 @@ function today() {
 
     // формируем набор данных
     date =
-        now.getFullYear() +
-        '-' +
-        (now.getMonth() + 1 < 10
-            ? '0' + (now.getMonth() + 1)
-            : now.getMonth() + 1) +
-        '-' +
-        (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
+        `${now.getFullYear() 
+        }-${ 
+        now.getMonth() + 1 < 10
+            ? `0${  now.getMonth() + 1}`
+            : now.getMonth() + 1 
+        }-${ 
+        now.getDate() < 10 ? `0${  now.getDate()}` : now.getDate()}`;
 
     // устанавливаем минимальную дату поиска по дате
-    let element = document.getElementsByClassName('date__picker')[0];
+    const element = document.getElementsByClassName('date__picker')[0];
     element.setAttribute('min', `${date}`);
     element.setAttribute('value', `${date}`);
 
@@ -101,7 +101,7 @@ function today() {
         code: 4,
         table: 'TASKS',
         id_owner: cookie,
-        date: date,
+        date,
     });
 
     taskList.list.clearTasks();
@@ -110,7 +110,7 @@ function today() {
 
 // Отображение сегоднящней даты
 function getDateToday(date) {
-    $('.today').html('Сегодня, ' + date);
+    $('.today').html(`Сегодня, ${date}`);
 }
 
 // Предстоящие
@@ -118,27 +118,27 @@ function upcoming() {
     closeAndOpenTitle('.upcoming', ['.inbox', '.today', '.request_search']);
 
     // формируем набор данных
-    let now = new Date();
+    const now = new Date();
     now.setDate(now.getDate() + 1);
     let year = now.getFullYear();
     let month = now.getMonth() + 1;
     let day = now.getDate();
     // определение начальной даты
-    const startDate = year + '-' + month + '-' + day;
+    const startDate = `${year  }-${  month  }-${  day}`;
 
     // определение конечной даты
     now.setDate(now.getDate() + 6);
     year = now.getFullYear();
     month = now.getMonth() + 1;
     day = now.getDate();
-    const endDate = year + '-' + month + '-' + day;
+    const endDate = `${year  }-${  month  }-${  day}`;
 
     const data = JSON.stringify({
         code: 4,
         table: 'TASKS',
         id_owner: cookie,
-        startDate: startDate,
-        endDate: endDate,
+        startDate,
+        endDate,
     });
 
     taskList.list.clearTasks();
@@ -161,14 +161,14 @@ async function checkRaspisanie() {
         // выполняем запрос
         let result = await performanceQuery(data);
 
-        let role = result[0].role; // код роли
-        let university = result[0].university; // код универа
-        let group = result[0].group; // код группы
+        const {role} = result[0]; // код роли
+        const {university} = result[0]; // код универа
+        const {group} = result[0]; // код группы
 
         // проверка на наличие даннных
         if (role !== null || university !== null || group !== null) {
             // если данные указаны то отрисовать область
-            let element = document.getElementsByClassName(
+            const element = document.getElementsByClassName(
                 'block__raspisanie'
             )[0];
             element.setAttribute('style', 'display: inline-block;');
@@ -182,7 +182,7 @@ async function checkRaspisanie() {
 
             result = await performanceQuery(data);
 
-            let address_main = result[0].address; // первичный электронный адрес
+            const address_main = result[0].address; // первичный электронный адрес
 
             // проверяем роль пользователя и формируем остаток пути
             data = JSON.stringify({
@@ -193,17 +193,17 @@ async function checkRaspisanie() {
 
             result = await performanceQuery(data);
 
-            let address = result[0].address; // вторичный электронный адрес
-            let address_res = address_main + address + group; // истоговый путь к сайту расписания
+            const {address} = result[0]; // вторичный электронный адрес
+            const address_res = address_main + address + group; // истоговый путь к сайту расписания
 
             // по полученным данным делаем запрос к сайту
             response = new XMLHttpRequest();
-            await response.open('POST', 'https://' + address_res);
+            await response.open('POST', `https://${  address_res}`);
             response.send();
 
             // переотправка если произошла ошибка
             response.onerror = async function () {
-                await response.open('POST', 'http://' + address_res);
+                await response.open('POST', `http://${  address_res}`);
                 response.send();
             };
 
@@ -211,10 +211,10 @@ async function checkRaspisanie() {
             response.onload = async function () {
                 // console.log(response);
                 if (response.status === 200) {
-                    let result = await response.response;
+                    const result = await response.response;
                     // определяем неделю
                     let week = result.indexOf('ЗНАМЕНАТЕЛЬ');
-                    let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
+                    const now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
                     if (week === -1) {
                         week = 'td_style2_ch';
                         if (now === 0) {
@@ -228,13 +228,13 @@ async function checkRaspisanie() {
                     }
 
                     // получаем пары на неделю
-                    let raspisanie = new DOMParser()
+                    const raspisanie = new DOMParser()
                         .parseFromString(result, 'text/html')
                         .getElementsByClassName('table_style')[0];
 
-                    let day, dayOld;
+                    let day; let dayOld;
                     for (var i = 2, row; (row = raspisanie.rows[i]); i++) {
-                        let para, predmet, teacher, auditoria;
+                        let para; let predmet; let teacher; let auditoria;
                         for (var j = 0, col; (col = row.cells[j]); j++) {
                             if (
                                 j < 2 &&
@@ -266,7 +266,7 @@ async function checkRaspisanie() {
 
                         if (predmet !== undefined) {
                             if (dayOld === undefined || dayOld !== day) {
-                                let node = `<li class="day"><span class="title">${day}</span></li>`;
+                                const node = `<li class="day"><span class="title">${day}</span></li>`;
                                 $('.raspisanie').append(node);
                                 dayOld = day;
                             }
@@ -287,14 +287,14 @@ async function checkRaspisanie() {
             };
         }
     } catch (error) {
-        return;
+        
     }
 }
 
 // Функция реализующая запрос и парсинг результата
 async function performanceQuery(data) {
     // посылаем запрос
-    let response = await fetch('./database/buildingQueryForDB', {
+    const response = await fetch('./database/buildingQueryForDB', {
         method: 'POST',
         body: data,
         headers: {
@@ -306,9 +306,9 @@ async function performanceQuery(data) {
     if (response.ok) {
         const result = await response.json();
         return result;
-    } else {
-        return;
-    }
+    } 
+        
+    
 }
 
 // Поиск по дате
@@ -320,25 +320,25 @@ function search() {
 
     // если активно дополнительное то получить с него
     try {
-        let node = document.getElementsByClassName('search__form')[0];
+        const node = document.getElementsByClassName('search__form')[0];
         date = document.getElementsByClassName('date__picker')[1].value;
         node.setAttribute('style', 'display: none;');
     } catch (error) {}
 
     $('.request_search').html(
-        'Поиск на ' +
-            date.slice(8) +
-            '.' +
-            date.slice(5, 7) +
-            '.' +
-            date.slice(0, 4)
+        `Поиск на ${ 
+            date.slice(8) 
+            }.${ 
+            date.slice(5, 7) 
+            }.${ 
+            date.slice(0, 4)}`
     );
 
     const data = JSON.stringify({
         code: 4,
         table: 'TASKS',
         id_owner: cookie,
-        date: '=' + date,
+        date: `=${  date}`,
     });
 
     taskList.list.clearTasks();
@@ -353,13 +353,13 @@ function searchForm() {
     let date = new Date();
     let month = date.getMonth() + 1;
     if (month < 9) {
-        month = '0' + month;
+        month = `0${  month}`;
     }
     let day = date.getDate();
     if (day < 10) {
-        day = '0' + day;
+        day = `0${  day}`;
     }
-    date = date.getFullYear() + '-' + month + '-' + day;
+    date = `${date.getFullYear()  }-${  month  }-${  day}`;
     element = document.getElementsByClassName('date__picker')[1];
     element.setAttribute('min', `${date}`);
     element.setAttribute('value', `${date}`);
@@ -367,7 +367,7 @@ function searchForm() {
 
 // Отрисовка формы для создания элементов
 function createForm() {
-    let element = document.getElementsByClassName('create__form')[0];
+    const element = document.getElementsByClassName('create__form')[0];
     element.setAttribute('style', 'display: block;');
 }
 
@@ -376,7 +376,7 @@ function openOrCloseFormRaspisanie() {
     let element = document.getElementsByClassName('raspisanie')[0];
     if (element.innerText.trim() !== ''){
         element = document.getElementsByClassName('btn__raspisanie')[0];
-        let value = element.getAttribute('value');
+        const value = element.getAttribute('value');
         if (value === true.toString()){
             element.setAttribute('value', 'false');
             element = document.getElementsByClassName('block__raspisanie')[0];
@@ -417,15 +417,15 @@ function closeAndOpenTitle(nameOpen, [nameSloce1, nameSloce2, nameSloce3]) {
 }
 
 // отображение отсутствия задач
-function emptyTasks(element) {
-    $('.bord__list').html(
-        '<div class="task__empty">' +
+async function emptyTasks(element) {
+    await $('.bord__list').html(
+        `${'<div class="task__empty">' +
             '<div class="task__empty__title">' +
-            '<h1>' +
-            element.title +
-            '</h1>' +
-            '</div>' +
-            '</div>'
+            '<h1>'}${ 
+            element.title 
+            }</h1>` +
+            `</div>` +
+            `</div>`
     );
 }
 
