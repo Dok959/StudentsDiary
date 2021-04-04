@@ -1,47 +1,41 @@
 const cookie = getCookie(document.cookie, 'USER');
 
-document.addEventListener('DOMContentLoaded', async () => {
-    today();
-    $('.menu-burger__header').click(() => {
-        $('.menu-burger__header').toggleClass('open-menu');
-        $('.menu').toggleClass('open__menu');
-    });
-    await checkRaspisanie();
+// Функция для открытия и закрытия заголовков вкладок
+function closeAndOpenTitle(nameOpen, [nameSloce1, nameSloce2, nameSloce3]) {
+    $(nameSloce1).hide();
+    $(nameSloce2).hide();
+    $(nameSloce3).hide();
+    $('.element__info').hide();
+    $(nameOpen).show();
+}
 
-    // функция отвечающая за скрытие и отображение даты на задачах при изменении размера экрана
-    $(window).resize(() => { 
-        let element = document.getElementsByClassName('block__raspisanie')[0];
-        element = getComputedStyle(element).display;
-        if (element === 'block' && window.innerWidth <= 1040) {
-            elements = document.getElementsByClassName('task__time');
-            for (let index = 0; index < elements.length; index++) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-        }
-        else if (element === 'block' && window.innerWidth > 1040) {
-            elements = document.getElementsByClassName('task__time');
-            for (let index = 0; index < elements.length; index++) {
-                elements[index].setAttribute('style', 'display: inline-block;');
-            }
-        }
-    });
-
-    visibleTime();
-});
+// Функция отвечающая за перерисовку значка добавления
+function reRenderIconAddElements(flag){
+    const element = document.getElementById('add_element');
+    if (flag){
+        element.setAttribute('value', getComputedStyle(element).right);
+        element.setAttribute('style', 'right: 3%;');
+    }
+    else{
+        const value = element.getAttribute('value');
+        element.setAttribute('value', '');
+        element.setAttribute('style', `right: ${value}px;`);
+    }
+}
 
 // функция отвечающая за скрытие и отображение даты на задачах при изменении размера экрана
-function visibleTime() { 
+function visibleTime() {
     let element = document.getElementsByClassName('block__raspisanie')[0];
     element = getComputedStyle(element).display;
     if (element === 'block' && window.innerWidth <= 1040) {
         elements = document.getElementsByClassName('task__time');
-        for (let index = 0; index < elements.length; index++) {
+        for (let index = 0; index < elements.length; index += 1) {
             elements[index].setAttribute('style', 'display: none;');
         }
     }
     else if (element === 'block' && window.innerWidth > 1040) {
         elements = document.getElementsByClassName('task__time');
-        for (let index = 0; index < elements.length; index++) {
+        for (let index = 0; index < elements.length; index += 1) {
             elements[index].setAttribute('style', 'display: inline-block;');
         }
     }
@@ -68,6 +62,11 @@ function inbox() {
     taskList.getTasks(data);
 }
 
+// Отображение сегоднящней даты
+function getDateToday(date) {
+    $('.today').html(`Сегодня, ${date}`);
+}
+
 // Сегодня
 function today() {
     closeAndOpenTitle('.today', ['.inbox', '.request_search', '.upcoming']);
@@ -84,13 +83,8 @@ function today() {
 
     // формируем набор данных
     date =
-        `${now.getFullYear() 
-        }-${ 
-        now.getMonth() + 1 < 10
-            ? `0${  now.getMonth() + 1}`
-            : now.getMonth() + 1 
-        }-${ 
-        now.getDate() < 10 ? `0${  now.getDate()}` : now.getDate()}`;
+        `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
+            : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
 
     // устанавливаем минимальную дату поиска по дате
     const element = document.getElementsByClassName('date__picker')[0];
@@ -108,11 +102,6 @@ function today() {
     taskList.getTasks(data);
 }
 
-// Отображение сегоднящней даты
-function getDateToday(date) {
-    $('.today').html(`Сегодня, ${date}`);
-}
-
 // Предстоящие
 function upcoming() {
     closeAndOpenTitle('.upcoming', ['.inbox', '.today', '.request_search']);
@@ -124,14 +113,14 @@ function upcoming() {
     let month = now.getMonth() + 1;
     let day = now.getDate();
     // определение начальной даты
-    const startDate = `${year  }-${  month  }-${  day}`;
+    const startDate = `${year}-${month}-${day}`;
 
     // определение конечной даты
     now.setDate(now.getDate() + 6);
     year = now.getFullYear();
     month = now.getMonth() + 1;
     day = now.getDate();
-    const endDate = `${year  }-${  month  }-${  day}`;
+    const endDate = `${year}-${month}-${day}`;
 
     const data = JSON.stringify({
         code: 4,
@@ -159,7 +148,7 @@ async function checkRaspisanie() {
         });
 
         // выполняем запрос
-        let result = await performanceQuery(data);
+        let result = await getResourse(data);
 
         const {role} = result[0]; // код роли
         const {university} = result[0]; // код универа
@@ -168,9 +157,7 @@ async function checkRaspisanie() {
         // проверка на наличие даннных
         if (role !== null || university !== null || group !== null) {
             // если данные указаны то отрисовать область
-            const element = document.getElementsByClassName(
-                'block__raspisanie'
-            )[0];
+            const element = document.getElementsByClassName('block__raspisanie')[0];
             element.setAttribute('style', 'display: inline-block;');
 
             // проверяем университет и узнаем первичный путь
@@ -180,9 +167,9 @@ async function checkRaspisanie() {
                 id: university,
             });
 
-            result = await performanceQuery(data);
+            result = await getResourse(data);
 
-            const address_main = result[0].address; // первичный электронный адрес
+            const addressMain = result[0].address; // первичный электронный адрес
 
             // проверяем роль пользователя и формируем остаток пути
             data = JSON.stringify({
@@ -191,29 +178,29 @@ async function checkRaspisanie() {
                 id: role,
             });
 
-            result = await performanceQuery(data);
+            result = await getResourse(data);
 
             const {address} = result[0]; // вторичный электронный адрес
-            const address_res = address_main + address + group; // истоговый путь к сайту расписания
+            const addressRes = addressMain + address + group; // истоговый путь к сайту расписания
 
             // по полученным данным делаем запрос к сайту
             response = new XMLHttpRequest();
-            await response.open('POST', `https://${  address_res}`);
+            await response.open('POST', `https://${addressRes}`);
             response.send();
 
             // переотправка если произошла ошибка
-            response.onerror = async function () {
-                await response.open('POST', `http://${  address_res}`);
+            response.onerror = async function resError() {
+                await response.open('POST', `http://${addressRes}`);
                 response.send();
             };
 
             // парсим ответ
-            response.onload = async function () {
+            response.onload = async function resLoad() {
                 // console.log(response);
                 if (response.status === 200) {
-                    const result = await response.response;
+                    const raspisanieQuerry = await response.response;
                     // определяем неделю
-                    let week = result.indexOf('ЗНАМЕНАТЕЛЬ');
+                    let week = raspisanieQuerry.indexOf('ЗНАМЕНАТЕЛЬ');
                     const now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
                     if (week === -1) {
                         week = 'td_style2_ch';
@@ -229,37 +216,24 @@ async function checkRaspisanie() {
 
                     // получаем пары на неделю
                     const raspisanie = new DOMParser()
-                        .parseFromString(result, 'text/html')
+                        .parseFromString(raspisanieQuerry, 'text/html')
                         .getElementsByClassName('table_style')[0];
 
                     let day; let dayOld;
-                    for (var i = 2, row; (row = raspisanie.rows[i]); i++) {
+                    for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
+                        row = raspisanie.rows[i];
                         let para; let predmet; let teacher; let auditoria;
-                        for (var j = 0, col; (col = row.cells[j]); j++) {
-                            if (
-                                j < 2 &&
-                                col.getElementsByClassName('naz_disc')[0] ===
-                                    undefined
-                            ) {
+                        for (let j = 0, col; j < row.cells.length; j += 1) {
+                            col = row.cells[j];
+                            if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined ) {
                                 para = col.textContent;
-                                para =
-                                    para.length > 2
-                                        ? ((day = para), (para = undefined))
-                                        : para;
-                            } else if (
-                                col === row.getElementsByClassName(week)[0]
-                            ) {
-                                predmet = col.getElementsByClassName(
-                                    'naz_disc'
-                                )[0];
+                                para = para.length > 2 ? ((day = para), (para = undefined)) : para;
+                            } else if (col === row.getElementsByClassName(week)[0]) {
+                                predmet = col.getElementsByClassName('naz_disc').item(0);
                                 if (predmet !== undefined) {
                                     predmet = predmet.textContent;
-                                    teacher = col.getElementsByClassName(
-                                        'segueTeacher'
-                                    )[0].textContent;
-                                    auditoria = col.getElementsByClassName(
-                                        'segueAud'
-                                    )[0].textContent;
+                                    teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                    auditoria = col.getElementsByClassName('segueAud')[0].textContent;
                                 }
                             }
                         }
@@ -287,28 +261,8 @@ async function checkRaspisanie() {
             };
         }
     } catch (error) {
-        
+        /* empty */
     }
-}
-
-// Функция реализующая запрос и парсинг результата
-async function performanceQuery(data) {
-    // посылаем запрос
-    const response = await fetch('./database/buildingQueryForDB', {
-        method: 'POST',
-        body: data,
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    });
-
-    if (response.ok) {
-        const result = await response.json();
-        return result;
-    } 
-        
-    
 }
 
 // Поиск по дате
@@ -323,22 +277,19 @@ function search() {
         const node = document.getElementsByClassName('search__form')[0];
         date = document.getElementsByClassName('date__picker')[1].value;
         node.setAttribute('style', 'display: none;');
-    } catch (error) {}
+    } catch (error) {
+        /* empty */
+    }
 
     $('.request_search').html(
-        `Поиск на ${ 
-            date.slice(8) 
-            }.${ 
-            date.slice(5, 7) 
-            }.${ 
-            date.slice(0, 4)}`
+        `Поиск на ${date.slice(8)}.${date.slice(5, 7)}.${date.slice(0, 4)}`
     );
 
     const data = JSON.stringify({
         code: 4,
         table: 'TASKS',
         id_owner: cookie,
-        date: `=${  date}`,
+        date: `=${date}`,
     });
 
     taskList.list.clearTasks();
@@ -353,14 +304,14 @@ function searchForm() {
     let date = new Date();
     let month = date.getMonth() + 1;
     if (month < 9) {
-        month = `0${  month}`;
+        month = `0${month}`;
     }
     let day = date.getDate();
     if (day < 10) {
-        day = `0${  day}`;
+        day = `0${day}`;
     }
-    date = `${date.getFullYear()  }-${  month  }-${  day}`;
-    element = document.getElementsByClassName('date__picker')[1];
+    date = `${date.getFullYear()  }-${month}-${day}`;
+    element = document.getElementsByClassName('date__picker').item(1);
     element.setAttribute('min', `${date}`);
     element.setAttribute('value', `${date}`);
 }
@@ -375,45 +326,21 @@ function createForm() {
 function openOrCloseFormRaspisanie() {
     let element = document.getElementsByClassName('raspisanie')[0];
     if (element.innerText.trim() !== ''){
-        element = document.getElementsByClassName('btn__raspisanie')[0];
+        element = document.getElementsByClassName('btn__raspisanie').item(0);
         const value = element.getAttribute('value');
         if (value === true.toString()){
             element.setAttribute('value', 'false');
-            element = document.getElementsByClassName('block__raspisanie')[0];
+            element = document.getElementsByClassName('block__raspisanie').item(0);
             element.setAttribute('style', 'display: none;');
-            
             reRenderIconAddElements(true);
         }
         else{
             element.setAttribute('value', 'true');
-            element = document.getElementsByClassName('block__raspisanie')[0];
-            element.setAttribute('style', 'display: flex;');
-            
+            element = document.getElementsByClassName('block__raspisanie').item(0);
+            element.setAttribute('style', 'display: block;');
             reRenderIconAddElements(false);
         }
     }
-}
-
-function reRenderIconAddElements(flag){
-    const element = document.getElementById('add_element');
-    if (flag){
-        element.setAttribute('value', getComputedStyle(element).right);
-        element.setAttribute('style', 'right: 1%;');
-    }
-    else{
-        const value = element.getAttribute('value');
-        element.setAttribute('value', '');
-        element.setAttribute('style', `right: ${value}px;`);
-    }
-}
-
-// Функция для открытия и закрытия заголовков вкладок
-function closeAndOpenTitle(nameOpen, [nameSloce1, nameSloce2, nameSloce3]) {
-    $(nameSloce1).hide();
-    $(nameSloce2).hide();
-    $(nameSloce3).hide();
-    $('.element__info').hide();
-    $(nameOpen).show();
 }
 
 // отображение отсутствия задач
@@ -421,13 +348,133 @@ async function emptyTasks(element) {
     await $('.bord__list').html(
         `${'<div class="task__empty">' +
             '<div class="task__empty__title">' +
-            '<h1>'}${ 
-            element.title 
+            '<h1>'}${
+            element.title
             }</h1>` +
             `</div>` +
             `</div>`
     );
 }
+
+// Действия при полной загрузке странцы
+document.addEventListener('DOMContentLoaded', async () => {
+    today();
+    $('.menu-burger__header').click(() => {
+        $('.menu-burger__header').toggleClass('open-menu');
+        $('.menu').toggleClass('open__menu');
+    });
+    await checkRaspisanie();
+    let flagVisible = true;
+
+    /* функция отвечающая за скрытие и отображение даты на задачах при изменении размера экрана,
+        а также за отрисовки разных элементов страницы */
+    $(window).resize(() => {
+        let element = document.getElementsByClassName('block__raspisanie')[0];
+        element = getComputedStyle(element).display;
+        if (window.innerWidth <= 1040) {
+            elements = document.getElementsByClassName('task__time');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+        }
+        else if (window.innerWidth > 1040) {
+            elements = document.getElementsByClassName('task__time');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: inline-block;');
+            }
+        }
+
+        if (element === 'block' && window.innerWidth < 900 && flagVisible === true) {
+            elements = document.getElementsByClassName('menu__element__title');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+            elements = document.getElementsByClassName('link__description');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+            element = document.getElementsByClassName('search__title').item(0);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('picker').item(0);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'display: block;');
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: none;');
+
+            element = document.getElementsByClassName('img__raspisanie').item(0);
+            element.setAttribute('style', 'display: block;');
+
+            element = document.getElementsByClassName('bottom__menu__element').item(0);
+            element.setAttribute('style', 'left: 2%;');
+            flagVisible = false;
+        }
+        else if (window.innerWidth >= 900 && flagVisible === false){
+            elements = document.getElementsByClassName('menu__element__title');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: flex;');
+            }
+            elements = document.getElementsByClassName('link__description');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: block;');
+            }
+            element = document.getElementsByClassName('search__title').item(0);
+            element.setAttribute('style', 'display: block;');
+            element = document.getElementsByClassName('picker').item(0);
+            element.setAttribute('style', 'display: block;');
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: none;');
+
+            element = document.getElementsByClassName('img__raspisanie').item(0);
+            element.setAttribute('style', 'display: none;');
+
+            element = document.getElementsByClassName('bottom__menu__element').item(0);
+            element.setAttribute('style', 'left: 3%;');
+            flagVisible = true;
+        }
+
+        if (element === 'block' && window.innerWidth <= 600 && flagVisible === false){
+            elements = document.getElementsByClassName('link__img');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: flex;');
+            }
+        }
+
+        if (window.innerWidth <= 400 && flagVisible === false){
+            elements = document.getElementsByClassName('menu__element__title');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: flex;');
+            }
+            elements = document.getElementsByClassName('link__description');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: block;');
+            }
+            elements = document.getElementsByClassName('link__img');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+        }
+        else if (window.innerWidth > 400 && flagVisible === false){
+            elements = document.getElementsByClassName('menu__element__title');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+            elements = document.getElementsByClassName('link__description');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: none;');
+            }
+            elements = document.getElementsByClassName('link__img');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: block;');
+            }
+        }
+    });
+
+    visibleTime();
+});
+
 
 // Настройки
 function settings() {

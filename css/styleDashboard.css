@@ -336,7 +336,7 @@ li{
     position:absolute;
     left: 5%;
     z-index: 1;
-    width: 65%;
+    width: 70%;
     height: 500px;
     padding:10px;
     border-radius:5px;
@@ -668,7 +668,7 @@ select{
     max-width: 100%;
     /* height: 100%; */
     padding: 15px;
-    /* flex: 0 0 20%; */
+    flex: 0 0 35%;
     min-height: 100vh;
     background-color:#C3DAF0;
     display: none;
@@ -697,7 +697,7 @@ select{
 }
 
 .schedule__item{
-    font-size: 14px;
+    font-size: 13px;
     display: grid;
 }
 
@@ -725,7 +725,7 @@ select{
 
 @media (max-width: 2000px){
     .link__add__element.big{
-        right: 17%;
+        right: 36%;
     }
 }
 
@@ -746,15 +746,19 @@ select{
     }
 }
 
-@media (max-width: 1700px){
-    .link__add__element.big{
-        right: 20%;
-    }
-}
-
 @media (max-width: 1600px){
     .date__picker{
         max-width: 160px;
+    }
+
+    .day .title{
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1500px){
+    .element__info{
+        width: 80%;
     }
 }
 
@@ -779,12 +783,6 @@ select{
 
     .repetition__block {
         justify-content: space-around;
-    }
-}
-
-@media (max-width: 1350px){
-    .link__add__element.big{
-        right: 22%;
     }
 }
 
@@ -828,10 +826,6 @@ select{
 }
 
 @media (max-width: 1200px){
-    .element__info{
-        width: 70%;
-    }
-
     .date__picker{
         font-size: 16px;
         max-width: 130px;
@@ -842,7 +836,7 @@ select{
     }
 
     .schedule__item{
-        font-size: 13px;
+        font-size: 12px;
     }
 }
 
@@ -850,10 +844,6 @@ select{
     .description{
         font-size: 15px;
         min-height: 210px;
-    }
-
-    .link__add__element.big{
-        right: 23%;
     }
 }
 
@@ -872,14 +862,6 @@ select{
 
     .bottom__menu{
         padding: 0;
-    }
-
-    .bottom__menu__element{
-        left: 2%;
-    }
-
-    .task__time{
-        /* right: 70px; */
     }
 
     label{
@@ -905,7 +887,7 @@ select{
 
 @media (max-width: 1050px){
     .element__info{
-        width: 80%;
+        width: 90%;
     }
 }
 
@@ -919,8 +901,16 @@ select{
         display: none;
     }
 
-    .link__description{
+    .title__description{
         font-size: 18px;
+    }
+
+    .link__description{
+        font-size: 17px;
+    }
+
+    .task__title{
+        font-size: 14px;
     }
 
     .create__form{
@@ -933,7 +923,7 @@ select{
     }
 
     .schedule__item{
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .day__element{
@@ -942,21 +932,58 @@ select{
 }
 
 @media (max-width: 970px){
-    /* Область описания накрылась */
+    .title__description{
+        font-size: 17px;
+    }
+
+    .link__description{
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 930px){
+    .title__description{
+        font-size: 16px;
+    }
+
+    .link__description{
+        font-size: 15px;
+    }
+
     .task__time{
         display: none;
     }
 
-    .element__info{
-        width: 80%;
+    .element__info {
+        width: 95%;
+        left: 3%;
     }
 }
 
 @media (max-width: 900px){
-    /* Область заголовка накрылась */
+
+    .title__description{
+        font-size: 15px;
+    }
+
+    .link__description{
+        font-size: 14px;
+    }
+
+    .search__title{
+        font-size: 14px;
+    }
+
+    .date__picker {
+        font-size: 14px;
+        max-width: 120px;
+    }
+
+    .element__info {
+        width: 100%;
+        left: 0%;
+    }
+
     .element__info__block {
         position: relative;
         height: 100px;
@@ -970,10 +997,6 @@ select{
         font-size: 14px;
         min-height: 250px;
     }
-    
-    .link__add__element.big{
-        right: 25%;
-    }
 }
 
 @media (max-width: 850px){
@@ -984,10 +1007,6 @@ select{
 
     .date__title{
         margin: auto;
-    }
-
-    label{
-        font-size: 18px;
     }
 
     .datetime-local {
@@ -1008,13 +1027,18 @@ select{
 
 
 @media (max-width: 800px){
-    .picker{
-        display: inline-block;
-    }
-
     .search{
         margin: auto;
         width: min-content;
+    }
+
+    .task {
+        margin: 0 0px 5px;
+    }
+
+    .element__info{
+        width: 120%;
+        left: -10%;
     }
 
     #updateElement, #readyElement, #deleteElement{
@@ -1025,11 +1049,30 @@ select{
     .description{
         font-size: 13px;
     }
+
+    .repetition__block{
+        display: block;
+    }
+
+    label {
+        margin: auto;
+    }
+
+    .repetition__elements{
+        justify-content: space-evenly;
+    }
+}
+
+@media (max-width: 780px){
+    .element__info {
+        width: 120%;
+        left: -10%;
+    }
 }
 
 @media (max-width: 770px){
     .link__description{
-        font-size: 17px;
+        font-size: 13px;
     }
 
     .task__title{
@@ -1044,17 +1087,17 @@ select{
         right: 65px;
     }
 
-    .element__info{
-        left: 3%;
-        width: 94%;
-    }
-
     .bottom__menu__element {
         left: 3%;
     }
 }
 
 @media (max-width: 700px){
+    .element__info {
+        width: 140%;
+    left: -20%;
+    }
+
     .repetition__element{
         margin-left: 5px;
     }
@@ -1069,6 +1112,11 @@ select{
 }
 
 @media (max-width: 650px){
+    .element__info {
+        width: 160%;
+        left: -30%;
+    }
+
     .repetition__block{
         display: block;
     }
@@ -1101,7 +1149,7 @@ select{
     }
 
     .element__menu{
-        justify-content: space-between;
+        justify-content: space-evenly;
     }
 }
 
@@ -1119,8 +1167,13 @@ select{
 }
 
 @media (max-width: 600px){
+    .date__picker {
+        font-size: 13px;
+        max-width: 115px;
+    }
+
     .title__description{
-        font-size: 18px;
+        font-size: 15px;
     }
 
     .link__element{
@@ -1133,7 +1186,7 @@ select{
 
     .link__description{
         padding-left: 5px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .link__add__element{
@@ -1161,13 +1214,18 @@ select{
     }
 
     .bottom__menu__element {
-        left: 10%;
+        left: 5%;
     }
 }
 
 @media (max-width: 550px){
     .create__form{
         left: 20%;
+    }
+
+    .element__info {
+        width: 180%;
+        left: -40%;
     }
 }
 
@@ -1226,6 +1284,11 @@ select{
         width: 28px;
         height: 28px;
     }
+
+    .element__info {
+        width: 160%;
+        left: -10%;
+    }
 }
 
 @media (max-width: 450px){
@@ -1235,6 +1298,27 @@ select{
 
     .search__form{
         left: 15%;
+    }
+
+    .element__info {
+        width: 170%;
+    }
+
+    .datetime-local{
+        width: 130px;
+    }
+
+    .time {
+        width: 80px;
+    }
+
+    .clear {
+        left: -25px;
+    }
+
+    .time__clear{
+        left: -22px;
+        top: 4px;
     }
 }
 
@@ -1274,7 +1358,7 @@ select{
     .btn__raspisanie .link__img{
         display: none;
     }
-    
+
     .btn__raspisanie .link__element{
         margin: auto;
     }
@@ -1282,7 +1366,6 @@ select{
     .search_image .search__title{
         display: flex;
         padding-left: 5px;
-        
     }
 
     .img__search{
@@ -1359,14 +1442,37 @@ select{
     .search__form{
         left: 10%;
     }
+
+    .block__raspisanie{
+        display: block;
+        width: 100%;
+        min-height: 80vh;
+    }
+
+    .link__add__element.big {
+        top: 10px;
+        right: 20px;
+    }
+
+    .create__form, .search__form{
+        left: 13%;
+    }
 }
 
 @media (max-width: 380px){
-    .create__form{
-        left: 3%;
+    .create__form, .search__form{
+        left: 9%;
     }
+}
 
-    .search__form{
+@media (max-width: 350px){
+    .create__form, .search__form{
+        left: 5%;
+    }
+}
+
+@media (max-width: 330px){
+    .create__form, .search__form{
         left: 3%;
     }
 }
