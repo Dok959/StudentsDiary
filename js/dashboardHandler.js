@@ -201,7 +201,7 @@ async function checkRaspisanie() {
                     const raspisanieQuerry = await response.response;
                     // определяем неделю
                     let week = raspisanieQuerry.indexOf('ЗНАМЕНАТЕЛЬ');
-                    const now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
+                    let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
                     if (week === -1) {
                         week = 'td_style2_ch';
                         if (now === 0) {
@@ -214,47 +214,74 @@ async function checkRaspisanie() {
                         }
                     }
 
-                    // получаем пары на неделю
-                    const raspisanie = new DOMParser()
+                    // получаем сроки актуальности пар
+                    const timing = new DOMParser()
                         .parseFromString(raspisanieQuerry, 'text/html')
-                        .getElementsByClassName('table_style')[0];
+                        .getElementsByClassName('paud_date')[0].innerHTML;
 
-                    let day; let dayOld;
-                    for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
-                        row = raspisanie.rows[i];
-                        let para; let predmet; let teacher; let auditoria;
-                        for (let j = 0, col; j < row.cells.length; j += 1) {
-                            col = row.cells[j];
-                            if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined ) {
-                                para = col.textContent;
-                                para = para.length > 2 ? ((day = para), (para = undefined)) : para;
-                            } else if (col === row.getElementsByClassName(week)[0]) {
-                                predmet = col.getElementsByClassName('naz_disc').item(0);
-                                if (predmet !== undefined) {
-                                    predmet = predmet.textContent;
-                                    teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                                    auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                    // получение начала занятий
+                    const startYear = Number.parseInt(timing.slice(8, 12), 10)
+                    const startMonth = Number.parseInt(timing.slice(5, 7), 10)
+                    const startDay = Number.parseInt(timing.slice(2, 4), 10)
+
+                    // получение окончания занятий
+                    const endYear = Number.parseInt(timing.slice(22, 26), 10)
+                    const endMonth = Number.parseInt(timing.slice(19, 21), 10)
+                    const endDay = Number.parseInt(timing.slice(16, 18), 10)
+
+                    // определение текущей даты
+                    now = new Date();
+                    const nowYear = now.getFullYear();
+                    const nowMonth = now.getMonth() + 1;
+                    const nowDay = now.getDate();
+
+                    if (nowYear >= startYear && nowYear <= endYear){
+                        if (nowMonth >= startMonth && nowMonth <= endMonth){
+                            if (nowDay >= startDay || nowDay <= endDay){
+                                // получаем пары на неделю
+                                const raspisanie = new DOMParser()
+                                .parseFromString(raspisanieQuerry, 'text/html')
+                                .getElementsByClassName('table_style')[0];
+
+                                let day; let dayOld;
+                                for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
+                                    row = raspisanie.rows[i];
+                                    let para; let predmet; let teacher; let auditoria;
+                                    for (let j = 0, col; j < row.cells.length; j += 1) {
+                                        col = row.cells[j];
+                                        if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined ) {
+                                            para = col.textContent;
+                                            para = para.length > 2 ? ((day = para), (para = undefined)) : para;
+                                        } else if (col === row.getElementsByClassName(week)[0]) {
+                                            predmet = col.getElementsByClassName('naz_disc').item(0);
+                                            if (predmet !== undefined) {
+                                                predmet = predmet.textContent;
+                                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                                            }
+                                        }
+                                    }
+
+                                    if (predmet !== undefined) {
+                                        if (dayOld === undefined || dayOld !== day) {
+                                            const node = `<li class="day"><span class="title">${day}</span></li>`;
+                                            $('.raspisanie').append(node);
+                                            dayOld = day;
+                                        }
+                                        node = `<li class="day__element">
+                                                <div class="schedule__item">
+                                                    <div class="item__title">
+                                                        <span class="para">Пара № ${para}</span>
+                                                        <span class="auditoria">Аудитория ${auditoria}</span>
+                                                    </div>
+                                                        <span class="predmet">${predmet}</span>
+                                                        <span class="teacher">${teacher}</span>
+                                                </div>
+                                            </li>`;
+                                        $('.raspisanie').append(node);
+                                    }
                                 }
                             }
-                        }
-
-                        if (predmet !== undefined) {
-                            if (dayOld === undefined || dayOld !== day) {
-                                const node = `<li class="day"><span class="title">${day}</span></li>`;
-                                $('.raspisanie').append(node);
-                                dayOld = day;
-                            }
-                            node = `<li class="day__element">
-                                    <div class="schedule__item">
-                                        <div class="item__title">
-                                            <span class="para">Пара № ${para}</span>
-                                            <span class="auditoria">Аудитория ${auditoria}</span>
-                                        </div>
-                                            <span class="predmet">${predmet}</span>
-                                            <span class="teacher">${teacher}</span>
-                                    </div>
-                                </li>`;
-                            $('.raspisanie').append(node);
                         }
                     }
                 }
@@ -442,7 +469,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        if (window.innerWidth <= 400 && flagVisible === false){
+        if (window.innerWidth <= 400){
             elements = document.getElementsByClassName('menu__element__title');
             for (let index = 0; index < elements.length; index += 1) {
                 elements[index].setAttribute('style', 'display: flex;');
@@ -455,8 +482,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             for (let index = 0; index < elements.length; index += 1) {
                 elements[index].setAttribute('style', 'display: none;');
             }
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'display: block;');
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: flex;');
         }
-        else if (window.innerWidth > 400 && flagVisible === false){
+        else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === true){
+            elements = document.getElementsByClassName('link__img');
+            for (let index = 0; index < elements.length; index += 1) {
+                elements[index].setAttribute('style', 'display: block;');
+            }
+            element = document.getElementsByClassName('search__title').item(0);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('picker').item(0);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'display: flex; flex-direction: row-reverse; '+
+                'padding-left: 5px;');
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: block;');
+        }
+        else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === false){
             elements = document.getElementsByClassName('menu__element__title');
             for (let index = 0; index < elements.length; index += 1) {
                 elements[index].setAttribute('style', 'display: none;');
@@ -469,6 +515,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             for (let index = 0; index < elements.length; index += 1) {
                 elements[index].setAttribute('style', 'display: block;');
             }
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'padding-left: 0px;');
+        }
+
+        if (window.innerWidth > 500 && window.innerWidth <= 600 && flagVisible === false){
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'display: block;');
+            element = document.getElementsByClassName('img__search').item(0);
+            element.setAttribute('style', 'display: block;');
+        }
+        else if (window.innerWidth >= 500 && window.innerWidth <= 600 && flagVisible === true){
+            element = document.getElementsByClassName('search__title').item(1);
+            element.setAttribute('style', 'display: none;');
+            element = document.getElementsByClassName('search_image').item(0);
+            element.setAttribute('style', 'padding-left: 0px;');
         }
     });
 

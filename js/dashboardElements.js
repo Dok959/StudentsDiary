@@ -216,7 +216,7 @@ async function renderTask({
 
                             <div class="repetition">
                                 <div class="repetition__block">
-                                    <label>Будет ли повторение задачи</label>
+                                    <label class="reiteration__title">Будет ли повторение задачи</label>
                                     <div class="repetition__elements">
                                         <div class="repetition__element">
                                             <input class="radio" type="radio" name="repetition" value="yes" ${
@@ -249,7 +249,7 @@ async function renderTask({
                             </div>
 
                             <div class="priority__block">
-                                <label>Укажите приоритет задачи</label>
+                                <label class="priority__title">Укажите приоритет задачи</label>
                                 <select name="priority" class="priority__select__block">
                                     <option value="1">Высший</option>
                                     <option value="2">Средний</option>
@@ -263,7 +263,7 @@ async function renderTask({
             </form>
         </div>`;
 
-    $('.bord').append(node);
+    $('.container').append(node);
 
     if (frequency !== undefined) {
         changeRepetition();
@@ -516,7 +516,7 @@ async function createTask() {
 
                             <div class="repetition">
                                 <div class="repetition__block">
-                                    <label>Будет ли повторение задачи</label>
+                                    <label class="repetition__elements">Будет ли повторение задачи</label>
                                     <div class="repetition__elements">
                                         <div class="repetition__element">
                                             <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
@@ -545,7 +545,7 @@ async function createTask() {
                             </div>
 
                             <div class="priority__block">
-                                <label>Укажите приоритет задачи</label>
+                                <label class="priority__title">Укажите приоритет задачи</label>
                                 <select name="priority" class="priority__select__block">
                                     <option value="1">Высший</option>
                                     <option value="2">Средний</option>
@@ -559,7 +559,7 @@ async function createTask() {
             </form>
         </div>`;
 
-    $('.bord').append(node);
+    $('.container').append(node);
 
     openAction();
 }
@@ -671,7 +671,6 @@ function cancelCreateTask() {
     element.setAttribute('style', 'display: none;');
 }
 
-// нужно ли сохранение при закрытии области задачи?
 
 // проверка нажатия вне выбранной задачи
 document.addEventListener('click', (event) => {

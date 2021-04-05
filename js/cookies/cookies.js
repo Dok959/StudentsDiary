@@ -5,13 +5,15 @@ function setCookie(name, value, options = {}) {
     };
 
     let updatedCookie =
-        `${encodeURIComponent(name)  }=${  encodeURIComponent(value)}`;
+        `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
 
     for (const optionKey in options) {
-        updatedCookie += `; ${  optionKey}`;
-        const optionValue = options[optionKey];
-        if (optionValue !== true) {
-            updatedCookie += `=${  optionValue}`;
+        if (Object.prototype.hasOwnProperty.call(options, optionKey)) {
+            updatedCookie += `; ${optionKey}`;
+            const optionValue = options[optionKey];
+            if (optionValue !== true) {
+                updatedCookie += `=${optionValue}`;
+            }
         }
     }
 
@@ -22,9 +24,7 @@ function setCookie(name, value, options = {}) {
 function getCookie(request, name) {
     const matches = request.match(
         new RegExp(
-            `(?:^|; )${
-                name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1')
-                }=([^;]*)`
+            `(?:^|; )${name.replace(/([.$?*|{}()[]\\\/\+^])/g, '\\$1')}=([^;]*)`
         )
     );
     return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -39,4 +39,6 @@ function deleteCookie(name) {
 
 try {
     module.exports = { setCookie, getCookie, deleteCookie };
-} catch (error) {}
+} catch (error) {
+    /* empty */
+}

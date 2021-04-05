@@ -1,9 +1,10 @@
 const pool = require('./pool');
 
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
+// eslint-disable-next-line consistent-return
 async function buildingQueryForDB(args) {
     let query = '';
-    let request, response;
+    let request; let response;
     let result = {};
     if (args.code === 1) {
         args.code = 4;
@@ -17,7 +18,7 @@ async function buildingQueryForDB(args) {
                 query += 'DEFAULT, ';
             }
 
-            for (let element in args) {
+            for (const element in args) {
                 // формирование запроса
                 if (
                     element === 'id_project' ||
@@ -47,7 +48,7 @@ async function buildingQueryForDB(args) {
             query = query.substring(0, query.length - 2);
             query += ');';
 
-            console.log('Запрос на добавление: ' + query);
+            console.log(`Запрос на добавление: ${  query}`);
             // выполняем запрос к базе и обрабатываем результат
             await pool.execute(query);
 
@@ -55,48 +56,46 @@ async function buildingQueryForDB(args) {
             if (args.table === 'USERS') {
                 request = await buildingQueryForDB(args);
                 response = JSON.parse(JSON.stringify(request[0]));
-                let id_owner = response.id;
+                const idOwner = response.id;
                 query =
-                    `INSERT INTO SETTINGS () VALUES (` +
-                    id_owner +
-                    ', NULL, NULL, NULL, DEFAULT);';
+                    `INSERT INTO SETTINGS () VALUES (${idOwner}, NULL, NULL, NULL, DEFAULT);`;
                 await pool.execute(query);
 
                 return buildingQueryForDB(args);
             }
             // если создалась запись об активности, то происходит проверка повторяемости задачи
-            else if (args.table === 'HISTORY') {
+            if (args.table === 'HISTORY') {
                 args.code = 3;
                 args.table = 'TASKS';
-                return await buildingQueryForDB(args);
+                return buildingQueryForDB(args);
             }
 
             result.el = undefined;
             return result;
-        } else {
-            // если запись об активности уже есть
-            if (args.table === 'HISTORY') {
-                args.count = request[0].count + 1;
-                args.code = 2;
-                return await buildingQueryForDB(args);
-            }
-            return request;
         }
-    } else if (args.code === 2) {
+
+        // если запись об активности уже есть
+        if (args.table === 'HISTORY') {
+            args.count = request[0].count + 1;
+            args.code = 2;
+            return buildingQueryForDB(args);
+        }
+        return request;
+    } if (args.code === 2) {
         // только для таблицы настроек
         // требуется приписка лимит, так как нет первичного ключа.
-        //UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1
+        // UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1
 
         query = `UPDATE ${args.table} SET `;
 
-        for (let element in args) {
+        for (const element in args) {
             if (
                 element !== 'code' &&
                 element !== 'table' &&
                 element !== 'id' &&
                 element !== 'id_owner'
             ) {
-                const iSValue = eval('args.' + `${element}`);
+                const iSValue = this.eval(`args.${element}`);
                 // if (iSValue === null) {
                 //     query += `${element} is ${iSValue}, `;
                 // }
@@ -115,7 +114,7 @@ async function buildingQueryForDB(args) {
         } else {
             query += ` WHERE id = '${args.id}';`;
         }
-        console.log('Запрос на обновление: ' + query);
+        console.log(`Запрос на обновление: ${  query}`);
         request = await pool.execute(query);
 
         if (args.table === 'HISTORY') {
@@ -125,12 +124,12 @@ async function buildingQueryForDB(args) {
             args.code = 3;
             args.table = 'TASKS';
 
-            return await buildingQueryForDB(args);
+            return buildingQueryForDB(args);
         }
 
         result.el = undefined;
         return result;
-    } else if (args.code === 3) {
+    } if (args.code === 3) {
         // проверка повторимости задач
         if (args.table === 'TASKS') {
             args.code = 4;
@@ -140,8 +139,8 @@ async function buildingQueryForDB(args) {
             if (result[0].period !== null) {
                 args.code = 4;
                 args.table = 'REPETITION';
-                let task_id = args.id;
-                let id_owner = args.id_owner;
+                const taskId = args.id;
+                const {idOwner} = args;
                 let date = new Date(result[0].date);
                 delete args.id_owner;
                 args.id = result[0].period;
@@ -150,14 +149,13 @@ async function buildingQueryForDB(args) {
 
                 // определяем периодичность
                 if (result[0].period !== null) {
-                    let frequency = result[0].frequency;
-                    let period = result[0].period;
+                    const {frequency} = result[0];
+                    const {period} = result[0];
 
                     // увеличение даты
                     if (frequency === 2 && period === 1) {
                         date.setDate(date.getDate() + 2);
-                    } else {
-                        if (period === 1) {
+                    } else if (period === 1) {
                             date.setDate(date.getDate() + 1);
                         } else if (period === 2) {
                             date.setDate(date.getDate() + 7);
@@ -166,37 +164,36 @@ async function buildingQueryForDB(args) {
                         } else if (period === 4) {
                             date.setFullYear(date.getFullYear() + 1);
                         }
-                    }
 
                     // определение новой даты
-                    let year = date.getFullYear();
+                    const year = date.getFullYear();
                     let month = date.getMonth() + 1;
                     if (month < 9) {
-                        month = '0' + month;
+                        month = `0${month}`;
                     }
                     let day = date.getDate();
                     if (day < 10) {
-                        day = '0' + day;
+                        day = `0${day}`;
                     }
-                    date = year + '-' + month + '-' + day;
+                    date = `${year}-${month}-${day}`;
 
                     args.code = 2;
                     args.table = 'TASKS';
-                    args.id = task_id;
-                    args.id_owner = id_owner;
+                    args.id = taskId;
+                    args.id_owner = idOwner;
                     args.date = date;
 
                     // обновление задачи, так она повторяется
-                    return await buildingQueryForDB(args);
+                    return buildingQueryForDB(args);
                 }
             }
         }
 
         query = `DELETE FROM ${args.table} WHERE `;
 
-        for (let element in args) {
+        for (const element in args) {
             if (element !== 'code' && element !== 'table') {
-                const iSValue = eval('args.' + `${element}`);
+                const iSValue = this.eval(`args.${element}`);
                 if (iSValue === null) {
                     query += `${element} is ${iSValue} and `;
                 } else {
@@ -206,13 +203,13 @@ async function buildingQueryForDB(args) {
         }
         query = query.substring(0, query.length - 5);
         query += ';';
-        console.log('Запрос на удаление: ' + query);
+        console.log(`Запрос на удаление: ${query}`);
 
         request = await pool.execute(query);
 
         result.el = undefined;
         return result;
-    } else if (args.code === 4) {
+    } if (args.code === 4) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${args.table};`;
 
@@ -220,7 +217,7 @@ async function buildingQueryForDB(args) {
         // парсинг результата и взятие 0 массива
         response = JSON.parse(JSON.stringify(request[0]));
 
-        let fields = new Array(); // массив для полей таблицы
+        const fields = new Array(); // массив для полей таблицы
 
         // перебор полей таблицы
         Object.keys(response).forEach((key) => {
@@ -230,12 +227,11 @@ async function buildingQueryForDB(args) {
         // формирование основного запроса
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
-            if (args.hasOwnProperty(element)) {
-                const iSValue = eval('args.' + `${element}`);
+            if (Object.prototype.hasOwnProperty.call(args, element)) {
+                const iSValue = this.eval(`args.${element}`);
                 if (iSValue === null) {
                     query += ` ${element} is ${iSValue} and`;
-                } else {
-                    if (element === 'date') {
+                } else if (element === 'date') {
                         if (args.table === 'HISTORY') {
                             query += ` ${element} = '${iSValue}' and`;
                         } else if (iSValue.slice(0, 1) === '=') {
@@ -246,25 +242,19 @@ async function buildingQueryForDB(args) {
                     } else {
                         query += ` ${element} = '${iSValue}' and`;
                     }
-                }
             }
         });
-        if (
-            args.hasOwnProperty('startDate') &&
-            args.hasOwnProperty('endDate')
-        ) {
+        if (Object.prototype.hasOwnProperty.call(args, 'startDate') &&
+            Object.prototype.hasOwnProperty.call(args, 'endDate')) {
             query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
         }
         query = query.substr(0, query.length - 4);
         // сортировка по возрастанию дат
-        if (
-            args.table === 'TASKS' &&
-            (args.date !== null || args.startDate !== undefined)
-        ) {
+        if (args.table === 'TASKS' && (args.date !== null || args.startDate !== undefined)) {
             query += ' ORDER BY date';
         }
         query += ';';
-        console.log('Запрос на поиск: ' + query);
+        console.log(`Запрос на поиск: ${query}`);
 
         request = await pool.execute(query);
         response = JSON.parse(JSON.stringify(request[0]));

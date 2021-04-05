@@ -68,12 +68,18 @@ class Bord {
 
                 // выделение просроченных задач
                 const now = new Date();
-                if (year <= now.getFullYear()) {
-                    if (month <= now.getMonth()) {
+                if (year === now.getFullYear()) {
+                    if (month < now.getMonth()) {
+                        expired = 'expired';
+                    }
+                    else if (month === now.getMonth()){
                         if (day < now.getDate()) {
                             expired = 'expired';
                         }
                     }
+                }
+                else if (year < now.getFullYear()){
+                    expired = 'expired';
                 }
             }
 

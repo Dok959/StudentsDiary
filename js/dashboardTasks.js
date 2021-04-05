@@ -17,7 +17,7 @@ class Tasks {
                 return this.tasks[element];
             }
         }
-        return false; // ???
+        return false;
     };
 
     localUpdateTask(id, title, description, date, time, period) {
