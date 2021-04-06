@@ -40,7 +40,7 @@ h1, h2, h3, h4, h5, h6, p, a, ol, ul, li, time, figure {
     border: 0;
     box-sizing: border-box;
 }
-    
+
 body {
 	background: white;
 	line-height: 1.5;
@@ -57,7 +57,7 @@ a{
 
 form{
     margin: 0 auto;
-    max-width: 300px;   
+    max-width: 300px;
 }
 
 label, input {

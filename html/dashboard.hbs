@@ -12,273 +12,79 @@
 
     <script src="/js/library/jquery-3.5.1.min.js" defer></script>
     <script src="/js/cookies/cookies.js" defer></script>
-    <script src="/js/dashboardHandler.js" defer></script>
+    {{!-- <script src="/js/dashboardHandler.js" defer></script>
     <script src="/js/validation.js" defer></script>
     <script src="/js/dashboardBord.js" defer></script>
     <script src="/js/dashboardTasks.js" defer></script>
-    <script src="/js/dashboardElements.js" defer></script>
+    <script src="/js/dashboardElements.js" defer></script> --}}
 </head>
 
 <body>
-    <div class="container">
+    <div id="dashboard-container">
+        <header id="header">
+            <div id="header-menu">
+                <a href="#" id="user-profile">
+                    <img src="/img/add.png" alt="Пользователь" id="user-image">
+                </a>
 
-        <div class="header">
+                <a href="#" id="user-activity">
+                    <span id="activity-title">Активность</span>
+                </a>
 
-            <div class="menu-burger__header">
-                <span></span>
+                <a href="#" id="overdue-tasks">
+                    <span id="overdue-title">Просроченные</span>
+                </a>
             </div>
+        </header>
 
-            <div class="hello">
-                <h1>Здравствуйте, {{user}}!</h1>
-            </div>
-
-            <nav class="menu">
-                <div class="block__elements">
-                    <div class="block__tasks">
-                        <div class="menu__element__title">
-                            <span class="title__description">
-                                ЗАДАЧИ
-                            </span>
-
-                            <a class="link__add__element" href="javascript:createTask()">
-                                <img class="img__add__element" src="/img/add.png" alt="Создать задачу">
-                            </a>
-                        </div>
-
-                        <div class="menu__element">
-                            <a class="link__element" href="javascript:inbox()">
-                                <img class="link__img" src="/img/inbox.svg" alt="Входящие">
-                                <span class="link__description">
-                                    Входящие
-                                </span>
-                            </a>
-                        </div>
-
-                        <div class="menu__element">
-                            <a class="link__element" href="javascript:today()">
-                                <img class="link__img" src="/img/today.svg" alt="Сегодня">
-                                <span class="link__description">
-                                    Сегодня
-                                </span>
-                            </a>
-                        </div>
-
-                        <div class="menu__element">
-                            <a class="link__element" href="javascript:upcoming()">
-                                <img class="link__img" src="/img/calendar.svg" alt="Планируемые">
-                                <span class="link__description">
-                                    Предстоящие
-                                </span>
-                            </a>
-                        </div>
-
-                        <div class="search__block">   
-                            <span class="search__title">
-                                Поиск по дате
-                            </span>
-                            <div class="picker">
-                                <input class="date__picker" type="date">
-                                <a class="search" href="javascript:search()">
-                                    <img class="img__search" src="/img/search.png" alt="Поиск по дате">
-                                </a>
-                            </div>
-                            <a class="search_image" href="javascript:searchForm()">
-                                <span class="search__title">
-                                    Поиск по дате
-                                </span>
-                                <img class="img__search" src="/img/search.png" alt="Поиск по дате">
-                            </a>
-                        </div>
+        <div id="dashboard-main">
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">
+                        <h2 class="day-title">Понедельник</h2>
                     </div>
 
-                    <div class="block__projects">
-                        <div class="menu__element__title">
-                            <span class="title__description">
-                                ПРОЕКТЫ
-                            </span>
-
-                            <a class="link__add__element" href="#">
-                                <img class="img__add__element" src="/img/add.png" alt="Создать проект">
-                            </a>
-                        </div>
-                        
-                        <div class="menu__element btn__raspisanie" value="true">
-                            <a class="link__element" href="javascript:openOrCloseFormRaspisanie()">
-                                <img class="link__img img__raspisanie"  src="/img/raspisanie.svg" alt="Расписание">
-                                <span class="link__description">
-                                    Расписание
+                    <div class="list-tasks">
+                        <a href="#" class="list-task">
+                            <div class="list-task-details">
+                                <span class="list-task-label">
+                                    Задача 1
                                 </span>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
-
-                <div class="bottom__menu__element">
-                    <a class="link__element bottom_element" href="./personPage.html">
-                        <img class="link__img" src="/img/settings.svg" alt="Настройки">
-                        <span class="link__description">
-                            Настройки
-                        </span>
-                    </a>
-                </div>
-            </nav>
-
-        </div>
-
-        <div class="bord">
-
-            <div class="title__bord">
-                <h2 class="inbox">Входящие</h2>
-                <h2 class="today">Сегодня</h2>
-                <h2 class="upcoming">Предстоящие</h2>
-                <h2 class="request_search">Поиск на</h2>
             </div>
-
-            {{!-- <div class="element__info">
-                <form class="element__task" name="id_task" method="get">
-
-                    <div class="element__info__block" id="title">
-                        <textarea class="element__task__area title" type="text" name="title" placeholder="Название"
-                            maxlength=100>Название</textarea>
-                    </div>
-
-                    <div class="element__btn">
-                        <a type="submit" id="updateElement" href="javascript:updateTask()">
-                            <span>Изменить</span>
-                        </a>
-                        <a type="submit" id="readyElement" href="javascript:taskReady()">
-                            <span>Выполнено</span>
-                        </a>
-                        <a type="submit" id="deleteElement" href="javascript:deleteTask()">
-                            <span>Удалить</span>
-                        </a>
-                    </div>
-
-                    <div class="element__info__more">
-                        <nav class="element__menu">
-                            <a class="link__element tab" href="javascript:openDescription()">
-                                <span class="link__description link_tab">
-                                    Описание
-                                </span>
-                            </a>
-
-                            <a class="link__element tab" href="javascript:openAction()">
-                                <span class="link__description link_tab">
-                                    Действия
-                                </span>
-                            </a>
-                        </nav>
-
-                        <div class="element__bord">
-
-                            <div class="element__info__block" id="description">
-                                <textarea class="element__task__area description" type="text" name="description"
-                                    placeholder="Описание" maxlength=600>fdsfsdf</textarea>
-                            </div>
-
-                            <div class="element__info__block" id="action">
-                                <div class="date">
-                                    <label class="date__title">Укажите срок выполнения задачи</label>
-                                    <div class="date__and__time__block">
-                                        <div class="date__and__time">
-                                            <a href="javascript:clearElement('date')" class="clear date__clear"></a>
-                                            <input class="datetime-local" type="date" name="date" value="2021-03-25">
-                                        </div>
-                                        <div class="date__and__time">
-                                            <a href="javascript:clearElement('time')" class="clear time__clear"></a>
-                                            <input class="datetime-local time" type="time" name="time" value="12:35">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="repetition">
-                                    <div class="repetition__block">
-                                        <label>Будет ли повторение задачи</label>
-                                        <div class="repetition__elements">
-                                            <div class="repetition__element">
-                                                <input class="radio" type="radio" name="repetition" value="yes" onchange="javascript:changeRepetition()">
-                                                <label>Да</label>
-                                            </div>
-                                            <div class="repetition__element">
-                                                <input class="radio" type="radio" name="repetition" value="no" checked onchange="javascript:changeRepetition()">
-                                                <label>Нет</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="select__block">
-                                        <select name="frequency">
-                                            <option value="1" selected>Каждый</option>
-                                            <option value="2">Через</option>
-                                        </select>
-
-                                        <select name="unit">
-                                            <option value="1" selected>День</option>
-                                            <option value="2">Неделю</option>
-                                            <option value="3">Месяц</option>
-                                            <option value="4">Год</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="priority__block">
-                                    <label>Укажите приоритет задачи</label>
-                                    <select name="priority" class="priority__select__block">
-                                        <option value="1">Высший</option>
-                                        <option value="2">Средний</option>
-                                        <option value="3">Низкий</option>
-                                        <option value="4" selected>Нет</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div> --}}
-
-            <section class="bord__tasks">
-                <ul class="bord__list">
-
-                </ul>
-            </section>
-        </div>
-
-        <a class="link__add__element big" id="add_element" href="javascript:createForm()" value="">
-            <img class="img__add__element big" src="/img/add.png" alt="Создать элемент">
-        </a>
-
-        <div class="create__form">
-            <span class="title">Выберите объект для создания:</span>
-            <a class="create_btn" href="javascript:createTask()"><span>Задача</span></a>
-            <a class="create_btn project" href="#"><span>Проект</span></a>
-            <a class="create_btn cancel" href="javascript:cancelCreateTask()"><span>Отмена</span></a>
-        </div>
-
-        <div class="search__form">
-            <span class="title">Поиск по дате:</span>
-            <input class="date__picker" type="date">
-            <a class="create_btn project" href="javascript:search()">
-                <span>Поиск</span>
-            </a>
-            <a class="create_btn cancel" href="javascript:cancelCreateTask()">
-                <span>Отмена</span>
-            </a>
-        </div>
-
-        <div class="block__raspisanie">
-            <ul class="raspisanie">
-                <li class="day"><span class="title">dasdasd</span></li>
-                <li class="day__element">
-                    <div class="schedule__item">
-                        <div class="item__title">
-                            <span class="para">Пара № 4</span>
-                            <span class="auditoria">Аудитория 505</span>
-                        </div>
-                            <span class="predmet">МАТАН</span>
-                            <span class="teacher">фывфыв</span>
-                    </div>
-                </li>
-            </ul>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Вторник</div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Среда</div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Четверг</div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Пятница</div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Суббота</div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <div id="bord-day-title">Воскресенье</div>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -53,9 +53,9 @@ async function checkUser(request, flag = true) {
 
 // определяем обработчик для ведения лога вызовов сервера
 router.use((request, _response, next) => {
-    const now = new Date();
-    const data = `${now} ${request.method} ${request.url}`;
-    fs.appendFile('server.log', `${data}\n`, () => {});
+    // const now = new Date();
+    // const data = `${now} ${request.method} ${request.url}`;
+    // fs.appendFile('server.log', `${data}\n`, () => {});
     next();
 });
 
@@ -68,7 +68,9 @@ const jsonParser = express.json();
 // определяем обработчики для маршрута на главную страницу, '/'
 router.get('/', (request, response) => {
     // отправляем ответ
-    response.sendFile(`${__dirname}/html/homePage.html`);
+    // response.sendFile(`${__dirname}/html/homePage.html`);
+    // ! Временная переардесация
+    response.redirect('/dashboard');
 });
 
 router.get('/index(.html)?', (request, response) => {
@@ -93,23 +95,26 @@ router.post('/queryForUser', jsonParser, async (request, response) => {
 
 // обработчики для попадания на рабочую область приложения
 router.use('/dashboard(.html)?', jsonParser, async (request, response) => {
-    await checkUser(request).then((result) => {
-        if (result !== false) {
-            let userName;
-            if (result !== null) {
-                userName = result;
-            } else {
-                userName = getCookie(request.headers.cookie, 'LOGIN');
-            }
+    // await checkUser(request).then((result) => {
+    //     if (result !== false) {
+    //         let userName;
+    //         if (result !== null) {
+    //             userName = result;
+    //         } else {
+    //             userName = getCookie(request.headers.cookie, 'LOGIN');
+    //         }
 
-            // вывод имени пользователя или его логина при приветствие
+    //         // вывод имени пользователя или его логина при приветствие
+    //         response.render('dashboard', {
+    //             user: userName,
+    //         });
+    //     } else {
+    //         response.redirect('/');
+    //     }
+    // });
             response.render('dashboard', {
-                user: userName,
+                user: 'dasd',
             });
-        } else {
-            response.redirect('/');
-        }
-    });
 });
 
 router.get('/dashboard(.hbs)?', (request, response) => {
