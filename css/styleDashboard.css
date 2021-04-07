@@ -67,11 +67,10 @@ header{
 }
 
 #dashboard-main{
+    display: flex;
+    flex-wrap: wrap;
+    
     margin-top: 40px;
-    /* display: flex;
-    align-items: flex-start;
-    justify-content: space-around; */
-    /* flex-wrap: wrap; */
     white-space: nowrap;
     position: absolute;
     top: 0;
@@ -80,8 +79,10 @@ header{
     left: 0;
 }
 .wrapper{
-    width: 272px;
-    margin: 4px;
+    flex: auto;
+    margin: 0.28%;
+    /* width: 272px;
+    margin: 4px; */
     min-height: 100%;
     box-sizing: border-box;
     display: inline-block;
@@ -139,7 +140,7 @@ header{
     cursor: pointer;
     display: block;
     margin-bottom: 8px;
-    max-width: 300px;
+    /* max-width: 300px; */
     min-height: 20px;
     position: relative;
     text-decoration: none;
@@ -157,4 +158,36 @@ header{
 .list-task-label{
     overflow: auto;
     position: relative;
+}
+
+@media(max-width: 2500px){
+    .wrapper{
+        margin: 0.25%;
+    }
+}
+
+@media(max-width: 1800px){
+    .wrapper{
+        width: 20%;
+    }
+}
+
+@media(max-width: 1100px){
+    .wrapper{
+        width: 25%;
+        margin: 0.5%;
+    }
+}
+
+@media(max-width: 850px){
+    .wrapper{
+        width: 33%;
+    }
+}
+
+@media(max-width: 550px){
+    .wrapper{
+        width: 50%;
+        margin: 1%;
+    }
 }

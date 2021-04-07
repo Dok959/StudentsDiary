@@ -25,16 +25,16 @@ DROP TABLE IF EXISTS `settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
-  `id_owner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
-  `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
-  `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
+  `idOwner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
+  `firstName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
+  `lastName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
   `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
   `role` int DEFAULT NULL COMMENT 'Указывает на роль пользователя при формировании учебного расписания',
   `university` int DEFAULT NULL COMMENT 'Ключ указывающий на принадлежность к конкретному университету',
   `group` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название группы обучения',
-  KEY `id_owner_idx` (`id_owner`),
-  CONSTRAINT `id_owner` FOREIGN KEY (`id_owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `id_owner_idx` (`idOwner`),
+  CONSTRAINT `id_owner` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:33:34
+-- Dump completed on 2021-04-07 18:19:14

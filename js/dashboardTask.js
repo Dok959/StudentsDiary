@@ -1,31 +1,11 @@
-async function getResourse (data) {
-    options = {
-        method: 'POST',
-        body: data,
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    }
-
-    const res = await fetch('./database/buildingQueryForDB', options);
-
-    if (!res.ok) {
-        throw new Error(`Произошла ошибка: ${  res.status}`);
-    }
-
-    const result = await res.json()
-    return result;
-};
-
 class Task {
     constructor({
         id, idOwner, idProject = '', title = '',
         description = '', date = '', time = '', period = null,
     }) {
         this.id = id;
-        this.id_owner = idOwner;
-        this.id_project = idProject;
+        this.idOwner = idOwner;
+        this.idProject = idProject;
         this.title = title;
         this.description = description;
         this.date = date;
@@ -79,6 +59,18 @@ function changeRepetition() {
     }
 }
 
+// отображение вкладки описания
+function openDescription() {
+    try {
+        let element = document.getElementById('action');
+        element.setAttribute('style', 'display: none; margin: 0;');
+        element = document.getElementById('description');
+        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
+    } catch (error) {
+        /* empty */
+    }
+}
+
 // отображение вкладки действий
 function openAction() {
     try {
@@ -109,21 +101,9 @@ function openAction() {
     }
 }
 
-// отображение вкладки описания
-function openDescription() {
-    try {
-        let element = document.getElementById('action');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('description');
-        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
-    } catch (error) {
-        /* empty */
-    }
-}
-
 // в процессе доработки
 async function renderTask({
-    id, id_project = '', title, description = '', date, time = '', period = null, } = {}) {
+    id, idProject = '', title, description = '', date, time = '', period = null, } = {}) {
     if (date != null) {
         const dates = new Date(date);
         const year = dates.getFullYear();
@@ -218,7 +198,7 @@ async function renderTask({
                                 <div class="repetition__block">
                                     <label class="reiteration__title">Будет ли повторение задачи</label>
                                     <div class="repetition__elements">
-                                        <div class="repetition__element">
+                                        <div class="repetition__elements">
                                             <input class="radio" type="radio" name="repetition" value="yes" ${
                                                 period ? 'checked' : ''
                                             } onchange="javascript:changeRepetition()">
@@ -280,10 +260,6 @@ async function renderTask({
         openDescription();
     }
 }
-
-const taskList = new Bord({
-    listElem: '.bord__list',
-});
 
 // открытие окна с выбранной задачей
 openTask = (id) => {
@@ -421,7 +397,7 @@ async function taskReady(idTask = null) {
     const data = JSON.stringify({
         code: 1,
         table: 'HISTORY',
-        id_owner: cookie,
+        idOwner: cookie,
         date,
         id: Number.parseInt(id, 10),
     });
@@ -635,8 +611,8 @@ async function readyCreateTask() {
         data = JSON.stringify({
             code: 1,
             table: 'TASKS',
-            id_owner: cookie,
-            id_project: null,
+            idOwner: cookie,
+            idProject: null,
             title,
             description,
             date,

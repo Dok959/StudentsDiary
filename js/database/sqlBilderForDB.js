@@ -2,7 +2,7 @@ const pool = require('./pool');
 
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
 // eslint-disable-next-line consistent-return
-async function buildingQueryForDB(args) {
+buildingQueryForDB = async (args) => {
     let query = '';
     let request; let response;
     let result = {};
@@ -21,7 +21,7 @@ async function buildingQueryForDB(args) {
             for (const element in args) {
                 // формирование запроса
                 if (
-                    element === 'id_project' ||
+                    element === 'idProject' ||
                     element === 'date' ||
                     element === 'time' ||
                     element === 'period'
@@ -84,7 +84,7 @@ async function buildingQueryForDB(args) {
     } if (args.code === 2) {
         // только для таблицы настроек
         // требуется приписка лимит, так как нет первичного ключа.
-        // UPDATE SETTINGS SET first_name = 'Doktor' where id_owner = 12 Limit 1
+        // UPDATE SETTINGS SET first_name = 'Doktor' where idOwner = 12 Limit 1
 
         query = `UPDATE ${args.table} SET `;
 
@@ -93,9 +93,9 @@ async function buildingQueryForDB(args) {
                 element !== 'code' &&
                 element !== 'table' &&
                 element !== 'id' &&
-                element !== 'id_owner'
+                element !== 'idOwner'
             ) {
-                const iSValue = this.eval(`args.${element}`);
+                const iSValue = args[element];
                 // if (iSValue === null) {
                 //     query += `${element} is ${iSValue}, `;
                 // }
@@ -110,7 +110,7 @@ async function buildingQueryForDB(args) {
         query = query.substring(0, query.length - 2);
 
         if (args.table === 'HISTORY') {
-            query += ` WHERE id_owner = '${args.id_owner}' and date = '${args.date}';`;
+            query += ` WHERE idOwner = '${args.idOwner}' and date = '${args.date}';`;
         } else {
             query += ` WHERE id = '${args.id}';`;
         }
@@ -142,7 +142,7 @@ async function buildingQueryForDB(args) {
                 const taskId = args.id;
                 const {idOwner} = args;
                 let date = new Date(result[0].date);
-                delete args.id_owner;
+                delete args.idOwner;
                 args.id = result[0].period;
 
                 result = await buildingQueryForDB(args);
@@ -180,7 +180,7 @@ async function buildingQueryForDB(args) {
                     args.code = 2;
                     args.table = 'TASKS';
                     args.id = taskId;
-                    args.id_owner = idOwner;
+                    args.idOwner = idOwner;
                     args.date = date;
 
                     // обновление задачи, так она повторяется
@@ -193,7 +193,7 @@ async function buildingQueryForDB(args) {
 
         for (const element in args) {
             if (element !== 'code' && element !== 'table') {
-                const iSValue = this.eval(`args.${element}`);
+                const iSValue = args[element];
                 if (iSValue === null) {
                     query += `${element} is ${iSValue} and `;
                 } else {
@@ -228,7 +228,7 @@ async function buildingQueryForDB(args) {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                const iSValue = this.eval(`args.${element}`);
+                const iSValue = args[element];
                 if (iSValue === null) {
                     query += ` ${element} is ${iSValue} and`;
                 } else if (element === 'date') {

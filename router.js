@@ -121,18 +121,25 @@ router.get('/dashboard(.hbs)?', (request, response) => {
     response.redirect('/dashboard');
 });
 
+
+router.get('/additionally(.html)?', (request, response) => {
+    response.sendFile(`${__dirname}/html/additionally.html`);
+});
+
+
 // обработчик для отправки запросов к базе
 router.post(
     '/database/buildingQueryForDB',
     jsonParser,
     async (request, response) => {
-        if (request.body.id_owner) {
-            // если пользователь авторизован, то парсим его hash
-            request.body.id_owner = key.decrypt(
-                getCookie(request.headers.cookie, 'USER'),
-                'utf8'
-            );
-        }
+        // ! Временно отключено
+        // if (request.body.id_owner) {
+        //     // если пользователь авторизован, то парсим его hash
+        //     request.body.id_owner = key.decrypt(
+        //         getCookie(request.headers.cookie, 'USER'),
+        //         'utf8'
+        //     );
+        // }
 
         // console.log('Запрос:');
         // console.log(request.body);
