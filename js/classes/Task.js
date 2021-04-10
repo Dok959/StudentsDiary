@@ -38,6 +38,7 @@ class Task {
     }
 }
 
+// ! Не тестировано ничего
 // получение задачи с формы
 function getTask() {
     const task = document.forms[0].name;
@@ -260,17 +261,6 @@ async function renderTask({
         openDescription();
     }
 }
-
-// открытие окна с выбранной задачей
-openTask = (id) => {
-    taskList.list.tasks.forEach((element) => {
-        if (element.id === id) {
-            // $(".element__info").show(); // тестовая штука
-            renderTask(element);
-            // openDescription();
-        }
-    });
-};
 
 function renderPeriod(frequency, period) {
     document.getElementsByName('frequency')[0].value = frequency;
@@ -649,29 +639,29 @@ function cancelCreateTask() {
 
 
 // проверка нажатия вне выбранной задачи
-document.addEventListener('click', (event) => {
-    try {
-        const node = document.getElementById('task');
-        if (!node.contains(event.target)) {
-            $('.element__info').remove();
-        }
-    } catch (error) {
-        /* empty */
-    }
-    try {
-        const node = document.getElementsByClassName('create__form')[0];
-        if (!node.contains(event.target)) {
-            node.setAttribute('style', 'display: none;');
-        }
-    } catch (error) {
-        /* empty */
-    }
-    try {
-        const node = document.getElementsByClassName('search__form')[0];
-        if (!node.contains(event.target)) {
-            node.setAttribute('style', 'display: none;');
-        }
-    } catch (error) {
-        /* empty */
-    }
-});
+// document.addEventListener('click', (event) => {
+//     try {
+//         const node = document.getElementById('task');
+//         if (!node.contains(event.target)) {
+//             $('.element__info').remove();
+//         }
+//     } catch (error) {
+//         /* empty */
+//     }
+//     try {
+//         const node = document.getElementsByClassName('create__form')[0];
+//         if (!node.contains(event.target)) {
+//             node.setAttribute('style', 'display: none;');
+//         }
+//     } catch (error) {
+//         /* empty */
+//     }
+//     try {
+//         const node = document.getElementsByClassName('search__form')[0];
+//         if (!node.contains(event.target)) {
+//             node.setAttribute('style', 'display: none;');
+//         }
+//     } catch (error) {
+//         /* empty */
+//     }
+// });

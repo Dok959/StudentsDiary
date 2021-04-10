@@ -1,5 +1,5 @@
 class Tasks {
-    constructor({ tasks = [] } = {}) {
+    constructor({ tasks = []} = {}) {
         this.tasks = tasks;
     }
 
@@ -7,10 +7,11 @@ class Tasks {
         this.tasks.push(new Task(element));
     };
 
-    clearTasks({ tasks = [] } = {}) {
+    clearTasks({ tasks = []} = {}) {
         this.tasks = tasks;
     }
 
+    // ! Не тестировано
     getIdTask(id) {
         for (let element = 0; element < this.tasks.length; element += 1) {
             if (this.tasks[element].id === id) {
@@ -20,6 +21,7 @@ class Tasks {
         return false;
     };
 
+    // ! Не тестировано
     localUpdateTask(id, title, description, date, time, period) {
         const task = this.getIdTask(id);
         task.setTitle(title);
@@ -57,6 +59,7 @@ class Tasks {
         taskList.showTasks();
     };
 
+    // ! Не тестировано
     localDeleteTask(id) {
         let index;
         for (let element = 0; element < this.tasks.length; element += 1) {

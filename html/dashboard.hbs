@@ -12,12 +12,11 @@
 
     <script src="/js/library/jquery-3.5.1.min.js" defer></script>
     <script src="/js/cookies/cookies.js" defer></script>
-    <script src="/js/dashboardBord.js" defer></script>
-    <script src="/js/dashboardTasks.js" defer></script>
-    <script src="/js/dashboardTask.js" defer></script>
+    <script src="/js/classes/Bord.js" defer></script>
+    <script src="/js/classes/Tasks.js" defer></script>
+    <script src="/js/classes/Task.js" defer></script>
     <script src="/js/dashboard.js" defer></script>
-    {{!-- <script src="/js/dashboardHandler.js" defer></script>
-    <script src="/js/validation.js" defer></script> --}}
+    <script src="/js/validation.js" defer></script>
 </head>
 
 <body>
@@ -25,15 +24,15 @@
         <header id="header">
             <div id="header-menu">
                 <a href="/personPage.html" id="user-profile">
-                    <img src="/img/add.png" alt="Пользователь" id="user-image">
+                    <img src="/img/user.svg" alt="Пользователь" id="user-image">
                 </a>
 
                 <a href="#" id="user-activity">
                     <span id="activity-title">Активность</span>
                 </a>
 
-                <a href="/additionally.html" id="overdue-tasks">
-                    <span id="overdue-title">Просроченные</span>
+                <a href="/additionally.html" id="additionally-tasks">
+                    <span id="additionally-title">Дополнительное</span>
                 </a>
             </div>
         </header>
@@ -55,109 +54,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Вторник</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 2
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Среда</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 3
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Четверг</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 4
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Пятница</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 5
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Суббота</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 6
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Воскресенье</h2>
-                    </div>
-
-                    <div class="list-tasks">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 7
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div> --}}
+            </div>--}}
         </div>
 
     </div>

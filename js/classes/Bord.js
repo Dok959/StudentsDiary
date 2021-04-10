@@ -15,32 +15,30 @@ class Bord {
     }
 
     showTasks() {
-        // скрытие областей открытых элементов
-        // $('.task__empty').remove();
-        // $('.element_task').remove();
+        // скрытие открытых элементов
+        closeOpenWindow();
 
         this.renderTasks(this.list.tasks);
     }
 
-
+    // ? возможно стоит удалить id с задач
     renderTasks(tasks) {
         tasks.forEach((element) => {
+            const {id} = element;
             let {title, date} = element;
             if (title.length > 70) {
-                title = `${title.slice(0, 55)}...`; // укоротить скорее всего
+                title = `${title.slice(0, 55)}...`;
             }
 
             date = new Date(date).getDay();
-            console.log(date)
 
-            // нужен механизм чтобы указать столбец для вывода
-            const taskList = document.getElementById(date);
-            console.log(taskList)
+            // определяем столбец для вывода
+            const taskList = document.getElementById(`day-${date}`);
 
-            const node = `<a href="#" class="list-task">
+            const node = `<a href="javascript:openTask(${id})" class="list-task" id="${id}">
                     <div class="list-task-details">
                         <span class="list-task-label">
-                            Задача 5
+                            ${title}
                         </span>
                     </div>
                 </a>`;

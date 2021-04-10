@@ -53,14 +53,13 @@ header{
     height: min-content;
 }
 
-/* display: none; должно выдаваться через js! */
-#overdue-tasks{
+#additionally-tasks{
     display: inline-flex;
     height: min-content;
     margin: 9px;
 }
 
-#overdue-title{
+#additionally-title{
     max-height: min-content;
     min-height: min-content;
     height: min-content;
@@ -78,17 +77,18 @@ header{
     bottom: 0;
     left: 0;
 }
+
 .wrapper{
     flex: auto;
     margin: 0.28%;
-    /* width: 272px;
-    margin: 4px; */
     min-height: 100%;
     box-sizing: border-box;
     display: inline-block;
     vertical-align: top;
     white-space: nowrap;
+    width: 13%;
 }
+
 #bord-day{
     background-color: #ebecf0;
     border-radius: 3px;
@@ -140,7 +140,6 @@ header{
     cursor: pointer;
     display: block;
     margin-bottom: 8px;
-    /* max-width: 300px; */
     min-height: 20px;
     position: relative;
     text-decoration: none;
@@ -158,6 +157,11 @@ header{
 .list-task-label{
     overflow: auto;
     position: relative;
+}
+
+/* * стиль по которому будут искаться все открытие окна */
+.open-window{
+    display: block;
 }
 
 @media(max-width: 2500px){

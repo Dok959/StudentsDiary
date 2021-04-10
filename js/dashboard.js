@@ -1,8 +1,10 @@
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 const nowDay = new Date();
 const taskList = new Bord();
+const closeTag = '.open-window'
 
-// функция формирующая адаптивный список дней
+// Адаптивный список дней
+// TODO убрать формирование пустых тестовых задач и добавить больше задач в базу
 function formation(){
     let now = nowDay.getDay();
     for (let index = 0; index < 7; index += 1) {
@@ -17,7 +19,7 @@ function formation(){
                         <h2 class="day-title">${element}</h2>
                     </div>
 
-                    <div class="list-tasks" id="${now}">
+                    <div class="list-tasks" id="day-${now}">
                         <a href="#" class="list-task">
                             <div class="list-task-details">
                                 <span class="list-task-label">
@@ -35,7 +37,7 @@ function formation(){
     }
 }
 
-// механизм запросов к базе данных
+// Механизм запросов
 async function getResourse (data) {
     options = {
         method: 'POST',
@@ -56,7 +58,7 @@ async function getResourse (data) {
     return result;
 };
 
-// получение списка задач на неделю
+// Получение задач на неделю
 function gettingListTasks(){
     // определение сроков
     const now = nowDay;
@@ -86,6 +88,24 @@ function gettingListTasks(){
     taskList.list.clearTasks();
     taskList.getTasks(data);
 }
+
+// Закрытие открытых окон
+function closeOpenWindow() {
+    const elements = document.querySelectorAll(closeTag);
+    elements.forEach(element => {
+        element.remove();
+    });
+}
+
+// Открытие выбранной задачей
+openTask = (id) => {
+    taskList.list.tasks.forEach((element) => {
+        if (element.id === id) {
+            console.log(id)
+            // renderTask(element);
+        }
+    });
+};
 
 // Действия при полной загрузке странцы
 document.addEventListener('DOMContentLoaded', () => {
