@@ -1,10 +1,13 @@
+const cookie = getCookie(document.cookie, 'USER');
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 const nowDay = new Date();
 const taskList = new Bord();
-const closeTag = '.open-window'
+const closeTag = '.window-overlay';
+
+// todo косяк с датой, непонятно как он её получает
+console.log(nowDay)
 
 // Адаптивный список дней
-// TODO убрать формирование пустых тестовых задач и добавить больше задач в базу
 function formation(){
     let now = nowDay.getDay();
     for (let index = 0; index < 7; index += 1) {
@@ -20,13 +23,7 @@ function formation(){
                     </div>
 
                     <div class="list-tasks" id="day-${now}">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 1
-                                </span>
-                            </div>
-                        </a>
+
                     </div>
                 </div>
             </div>`;
@@ -59,6 +56,7 @@ async function getResourse (data) {
 };
 
 // Получение задач на неделю
+// todo прописать получение куки
 function gettingListTasks(){
     // определение сроков
     const now = nowDay;
@@ -97,12 +95,260 @@ function closeOpenWindow() {
     });
 }
 
+// Включение и выключение выбора периодичности
+function periodicityEnable() {
+    const elements = document.querySelectorAll('select');
+    elements.forEach(element => {
+        element.setAttribute('style', 'display: initial');
+    });
+    $('#periodicityEnable').toggleClass('btn-invizible');
+    $('#periodicityShutdown').toggleClass('btn-invizible');
+}
+function periodicityShutdown() {
+    const elements = document.querySelectorAll('select');
+    elements.forEach(element => {
+        element.setAttribute('style', 'display: none');
+    });
+    $('#periodicityEnable').toggleClass('btn-invizible');
+    $('#periodicityShutdown').toggleClass('btn-invizible');
+}
+
+// сброс даты и времени
+function clearElement() {
+    document.getElementById('date').value = null;
+    document.getElementById('time').value = null;
+}
+
+// получение задачи с формы
+function getTask() {
+    const task = document.getElementById('window').getAttribute('name');
+    return task;
+}
+
+// обновление в базе
+async function updateTask() {
+    let availabilityTitle = true; // флаг проверки названия
+    const id = getTask();
+
+    let title = document.getElementById('title');
+    // проверка на пустоту
+    checkLength(title) ? (title = title.value) : (availabilityTitle = false);
+
+    const description = document.getElementById('description').value;
+
+    // дата
+    let date = document.getElementById('date');
+    const availabilityDate = await checkValidation(date); // флаг проверки даты
+    date = date.value ? date.value : null;
+
+    // время
+    const time = document.getElementById('time').value
+        ? document.getElementById('time').value
+        : null;
+
+    console.log(availabilityTitle, availabilityDate)
+
+    // если время задано, а дата нет, то она будет установлена на сегодня
+    if (time !== null && date === null) {
+        const year = nowDay.getFullYear();
+        let month = nowDay.getMonth() + 1;
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        let day = nowDay.getDate();
+        if (day < 10) {
+            day = `0${day}`;
+        }
+        date = `${year}-${month}-${day}`;
+    }
+    console.log(date)
+
+    // повторяется ли задача и если да то когда
+    let frequency = null;
+    let period = null;
+    if (document.getElementById('periodicityEnable').classList.contains('btn-invizible') === true) {
+        if (date === null){
+            const year = nowDay.getFullYear();
+            let month = nowDay.getMonth() + 1;
+            if (month < 10) {
+                month = `0${month}`;
+            }
+            let day = nowDay.getDate();
+            if (day < 10) {
+                day = `0${day}`;
+            }
+            date = `${year}-${month}-${day}`;
+        }
+        frequency = document.getElementById('frequency').value;
+        period = document.getElementById('period').value;
+    }
+
+    // если все ок, сохраняем
+    if (availabilityTitle && availabilityDate) {
+        removeValidation(); // удаление ошибочного выделения;
+
+        // формируем набор для проверки периодичности задачи
+        let data = JSON.stringify({
+            code: 4,
+            table: 'REPETITION',
+            frequency,
+            period,
+        });
+
+        period = await getResourse(data);
+        period = period[0] ? period[0].id : null;
+
+        // обновление данных локально
+        // todo
+        // taskList.list.localUpdateTask(
+        //     id,
+        //     title,
+        //     description,
+        //     date,
+        //     time,
+        //     period
+        // );
+
+        // формируем набор для отправки на сервер
+        data = JSON.stringify({
+            code: 2,
+            table: 'TASKS',
+            id: Number.parseInt(id, 10),
+            title,
+            description,
+            date,
+            time,
+            period,
+        });
+
+        getResourse(data);
+    }
+}
+
+
+// Отрисовка задачи
+async function renderTask({
+    id, idProject = '', title, description = '', date, time = '', period = null, } = {}) {
+
+    closeOpenWindow();
+
+    let year = nowDay.getFullYear();
+    let month = nowDay.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    let day = nowDay.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    const minDate = `${year}-${month}-${day}`;
+
+    if (date != null) {
+        const dates = new Date(date);
+        year = dates.getFullYear();
+        month = dates.getMonth() + 1;
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        day = dates.getDate();
+        if (day < 10) {
+            day = `0${day}`;
+        }
+        date = `${year}-${month}-${day}`;
+    }
+
+    let frequency;
+    if (period !== null) {
+        // набор для проверки повторяемости задачи
+        const data = JSON.stringify({
+            code: 4,
+            table: 'REPETITION',
+            id: period,
+        });
+
+        period = await getResourse(data);
+        frequency = period[0].frequency;
+        period = period[0].period;
+    }
+
+    const node = `<div class="window-overlay">
+            <div class="window" id="window" name="${id}">
+                <div class="window-wrapper">
+                    <a href="javascript:closeOpenWindow()" class="icon-close"></a>
+
+                    <div class="card-detail-window">
+                        <div class="window-detail-header">
+                            <div class="window-title">
+                                <textarea class="card-detail-header" type="text" id="title" placeholder="Название задачи" maxlength=100>${title || ''}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="window-main-col">
+                            <div class="card-detail-data">
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Действия с задачей</h3>
+                                    <div class="card-detail-action">
+                                        <a href="javascript:updateTask()" class="link-button">Изменить</a>
+                                        <a href="javascript:taskReady()" class="link-button">Выполнено</a>
+                                        <a href="javascript:deleteTask()" class="link-button">Удалить</a>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Срок</h3>
+                                    <div class="card-detail-due-date">
+                                        <input class="datetime-local" type="date" id="date" min="${minDate}" value="${date || ''}">
+                                        <input class="datetime-local" type="time" id="time" value="${time || ''}">
+                                        <a href="javascript:clearElement()" class="link-button">Сбросить</a>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Повторение</h3>
+                                    <div class="card-detail-repeat">
+                                        <a href="javascript:periodicityEnable()" class="link-button" id="periodicityEnable">Задать</a>
+                                        <select class="select" id="frequency">
+                                            <option value="1">Каждый</option>
+                                            <option value="2">Через</option>
+                                        </select>
+
+                                        <select class="select" id="period">
+                                            <option value="1">День</option>
+                                            <option value="2">Неделю</option>
+                                            <option value="3">Месяц</option>
+                                            <option value="4">Год</option>
+                                        </select>
+                                        <a href="javascript:periodicityShutdown()" class="link-button btn-invizible" id="periodicityShutdown">Очистить</a>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Описание</h3>
+                                    <div class="description-edit">
+                                        <textarea class="card-detail-description" type="text" id="description" placeholder="Описание задачи" maxlength=600>${description || ''}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    $('#dashboard-container').append(node);
+
+    if (frequency !== undefined) {
+        periodicityEnable();
+        document.getElementById('frequency').value = frequency;
+        document.getElementById('period').value = period;
+    }
+}
+
 // Открытие выбранной задачей
 openTask = (id) => {
     taskList.list.tasks.forEach((element) => {
         if (element.id === id) {
-            console.log(id)
-            // renderTask(element);
+            renderTask(element);
         }
     });
 };
@@ -111,4 +357,16 @@ openTask = (id) => {
 document.addEventListener('DOMContentLoaded', () => {
     formation();
     gettingListTasks();
+})
+
+// проверка нажатия вне выбранной задачи
+document.addEventListener('click', (event) => {
+    try {
+        const node = document.getElementById('window');
+        if (!node.contains(event.target)) {
+            closeOpenWindow();
+        }
+    } catch (error) {
+        /* empty */
+    }
 })

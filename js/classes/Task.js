@@ -39,326 +39,104 @@ class Task {
 }
 
 // ! Не тестировано ничего
-// получение задачи с формы
-function getTask() {
-    const task = document.forms[0].name;
-    return task;
-}
+// // получение задачи с формы
+// function getTask() {
+//     const task = document.forms[0].name;
+//     return task;
+// }
 
-// проверка выбора повторяемости задачи
-function changeRepetition() {
-    const radios = document.getElementsByClassName('radio');
-    for (let i = 0; i < radios.length; i += 1) {
-        if (radios[i].checked === true && i === 0) {
-            const element = document.getElementsByClassName('select__block')[0];
-            element.setAttribute('style', 'display: flex;');
-            break;
-        } else {
-            const element = document.getElementsByClassName('select__block')[0];
-            element.setAttribute('style', 'display: none;');
-        }
-    }
-}
+// // обновление в базе
+// async function updateTask() {
+//     let availabilityTitle = true; // флаг проверки названия
+//     const id = getTask();
 
-// отображение вкладки описания
-function openDescription() {
-    try {
-        let element = document.getElementById('action');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('description');
-        element.setAttribute('style', 'display: flex; margin: 0 auto 10px;');
-    } catch (error) {
-        /* empty */
-    }
-}
+//     let title = document.getElementsByName('title')[0];
+//     // проверка на пустоту
+//     checkLength(title) ? (title = title.value) : (availabilityTitle = false);
 
-// отображение вкладки действий
-function openAction() {
-    try {
-        let element = document.getElementById('description');
-        element.setAttribute('style', 'display: none; margin: 0;');
-        element = document.getElementById('action');
-        element.setAttribute(
-            'style',
-            'display: flow-root; margin: 0 auto 10px;'
-        );
+//     const description = document.getElementsByName('description')[0].value;
 
-        element = document.getElementsByName('date').item(0);
-        let date = new Date();
-        let month = date.getMonth() + 1;
-        if (month < 9) {
-            month = `0${month}`;
-        }
-        let day = date.getDate();
-        if (day < 10) {
-            day = `0${day}`;
-        }
-        date = `${date.getFullYear()  }-${month}-${day}`;
-        element.setAttribute('min', `${date}`);
+//     // дата
+//     let date = document.getElementsByName('date')[0];
+//     const availabilityDate = await checkValidation(date); // флаг проверки даты
+//     date = document.getElementsByName('date')[0].value
+//         ? document.getElementsByName('date')[0].value
+//         : null;
 
-        changeRepetition();
-    } catch (error) {
-        /* empty */
-    }
-}
+//     // время
+//     const time = document.getElementsByName('time')[0].value
+//         ? document.getElementsByName('time')[0].value
+//         : null;
 
-// в процессе доработки
-async function renderTask({
-    id, idProject = '', title, description = '', date, time = '', period = null, } = {}) {
-    if (date != null) {
-        const dates = new Date(date);
-        const year = dates.getFullYear();
-        let month = dates.getMonth() + 1;
-        if (month < 10) {
-            month = `0${month}`;
-        }
-        let day = dates.getDate();
-        if (day < 10) {
-            day = `0${day}`;
-        }
-        date = `${year}-${month}-${day}`;
-    }
+//     // если время задано, а дата нет, то она будет установлена на сегодня
+//     if (time !== null && date === null) {
+//         const now = new Date();
+//         date =
+//             `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
+//                 : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
+//     }
 
-    let frequency;
-    if (period !== null) {
-        // набор для проверки повторяемости задачи
-        const data = JSON.stringify({
-            code: 4,
-            table: 'REPETITION',
-            id: period,
-        });
+//     // повторяется ли задача и если да то когда
+//     let frequency = null;
+//     let period = null;
+//     const radios = document.getElementsByClassName('radio');
+//     for (let i = 0; i < radios.length; i += 1) {
+//         if (radios[i].checked === true && i === 0) {
+//             // если установлено повторение
+//             if (date === null && document.getElementsByName('unit')[0].value !== null) {
+//                 frequency = document.getElementsByName('frequency')[0].value;
+//                 const now = new Date();
+//                 date =
+//                     `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
+//                         : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
+//                 period = document.getElementsByName('unit')[0].value;
+//             } else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
+//                 frequency = document.getElementsByName('frequency')[0].value;
+//                 period = document.getElementsByName('unit')[0].value;
+//             }
+//         }
+//     }
 
-        period = await getResourse(data);
-        frequency = period[0].frequency;
-        period = period[0].period;
-    }
+//     // если все ок, сохраняем
+//     if (availabilityTitle && availabilityDate) {
+//         removeValidation(); // удаление ошибочного выделения;
 
-    $('.element__info').remove();
-    const node = `
-        <div class="element__info" id="task">
-            <form class="element__task" name="${id}" method="get">
+//         // формируем набор для проверки периодичности задачи
+//         let data = JSON.stringify({
+//             code: 4,
+//             table: 'REPETITION',
+//             frequency,
+//             period,
+//         });
 
-                <div class="element__info__block">
-                    <textarea class="element__task__area title" type="text" name="title" placeholder="Название" maxlength=100>${title}</textarea>
-                </div>
+//         period = await getResourse(data);
+//         period = period[0] ? period[0].id : null;
 
-                <div class="element__btn">
-                    <a type="submit" id="updateElement" href="javascript:updateTask()">
-                        <span>Изменить</span>
-                    </a>
-                    <a type="submit" id="readyElement" href="javascript:taskReady()">
-                        <span>Выполнено</span>
-                    </a>
-                    <a type="submit" id="deleteElement" href="javascript:deleteTask()">
-                        <span>Удалить</span>
-                    </a>
-                </div>
+//         // обновление данных локально
+//         taskList.list.localUpdateTask(
+//             id,
+//             title,
+//             description,
+//             date,
+//             time,
+//             period
+//         );
 
-                <div class="element__info__more">
-                    <nav class="element__menu">
-                        <a class="link__element tab" href="javascript:openDescription()">
-                            <span class="link__description link_tab">
-                                Описание
-                            </span>
-                        </a>
+//         // формируем набор для отправки на сервер
+//         data = JSON.stringify({
+//             code: 2,
+//             table: 'TASKS',
+//             id: Number.parseInt(id, 10),
+//             title,
+//             description,
+//             date,
+//             time,
+//             period,
+//         });
 
-                        <a class="link__element tab" href="javascript:openAction()">
-                            <span class="link__description link_tab">
-                                Действия
-                            </span>
-                        </a>
-                    </nav>
-
-                    <div class="element__bord">
-                        <div class="element__info__block" id="description">
-                            <textarea class="element__task__area description" type="text" name="description" placeholder="Описание" maxlength=600>${
-                                description || ''
-                            }</textarea>
-                        </div>
-
-                        <div class="element__info__block" id="action">
-                            <div class="date">
-                                <label class="date__title">Укажите срок выполнения задачи</label>
-                                <div class="date__and__time__block">
-                                    <div class="date__and__time">
-                                        <a href="javascript:clearElement('date')" class="clear date__clear"></a>
-                                        <input class="datetime-local" type="date" name="date" value="${
-                                            date || ''
-                                        }">
-                                    </div>
-                                    <div class="date__and__time">
-                                        <a href="javascript:clearElement('time')" class="clear time__clear"></a>
-                                        <input class="datetime-local time" type="time" name="time" value="${
-                                            time || ''
-                                        }">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="repetition">
-                                <div class="repetition__block">
-                                    <label class="reiteration__title">Будет ли повторение задачи</label>
-                                    <div class="repetition__elements">
-                                        <div class="repetition__elements">
-                                            <input class="radio" type="radio" name="repetition" value="yes" ${
-                                                period ? 'checked' : ''
-                                            } onchange="javascript:changeRepetition()">
-                                            <label>Да</label>
-                                        </div>
-                                        <div class="repetition__element">
-                                            <input class="radio" type="radio" name="repetition" value="no" ${
-                                                period ? '' : 'checked'
-                                            } onchange="javascript:changeRepetition()">
-                                            <label>Нет</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="select__block">
-                                    <select name="frequency">
-                                        <option value="1">Каждый</option>
-                                        <option value="2">Через</option>
-                                    </select>
-
-                                    <select name="unit">
-                                        <option value="1">День</option>
-                                        <option value="2">Неделю</option>
-                                        <option value="3">Месяц</option>
-                                        <option value="4">Год</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="priority__block">
-                                <label class="priority__title">Укажите приоритет задачи</label>
-                                <select name="priority" class="priority__select__block">
-                                    <option value="1">Высший</option>
-                                    <option value="2">Средний</option>
-                                    <option value="3">Низкий</option>
-                                    <option value="4" selected>Нет</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>`;
-
-    $('.container').append(node);
-
-    if (frequency !== undefined) {
-        changeRepetition();
-        document.getElementsByName('frequency')[0].value = frequency;
-        document.getElementsByName('unit')[0].value = period;
-    } else {
-        document.getElementsByName('frequency')[0].value = 1;
-        document.getElementsByName('unit')[0].value = 1;
-    }
-
-    if (description === '') {
-        openAction();
-    } else {
-        openDescription();
-    }
-}
-
-function renderPeriod(frequency, period) {
-    document.getElementsByName('frequency')[0].value = frequency;
-    document.getElementsByName('unit')[0].value = period;
-}
-
-// обновление в базе
-async function updateTask() {
-    let availabilityTitle = true; // флаг проверки названия
-    const id = getTask();
-
-    let title = document.getElementsByName('title')[0];
-    // проверка на пустоту
-    checkLength(title) ? (title = title.value) : (availabilityTitle = false);
-
-    const description = document.getElementsByName('description')[0].value;
-
-    // дата
-    let date = document.getElementsByName('date')[0];
-    const availabilityDate = await checkValidation(date); // флаг проверки даты
-    date = document.getElementsByName('date')[0].value
-        ? document.getElementsByName('date')[0].value
-        : null;
-
-    // время
-    const time = document.getElementsByName('time')[0].value
-        ? document.getElementsByName('time')[0].value
-        : null;
-
-    // если время задано, а дата нет, то она будет установлена на сегодня
-    if (time !== null && date === null) {
-        const now = new Date();
-        date =
-            `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
-                : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
-    }
-
-    // повторяется ли задача и если да то когда
-    let frequency = null;
-    let period = null;
-    const radios = document.getElementsByClassName('radio');
-    for (let i = 0; i < radios.length; i += 1) {
-        if (radios[i].checked === true && i === 0) {
-            // если установлено повторение
-            if (date === null && document.getElementsByName('unit')[0].value !== null) {
-                frequency = document.getElementsByName('frequency')[0].value;
-                const now = new Date();
-                date =
-                    `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
-                        : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
-                period = document.getElementsByName('unit')[0].value;
-            } else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
-                frequency = document.getElementsByName('frequency')[0].value;
-                period = document.getElementsByName('unit')[0].value;
-            }
-        }
-    }
-
-    // если все ок, сохраняем
-    if (availabilityTitle && availabilityDate) {
-        removeValidation(); // удаление ошибочного выделения;
-
-        // формируем набор для проверки периодичности задачи
-        let data = JSON.stringify({
-            code: 4,
-            table: 'REPETITION',
-            frequency,
-            period,
-        });
-
-        period = await getResourse(data);
-        period = period[0] ? period[0].id : null;
-
-        // обновление данных локально
-        taskList.list.localUpdateTask(
-            id,
-            title,
-            description,
-            date,
-            time,
-            period
-        );
-
-        // формируем набор для отправки на сервер
-        data = JSON.stringify({
-            code: 2,
-            table: 'TASKS',
-            id: Number.parseInt(id, 10),
-            title,
-            description,
-            date,
-            time,
-            period,
-        });
-
-        getResourse(data);
-    }
-}
+//         getResourse(data);
+//     }
+// }
 
 // выполнение задачи в базе
 async function taskReady(idTask = null) {
@@ -414,11 +192,6 @@ function deleteTask() {
     });
 
     getResourse(data);
-}
-
-// сброс даты и времени
-function clearElement(name) {
-    document.getElementsByName(name)[0].value = null;
 }
 
 async function createTask() {
@@ -636,32 +409,3 @@ function cancelCreateTask() {
     element = document.getElementsByClassName('search__form').item(0);
     element.setAttribute('style', 'display: none;');
 }
-
-
-// проверка нажатия вне выбранной задачи
-// document.addEventListener('click', (event) => {
-//     try {
-//         const node = document.getElementById('task');
-//         if (!node.contains(event.target)) {
-//             $('.element__info').remove();
-//         }
-//     } catch (error) {
-//         /* empty */
-//     }
-//     try {
-//         const node = document.getElementsByClassName('create__form')[0];
-//         if (!node.contains(event.target)) {
-//             node.setAttribute('style', 'display: none;');
-//         }
-//     } catch (error) {
-//         /* empty */
-//     }
-//     try {
-//         const node = document.getElementsByClassName('search__form')[0];
-//         if (!node.contains(event.target)) {
-//             node.setAttribute('style', 'display: none;');
-//         }
-//     } catch (error) {
-//         /* empty */
-//     }
-// });

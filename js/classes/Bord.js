@@ -21,7 +21,6 @@ class Bord {
         this.renderTasks(this.list.tasks);
     }
 
-    // ? возможно стоит удалить id с задач
     renderTasks(tasks) {
         tasks.forEach((element) => {
             const {id} = element;
@@ -35,7 +34,7 @@ class Bord {
             // определяем столбец для вывода
             const taskList = document.getElementById(`day-${date}`);
 
-            const node = `<a href="javascript:openTask(${id})" class="list-task" id="${id}">
+            const node = `<a href="javascript:openTask(${id})" class="list-task">
                     <div class="list-task-details">
                         <span class="list-task-label">
                             ${title}

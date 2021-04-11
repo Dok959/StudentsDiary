@@ -74,7 +74,8 @@ router.get('/', (request, response) => {
 });
 
 router.get('/index(.html)?', (request, response) => {
-    response.redirect('/');
+    // response.redirect('/');
+    response.sendFile(`${__dirname}/html/homePage.html`);
 });
 
 router.get('/homePage(.html)?', (request, response) => {
