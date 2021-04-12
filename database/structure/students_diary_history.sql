@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `history` (
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
   `date` date NOT NULL COMMENT 'Дата выполнения задачи',
   `count` int DEFAULT '1' COMMENT 'Количество выполненных задач за день'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая историю выполнения задач по дням';
@@ -40,4 +40,4 @@ CREATE TABLE `history` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:34:24
+-- Dump completed on 2021-04-07 18:19:52

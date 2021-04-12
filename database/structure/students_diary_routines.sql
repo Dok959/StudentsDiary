@@ -34,4 +34,4 @@ USE `students_diary`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:34:24
+-- Dump completed on 2021-04-07 18:19:52

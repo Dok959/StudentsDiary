@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `projects`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `projects` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ проекта',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца проекта',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца проекта',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название проекта',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание проекта',
   PRIMARY KEY (`id`)
@@ -42,4 +42,4 @@ CREATE TABLE `projects` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:34:24
+-- Dump completed on 2021-04-07 18:19:51

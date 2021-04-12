@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS `tasks`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tasks` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
-  `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
+  `idProject` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
   `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
@@ -43,7 +43,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-03-21','14:01:00',7),(3,1,NULL,'Купить хлеб','','2021-03-23','13:15:00',1),(8,1,NULL,'Созданная задача','',NULL,NULL,NULL);
+INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко новая задача','авыаыва','2021-04-12',NULL,5),(3,1,NULL,'Купить хлеб','','2021-03-23','13:15:00',1),(4,1,NULL,'fdsfsd','','2021-04-15',NULL,NULL),(5,1,NULL,'dfdsfsdfdfsfsd',NULL,'2021-04-17',NULL,NULL),(8,1,NULL,'Созданная задача','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:33:33
+-- Dump completed on 2021-04-12 19:21:03

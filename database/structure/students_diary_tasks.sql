@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS `tasks`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tasks` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
-  `id_owner` int NOT NULL COMMENT 'Ключ владельца задачи',
-  `id_project` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
+  `idProject` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
   `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
   `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
@@ -46,4 +46,4 @@ CREATE TABLE `tasks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-24 16:34:23
+-- Dump completed on 2021-04-07 18:19:50
