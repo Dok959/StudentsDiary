@@ -34,7 +34,7 @@ class Bord {
             // определяем столбец для вывода
             const taskList = document.getElementById(`day-${date}`);
 
-            const node = `<a href="javascript:openTask(${id})" class="list-task">
+            const node = `<a href="javascript:openTask(${id})" class="list-task" id="${id}">
                     <div class="list-task-details">
                         <span class="list-task-label">
                             ${title}

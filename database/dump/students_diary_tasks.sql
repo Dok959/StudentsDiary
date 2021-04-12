@@ -43,7 +43,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко','авыаыва','2021-04-10','14:01:00',7),(3,1,NULL,'Купить хлеб','','2021-03-23','13:15:00',1),(8,1,NULL,'Созданная задача','',NULL,NULL,NULL);
+INSERT INTO `tasks` VALUES (1,1,NULL,'Купить билет в кино','тест',NULL,NULL,NULL),(2,1,NULL,'Купить молоко новая задача','авыаыва','2021-04-12',NULL,5),(3,1,NULL,'Купить хлеб','','2021-03-23','13:15:00',1),(4,1,NULL,'fdsfsd','','2021-04-15',NULL,NULL),(5,1,NULL,'dfdsfsdfdfsfsd',NULL,'2021-04-17',NULL,NULL),(8,1,NULL,'Созданная задача','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-07 18:19:13
+-- Dump completed on 2021-04-12 19:21:03

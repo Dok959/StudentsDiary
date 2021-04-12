@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS `repetition`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `repetition` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `frequency` int NOT NULL COMMENT 'Частота задачи',
-  `period` int NOT NULL COMMENT 'Элемент частоты задачи',
+  `frequency` int NOT NULL COMMENT 'Ключ частоты задачи',
+  `period` int NOT NULL COMMENT 'Ключ периода частоты задачи',
   PRIMARY KEY (`id`),
   KEY `id_idx` (`frequency`),
   KEY `id_period_idx` (`period`),

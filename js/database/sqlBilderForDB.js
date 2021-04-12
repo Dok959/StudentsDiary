@@ -48,7 +48,7 @@ buildingQueryForDB = async (args) => {
             query = query.substring(0, query.length - 2);
             query += ');';
 
-            console.log(`Запрос на добавление: ${  query}`);
+            console.log(`Запрос на добавление: ${query}`);
             // выполняем запрос к базе и обрабатываем результат
             await pool.execute(query);
 
@@ -81,7 +81,8 @@ buildingQueryForDB = async (args) => {
             return buildingQueryForDB(args);
         }
         return request;
-    } if (args.code === 2) {
+    }
+    if (args.code === 2) {
         // только для таблицы настроек
         // требуется приписка лимит, так как нет первичного ключа.
         // UPDATE SETTINGS SET first_name = 'Doktor' where idOwner = 12 Limit 1
@@ -114,7 +115,7 @@ buildingQueryForDB = async (args) => {
         } else {
             query += ` WHERE id = '${args.id}';`;
         }
-        console.log(`Запрос на обновление: ${  query}`);
+        console.log(`Запрос на обновление: ${query}`);
         request = await pool.execute(query);
 
         if (args.table === 'HISTORY') {
@@ -129,7 +130,8 @@ buildingQueryForDB = async (args) => {
 
         result.el = undefined;
         return result;
-    } if (args.code === 3) {
+    }
+    if (args.code === 3) {
         // проверка повторимости задач
         if (args.table === 'TASKS') {
             args.code = 4;
@@ -209,7 +211,8 @@ buildingQueryForDB = async (args) => {
 
         result.el = undefined;
         return result;
-    } if (args.code === 4) {
+    }
+    if (args.code === 4) {
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${args.table};`;
 

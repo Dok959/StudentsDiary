@@ -1,14 +1,12 @@
 const cookie = getCookie(document.cookie, 'USER');
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-const nowDay = new Date();
 const taskList = new Bord();
 const closeTag = '.window-overlay';
 
-// todo косяк с датой, непонятно как он её получает
-console.log(nowDay)
 
 // Адаптивный список дней
 function formation(){
+    const nowDay = new Date();
     let now = nowDay.getDay();
     for (let index = 0; index < 7; index += 1) {
         if (now === 7){
@@ -59,7 +57,7 @@ async function getResourse (data) {
 // todo прописать получение куки
 function gettingListTasks(){
     // определение сроков
-    const now = nowDay;
+    const now = new Date();
     let year = now.getFullYear();
     let month = now.getMonth() + 1;
     let day = now.getDate();
@@ -95,6 +93,12 @@ function closeOpenWindow() {
     });
 }
 
+// Удаление задачи с панели
+function removeDashbordTask(id) {
+    const element = document.getElementById(id);
+    element.remove();
+}
+
 // Включение и выключение выбора периодичности
 function periodicityEnable() {
     const elements = document.querySelectorAll('select');
@@ -125,7 +129,7 @@ function getTask() {
     return task;
 }
 
-// обновление в базе
+// обновление задачи
 async function updateTask() {
     let availabilityTitle = true; // флаг проверки названия
     const id = getTask();
@@ -146,10 +150,9 @@ async function updateTask() {
         ? document.getElementById('time').value
         : null;
 
-    console.log(availabilityTitle, availabilityDate)
-
     // если время задано, а дата нет, то она будет установлена на сегодня
     if (time !== null && date === null) {
+        const nowDay = new Date();
         const year = nowDay.getFullYear();
         let month = nowDay.getMonth() + 1;
         if (month < 10) {
@@ -161,13 +164,13 @@ async function updateTask() {
         }
         date = `${year}-${month}-${day}`;
     }
-    console.log(date)
 
     // повторяется ли задача и если да то когда
     let frequency = null;
     let period = null;
     if (document.getElementById('periodicityEnable').classList.contains('btn-invizible') === true) {
         if (date === null){
+            const nowDay = new Date();
             const year = nowDay.getFullYear();
             let month = nowDay.getMonth() + 1;
             if (month < 10) {
@@ -199,15 +202,14 @@ async function updateTask() {
         period = period[0] ? period[0].id : null;
 
         // обновление данных локально
-        // todo
-        // taskList.list.localUpdateTask(
-        //     id,
-        //     title,
-        //     description,
-        //     date,
-        //     time,
-        //     period
-        // );
+        taskList.list.localUpdateTask(
+            id,
+            title,
+            description,
+            date,
+            time,
+            period
+        );
 
         // формируем набор для отправки на сервер
         data = JSON.stringify({
@@ -225,6 +227,56 @@ async function updateTask() {
     }
 }
 
+// выполнение задачи в базе
+// todo прописать получение куки
+async function taskReady() {
+    const id = Number.parseInt( getTask(), 10);
+
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 9) {
+        month = `0${month}`;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    date = `${date.getFullYear()}-${month}-${day}`;
+
+    // удаление задачи локально
+    removeDashbordTask(id);
+    taskList.list.localDeleteTask(id);
+
+    // формируем набор для отправки на сервер
+    const data = JSON.stringify({
+        code: 1,
+        table: 'HISTORY',
+        idOwner: 1, // cookie,
+        date,
+        id,
+    });
+
+    const result = getResourse(data);
+    console.log(result)
+}
+
+// удаление задачи
+function deleteTask() {
+    const id = Number.parseInt(getTask(), 10);
+
+    // обновление данных локально
+    taskList.list.localDeleteTask(id);
+    removeDashbordTask(id);
+
+    // формируем набор для отправки на сервер
+    const data = JSON.stringify({
+        code: 3,
+        table: 'TASKS',
+        id,
+    });
+
+    getResourse(data);
+}
 
 // Отрисовка задачи
 async function renderTask({
@@ -232,6 +284,7 @@ async function renderTask({
 
     closeOpenWindow();
 
+    const nowDay = new Date();
     let year = nowDay.getFullYear();
     let month = nowDay.getMonth() + 1;
     if (month < 10) {

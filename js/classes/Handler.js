@@ -391,149 +391,149 @@ document.addEventListener('DOMContentLoaded', async () => {
         $('.menu').toggleClass('open__menu');
     });
     await checkRaspisanie();
-    let flagVisible = true;
+    // let flagVisible = true;
 
     /* функция отвечающая за скрытие и отображение даты на задачах при изменении размера экрана,
         а также за отрисовки разных элементов страницы */
-    $(window).resize(() => {
-        let element = document.getElementsByClassName('block__raspisanie')[0];
-        element = getComputedStyle(element).display;
-        if (window.innerWidth <= 1040) {
-            elements = document.getElementsByClassName('task__time');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-        }
-        else if (window.innerWidth > 1040) {
-            elements = document.getElementsByClassName('task__time');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: inline-block;');
-            }
-        }
+    // $(window).resize(() => {
+    //     let element = document.getElementsByClassName('block__raspisanie')[0];
+    //     element = getComputedStyle(element).display;
+    //     if (window.innerWidth <= 1040) {
+    //         elements = document.getElementsByClassName('task__time');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //     }
+    //     else if (window.innerWidth > 1040) {
+    //         elements = document.getElementsByClassName('task__time');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: inline-block;');
+    //         }
+    //     }
 
-        if (element === 'block' && window.innerWidth < 900 && flagVisible === true) {
-            elements = document.getElementsByClassName('menu__element__title');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-            elements = document.getElementsByClassName('link__description');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-            element = document.getElementsByClassName('search__title').item(0);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('picker').item(0);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'display: block;');
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: none;');
+    //     if (element === 'block' && window.innerWidth < 900 && flagVisible === true) {
+    //         elements = document.getElementsByClassName('menu__element__title');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //         elements = document.getElementsByClassName('link__description');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //         element = document.getElementsByClassName('search__title').item(0);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('picker').item(0);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: none;');
 
-            element = document.getElementsByClassName('img__raspisanie').item(0);
-            element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('img__raspisanie').item(0);
+    //         element.setAttribute('style', 'display: block;');
 
-            element = document.getElementsByClassName('bottom__menu__element').item(0);
-            element.setAttribute('style', 'left: 2%;');
-            flagVisible = false;
-        }
-        else if (window.innerWidth >= 900 && flagVisible === false){
-            elements = document.getElementsByClassName('menu__element__title');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: flex;');
-            }
-            elements = document.getElementsByClassName('link__description');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: block;');
-            }
-            element = document.getElementsByClassName('search__title').item(0);
-            element.setAttribute('style', 'display: block;');
-            element = document.getElementsByClassName('picker').item(0);
-            element.setAttribute('style', 'display: block;');
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('bottom__menu__element').item(0);
+    //         element.setAttribute('style', 'left: 2%;');
+    //         flagVisible = false;
+    //     }
+    //     else if (window.innerWidth >= 900 && flagVisible === false){
+    //         elements = document.getElementsByClassName('menu__element__title');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: flex;');
+    //         }
+    //         elements = document.getElementsByClassName('link__description');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: block;');
+    //         }
+    //         element = document.getElementsByClassName('search__title').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('picker').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: none;');
 
-            element = document.getElementsByClassName('img__raspisanie').item(0);
-            element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('img__raspisanie').item(0);
+    //         element.setAttribute('style', 'display: none;');
 
-            element = document.getElementsByClassName('bottom__menu__element').item(0);
-            element.setAttribute('style', 'left: 3%;');
-            flagVisible = true;
-        }
+    //         element = document.getElementsByClassName('bottom__menu__element').item(0);
+    //         element.setAttribute('style', 'left: 3%;');
+    //         flagVisible = true;
+    //     }
 
-        if (element === 'block' && window.innerWidth <= 600 && flagVisible === false){
-            elements = document.getElementsByClassName('link__img');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: flex;');
-            }
-        }
+    //     if (element === 'block' && window.innerWidth <= 600 && flagVisible === false){
+    //         elements = document.getElementsByClassName('link__img');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: flex;');
+    //         }
+    //     }
 
-        if (window.innerWidth <= 400){
-            elements = document.getElementsByClassName('menu__element__title');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: flex;');
-            }
-            elements = document.getElementsByClassName('link__description');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: block;');
-            }
-            elements = document.getElementsByClassName('link__img');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'display: block;');
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: flex;');
-        }
-        else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === true){
-            elements = document.getElementsByClassName('link__img');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: block;');
-            }
-            element = document.getElementsByClassName('search__title').item(0);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('picker').item(0);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'display: flex; flex-direction: row-reverse; '+
-                'padding-left: 5px;');
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: block;');
-        }
-        else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === false){
-            elements = document.getElementsByClassName('menu__element__title');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-            elements = document.getElementsByClassName('link__description');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: none;');
-            }
-            elements = document.getElementsByClassName('link__img');
-            for (let index = 0; index < elements.length; index += 1) {
-                elements[index].setAttribute('style', 'display: block;');
-            }
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'padding-left: 0px;');
-        }
+    //     if (window.innerWidth <= 400){
+    //         elements = document.getElementsByClassName('menu__element__title');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: flex;');
+    //         }
+    //         elements = document.getElementsByClassName('link__description');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: block;');
+    //         }
+    //         elements = document.getElementsByClassName('link__img');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: flex;');
+    //     }
+    //     else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === true){
+    //         elements = document.getElementsByClassName('link__img');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: block;');
+    //         }
+    //         element = document.getElementsByClassName('search__title').item(0);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('picker').item(0);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'display: flex; flex-direction: row-reverse; '+
+    //             'padding-left: 5px;');
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: block;');
+    //     }
+    //     else if (window.innerWidth > 400 && window.innerWidth <= 500 && flagVisible === false){
+    //         elements = document.getElementsByClassName('menu__element__title');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //         elements = document.getElementsByClassName('link__description');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: none;');
+    //         }
+    //         elements = document.getElementsByClassName('link__img');
+    //         for (let index = 0; index < elements.length; index += 1) {
+    //             elements[index].setAttribute('style', 'display: block;');
+    //         }
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'padding-left: 0px;');
+    //     }
 
-        if (window.innerWidth > 500 && window.innerWidth <= 600 && flagVisible === false){
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'display: block;');
-            element = document.getElementsByClassName('img__search').item(0);
-            element.setAttribute('style', 'display: block;');
-        }
-        else if (window.innerWidth >= 500 && window.innerWidth <= 600 && flagVisible === true){
-            element = document.getElementsByClassName('search__title').item(1);
-            element.setAttribute('style', 'display: none;');
-            element = document.getElementsByClassName('search_image').item(0);
-            element.setAttribute('style', 'padding-left: 0px;');
-        }
-    });
+    //     if (window.innerWidth > 500 && window.innerWidth <= 600 && flagVisible === false){
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //         element = document.getElementsByClassName('img__search').item(0);
+    //         element.setAttribute('style', 'display: block;');
+    //     }
+    //     else if (window.innerWidth >= 500 && window.innerWidth <= 600 && flagVisible === true){
+    //         element = document.getElementsByClassName('search__title').item(1);
+    //         element.setAttribute('style', 'display: none;');
+    //         element = document.getElementsByClassName('search_image').item(0);
+    //         element.setAttribute('style', 'padding-left: 0px;');
+    //     }
+    // });
 
     visibleTime();
 });

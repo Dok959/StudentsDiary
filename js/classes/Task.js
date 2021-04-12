@@ -25,6 +25,10 @@ class Task {
         this.description = description;
     }
 
+    getDate() {
+        return this.date;
+    }
+
     setDate(date) {
         this.date = date;
     }
@@ -39,160 +43,44 @@ class Task {
 }
 
 // ! Не тестировано ничего
-// // получение задачи с формы
-// function getTask() {
-//     const task = document.forms[0].name;
-//     return task;
-// }
-
-// // обновление в базе
-// async function updateTask() {
-//     let availabilityTitle = true; // флаг проверки названия
-//     const id = getTask();
-
-//     let title = document.getElementsByName('title')[0];
-//     // проверка на пустоту
-//     checkLength(title) ? (title = title.value) : (availabilityTitle = false);
-
-//     const description = document.getElementsByName('description')[0].value;
-
-//     // дата
-//     let date = document.getElementsByName('date')[0];
-//     const availabilityDate = await checkValidation(date); // флаг проверки даты
-//     date = document.getElementsByName('date')[0].value
-//         ? document.getElementsByName('date')[0].value
-//         : null;
-
-//     // время
-//     const time = document.getElementsByName('time')[0].value
-//         ? document.getElementsByName('time')[0].value
-//         : null;
-
-//     // если время задано, а дата нет, то она будет установлена на сегодня
-//     if (time !== null && date === null) {
-//         const now = new Date();
-//         date =
-//             `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
-//                 : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
-//     }
-
-//     // повторяется ли задача и если да то когда
-//     let frequency = null;
-//     let period = null;
-//     const radios = document.getElementsByClassName('radio');
-//     for (let i = 0; i < radios.length; i += 1) {
-//         if (radios[i].checked === true && i === 0) {
-//             // если установлено повторение
-//             if (date === null && document.getElementsByName('unit')[0].value !== null) {
-//                 frequency = document.getElementsByName('frequency')[0].value;
-//                 const now = new Date();
-//                 date =
-//                     `${now.getFullYear()}-${now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}`
-//                         : now.getMonth() + 1}-${now.getDate() < 10 ? `0${now.getDate()}` : now.getDate()}`;
-//                 period = document.getElementsByName('unit')[0].value;
-//             } else if (date !== null && document.getElementsByName('unit')[0].value !== null) {
-//                 frequency = document.getElementsByName('frequency')[0].value;
-//                 period = document.getElementsByName('unit')[0].value;
-//             }
-//         }
-//     }
-
-//     // если все ок, сохраняем
-//     if (availabilityTitle && availabilityDate) {
-//         removeValidation(); // удаление ошибочного выделения;
-
-//         // формируем набор для проверки периодичности задачи
-//         let data = JSON.stringify({
-//             code: 4,
-//             table: 'REPETITION',
-//             frequency,
-//             period,
-//         });
-
-//         period = await getResourse(data);
-//         period = period[0] ? period[0].id : null;
-
-//         // обновление данных локально
-//         taskList.list.localUpdateTask(
-//             id,
-//             title,
-//             description,
-//             date,
-//             time,
-//             period
-//         );
-
-//         // формируем набор для отправки на сервер
-//         data = JSON.stringify({
-//             code: 2,
-//             table: 'TASKS',
-//             id: Number.parseInt(id, 10),
-//             title,
-//             description,
-//             date,
-//             time,
-//             period,
-//         });
-
-//         getResourse(data);
-//     }
-// }
-
 // выполнение задачи в базе
-async function taskReady(idTask = null) {
-    const id = idTask || getTask();
+// async function taskReady(idTask = null) {
+//     const id = idTask || getTask();
 
-    let date = new Date();
-    let month = date.getMonth() + 1;
-    if (month < 9) {
-        month = `0${month}`;
-    }
-    let day = date.getDate();
-    if (day < 10) {
-        day = `0${day}`;
-    }
-    date = `${date.getFullYear()}-${month}-${day}`;
+//     let date = new Date();
+//     let month = date.getMonth() + 1;
+//     if (month < 9) {
+//         month = `0${month}`;
+//     }
+//     let day = date.getDate();
+//     if (day < 10) {
+//         day = `0${day}`;
+//     }
+//     date = `${date.getFullYear()}-${month}-${day}`;
 
-    if ($('.upcoming').is(':hidden')) {
-        // удаление задачи локально
-        taskList.list.localDeleteTask(id);
-        $('.element__info').remove();
-    } else {
-        $('.element__info').remove();
-    }
+//     if ($('.upcoming').is(':hidden')) {
+//         // удаление задачи локально
+//         taskList.list.localDeleteTask(id);
+//         $('.element__info').remove();
+//     } else {
+//         $('.element__info').remove();
+//     }
 
-    // формируем набор для отправки на сервер
-    const data = JSON.stringify({
-        code: 1,
-        table: 'HISTORY',
-        idOwner: cookie,
-        date,
-        id: Number.parseInt(id, 10),
-    });
+//     // формируем набор для отправки на сервер
+//     const data = JSON.stringify({
+//         code: 1,
+//         table: 'HISTORY',
+//         idOwner: cookie,
+//         date,
+//         id: Number.parseInt(id, 10),
+//     });
 
-    getResourse(data);
+//     getResourse(data);
 
-    if ($('.upcoming').is(':visible')) {
-        upcoming();
-    }
-}
-
-function deleteTask() {
-    const id = getTask();
-
-    // обновление данных локально
-    taskList.list.localDeleteTask(id);
-    $('.element__info').remove();
-
-    // формируем набор для отправки на сервер
-    const data = JSON.stringify({
-        code: 3,
-        table: 'TASKS',
-        id: Number.parseInt(id, 10),
-    });
-
-    getResourse(data);
-}
+//     if ($('.upcoming').is(':visible')) {
+//         upcoming();
+//     }
+// }
 
 async function createTask() {
     $('.element__info').remove();
