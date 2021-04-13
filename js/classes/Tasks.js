@@ -20,17 +20,17 @@ class Tasks {
         return false;
     };
 
-    localUpdateTask(id, title, description, date, time, period) {
+    async localUpdateTask(id, title, description, date, time, period) {
         id = Number.parseInt(id, 10);
-        const task = this.getIdTask(id);
-        task.setTitle(title);
-        task.setDescription(description);
-        task.setTime(time);
-        task.setPeriod(period);
+        const task = await this.getIdTask(id);
+        title ? task.setTitle(title) : null;
+        description ? task.setDescription(description) : null;
+        time ? task.setTime(time) : null;
+        period ? task.setPeriod(period) : null;
 
         const oldDate = task.getDate();
         if (oldDate !== date){
-            task.setDate(date);
+            date ? task.setDate(date) : null;
             removeDashbordTask(id);
 
             // проверка сильного изменения сроков

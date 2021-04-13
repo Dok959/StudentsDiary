@@ -40,6 +40,10 @@ class Task {
     setPeriod(period) {
         this.period = period;
     }
+
+    getPeriod() {
+        return this.period;
+    }
 }
 
 // ! Не тестировано ничего

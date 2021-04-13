@@ -54,7 +54,7 @@ async function getResourse (data) {
 };
 
 // Получение задач на неделю
-// todo прописать получение куки
+// todo прописать получение куки, 1 раз
 function gettingListTasks(){
     // определение сроков
     const now = new Date();
@@ -227,8 +227,19 @@ async function updateTask() {
     }
 }
 
+// Открытие выбранной задачей
+selectTask = (id) => {
+    let task;
+    taskList.list.tasks.forEach((element) => {
+        if (element.id === id) {
+            task = element;
+        }
+    });
+    return task;
+};
+
 // выполнение задачи в базе
-// todo прописать получение куки
+// todo прописать получение куки, 2 раза
 async function taskReady() {
     const id = Number.parseInt( getTask(), 10);
 
@@ -243,10 +254,6 @@ async function taskReady() {
     }
     date = `${date.getFullYear()}-${month}-${day}`;
 
-    // удаление задачи локально
-    removeDashbordTask(id);
-    taskList.list.localDeleteTask(id);
-
     // формируем набор для отправки на сервер
     const data = JSON.stringify({
         code: 1,
@@ -256,8 +263,26 @@ async function taskReady() {
         id,
     });
 
-    const result = getResourse(data);
-    console.log(result)
+    await getResourse(data);
+
+    // локально
+    const task = selectTask(id);
+    if (task.getPeriod() === null){ // удаление задачи
+        removeDashbordTask(id);
+        taskList.list.localDeleteTask(id);
+    }
+    else { // если задача повторяется, обновляем её
+        const dataElement = JSON.stringify({
+            code: 4,
+            table: 'TASKS',
+            idOwner: 1, // cookie,
+            id,
+        });
+
+        const result = await getResourse(dataElement);
+        taskList.list.localUpdateTask(id, null,null,
+            result[0].date, null,null);
+    }
 }
 
 // удаление задачи
