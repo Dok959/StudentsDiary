@@ -123,8 +123,13 @@ router.get('/dashboard(.hbs)?', (request, response) => {
 });
 
 
-router.get('/additionally(.html)?', (request, response) => {
-    response.sendFile(`${__dirname}/html/additionally.html`);
+// обработчики для попадания на дополнительную рабочую область приложения
+router.use('/additionally(.html)?', jsonParser, async (request, response) => {
+    response.render('additionally');
+});
+
+router.get('/additionally(.hbs)?', (request, response) => {
+    response.redirect('/additionally');
 });
 
 

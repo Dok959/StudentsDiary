@@ -15,6 +15,7 @@
     <script src="/js/classes/Bord.js" defer></script>
     <script src="/js/classes/Tasks.js" defer></script>
     <script src="/js/classes/Task.js" defer></script>
+    <script src="/js/mainFunctionDashboard.js" defer></script>
     <script src="/js/dashboard.js" defer></script>
     <script src="/js/validation.js" defer></script>
 </head>
@@ -23,103 +24,18 @@
     <div id="dashboard-container">
         <header id="header">
             <div id="header-menu">
-                <a href="/personPage.html" id="user-profile">
-                    <img src="/img/user.svg" alt="Пользователь" id="user-image">
-                </a>
+                {{> menu}}
 
-                <a href="#" id="user-activity">
-                    <span id="activity-title">Активность</span>
-                </a>
-
-                <a href="/additionally.html" id="additionally-tasks">
+                <a href="/additionally" id="links">
+                    <img src="/img/more.svg" alt="Дополнительное" id="image">
                     <span id="additionally-title">Дополнительное</span>
                 </a>
             </div>
         </header>
 
         <div id="dashboard-main">
-            {{!--<div class="wrapper">
-                <div id="bord-day">
-                    <div id="bord-day-title">
-                        <h2 class="day-title">Понедельник</h2>
-                    </div>
 
-                    <div class="list-tasks" id="1">
-                        <a href="#" class="list-task">
-                            <div class="list-task-details">
-                                <span class="list-task-label">
-                                    Задача 1
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>--}}
         </div>
-
-        {{!-- <div class="window-overlay">
-            <div class="window" id="window" name="000">
-                <div class="window-wrapper">
-                    <a href="javascript:closeOpenWindow()" class="icon-close"></a>
-
-                    <div class="card-detail-window">
-                        <div class="window-detail-header">
-                            <div class="window-title">
-                                <textarea class="card-detail-header" name="title" placeholder="Название задачи"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="window-main-col">
-                            <div class="card-detail-data">
-                                <div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Действия с задачей</h3>
-                                    <div class="card-detail-action">
-                                        <a href="javascript:updateTask()" class="link-button">Изменить</a>
-                                        <a href="javascript:taskReady()" class="link-button">Выполнено</a>
-                                        <a href="javascript:deleteTask()" class="link-button">Удалить</a>
-                                    </div>
-                                </div>
-
-                                <div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Срок</h3>
-                                    <div class="card-detail-due-date">
-                                        <input class="datetime-local" type="date" name="date" min="2021-03-25" value="2021-03-25">
-                                        <input class="datetime-local" type="time" name="time" value="12:35">
-                                        <a href="javascript:clearElement()" class="link-button">Сбросить</a>
-                                    </div>
-                                </div>
-
-                                <div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Повторение</h3>
-                                    <div class="card-detail-repeat">
-                                        <a href="javascript:periodicityEnable()" class="link-button" id="periodicityEnable">Задать</a>
-                                        <select class="select" name="frequency">
-                                            <option value="1">Каждый</option>
-                                            <option value="2">Через</option>
-                                        </select>
-
-                                        <select class="select" name="period">
-                                            <option value="1">День</option>
-                                            <option value="2">Неделю</option>
-                                            <option value="3">Месяц</option>
-                                            <option value="4">Год</option>
-                                        </select>
-                                        <a href="javascript:periodicityShutdown()" class="link-button btn-invizible" id="periodicityShutdown">Очистить</a>
-                                    </div>
-                                </div>
-
-                                <div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Описание</h3>
-                                    <div class="description-edit">
-                                        <textarea class="card-detail-description" name="description" placeholder="Описание задачи"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </div>
 </body>
 

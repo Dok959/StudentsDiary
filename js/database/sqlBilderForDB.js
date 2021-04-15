@@ -151,8 +151,7 @@ buildingQueryForDB = async (args) => {
 
                 // определяем периодичность
                 if (result[0].period !== null) {
-                    const {frequency} = result[0];
-                    const {period} = result[0];
+                    const {frequency, period } = result[0];
 
                     // увеличение даты
                     if (frequency === 2 && period === 1) {
@@ -235,26 +234,29 @@ buildingQueryForDB = async (args) => {
                 if (iSValue === null) {
                     query += ` ${element} is ${iSValue} and`;
                 } else if (element === 'date') {
-                        if (args.table === 'HISTORY') {
-                            query += ` ${element} = '${iSValue}' and`;
-                        } else if (iSValue.slice(0, 1) === '=') {
-                            query += ` ${element} = '${iSValue.slice(1)}' and`;
-                        } else {
-                            query += ` ${element} <= '${iSValue}' and`;
-                        }
-                    } else {
+                    if (args.table === 'HISTORY') {
                         query += ` ${element} = '${iSValue}' and`;
+                    } else if (iSValue.slice(0, 1) === '=') {
+                        query += ` ${element} = '${iSValue.slice(1)}' and`;
+                    } else {
+                        query += ` ${element} <= '${iSValue}' and`;
                     }
+                } else {
+                    query += ` ${element} = '${iSValue}' and`;
+                }
             }
         });
         if (Object.prototype.hasOwnProperty.call(args, 'startDate') &&
             Object.prototype.hasOwnProperty.call(args, 'endDate')) {
             query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
+        } else if (Object.prototype.hasOwnProperty.call(args, 'dateFirst') &&
+            Object.prototype.hasOwnProperty.call(args, 'dateSecond')) {
+            query += ` date is ${args.dateFirst} or date <= '${args.dateSecond}' and`;
         }
         query = query.substr(0, query.length - 4);
         // сортировка по возрастанию дат
         if (args.table === 'TASKS' && (args.date !== null || args.startDate !== undefined)) {
-            query += ' ORDER BY date';
+            query += ' ORDER BY date, - time DESC';
         }
         query += ';';
         console.log(`Запрос на поиск: ${query}`);

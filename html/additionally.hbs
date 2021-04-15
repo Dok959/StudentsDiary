@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styleDashboard.css">
+
+    <script src="/js/library/jquery-3.5.1.min.js" defer></script>
+    <script src="/js/cookies/cookies.js" defer></script>
+    <script src="/js/classes/Bord.js" defer></script>
+    <script src="/js/classes/Tasks.js" defer></script>
+    <script src="/js/classes/Task.js" defer></script>
+    <script src="/js/mainFunctionDashboard.js" defer></script>
+    <script src="/js/additionally.js" defer></script>
+    <script src="/js/validation.js" defer></script>
+</head>
+
+<body>
+    <div id="dashboard-container">
+        <header id="header">
+            <div id="header-menu">
+                {{> menu}}
+
+                <a href="/dashboard" id="links">
+                    <img src="/img/more.svg" alt="Дополнительное" id="image">
+                    <span id="additionally-title">Дополнительное</span>
+                </a>
+            </div>
+        </header>
+
+        <div id="dashboard-main">
+            <div class="wrapper">
+                <div id="bord-day">
+                    <details open>
+                        <summary>
+                            <div id="bord-day-title">
+                                <h2 class="day-title">Без срока</h2>
+                            </div>
+                        </summary>
+
+                        <div class="list-tasks" id="day-null">
+                            <a href="#" class="list-task">
+                                <div class="list-task-details">
+                                    <span class="list-task-label">
+                                        Задача 1
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div id="bord-day">
+                    <details open>
+                        <summary>
+                            <div id="bord-day-title">
+                                <h2 class="day-title">Просроченные</h2>
+                            </div>
+                        </summary>
+
+                        <div class="list-tasks" id="day--1">
+                            <a href="#" class="list-task">
+                                <div class="list-task-details">
+                                    <span class="list-task-label">
+                                        Задача 2
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -20,9 +20,9 @@ class Tasks {
         return false;
     };
 
-    async localUpdateTask(id, title, description, date, time, period) {
+    localUpdateTask(id, title, description, date, time, period) {
         id = Number.parseInt(id, 10);
-        const task = await this.getIdTask(id);
+        const task = this.getIdTask(id);
         title ? task.setTitle(title) : null;
         description ? task.setDescription(description) : null;
         time ? task.setTime(time) : null;
@@ -61,6 +61,6 @@ class Tasks {
             }
         }
         this.tasks.splice(index, 1);
-        closeOpenWindow();
+        removeWindow();
     };
 }

@@ -17,7 +17,7 @@ const { PORT } = process.env;
 // создаем установку и подключение представлений
 app.set('view engine', 'hbs'); // установка движка представлений
 app.set('views', 'html'); // установка пути к представлениям
-hbs.registerPartials(`${__dirname}/html/parts`); // установка пути к частичным представлениям
+hbs.registerPartials(`${__dirname}/html/partials`); // установка пути к частичным представлениям
 
 // перевод на маршрутизацию файлов
 app.use(router);

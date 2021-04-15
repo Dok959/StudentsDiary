@@ -15,8 +15,7 @@ class Bord {
     }
 
     showTasks() {
-        // скрытие открытых элементов
-        closeOpenWindow();
+        removeWindow();
 
         this.renderTasks(this.list.tasks);
     }
@@ -29,7 +28,18 @@ class Bord {
                 title = `${title.slice(0, 55)}...`;
             }
 
-            date = new Date(date).getDay();
+            if (date === null){
+                date = null;
+            }
+            else{
+                date = new Date(date);
+                if (date < new Date()){
+                    date = -1;
+                }
+                else{
+                    date = date.getDay();
+                }
+            }
 
             // определяем столбец для вывода
             const taskList = document.getElementById(`day-${date}`);

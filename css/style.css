@@ -96,3 +96,49 @@ option{
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
 }
+
+details{
+    border-radius: 10px;
+    overflow:hidden;
+    box-shadow: 0 10px 10px -10px rgb(0 0 0 / 10%);
+}
+
+summary {
+    display:block;
+    font-size:1.5em;
+    cursor: pointer;
+    position: relative;
+}
+
+summary:before {
+    top: .6em;
+    right: .5em;
+    color: transparent;
+    background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYuNTkgOC41OUwxMiAxMy4xNyA3LjQxIDguNTkgNiAxMGw2IDYgNi02eiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=") no-repeat 50% 50% / 1em 1em;
+    width: 1em;
+    height: 1em;
+    content: "";
+    position: absolute;
+    transition: transform .5s;
+}
+
+details[open] > summary:before {
+    transform: scale(1,-1);
+}
+
+summary ~ * {
+    padding: 0 1em 10px 1.4em;
+}
+
+details[open] summary ~ *{
+    animation: sweep .5s ease-in-out;
+}
+
+@keyframes sweep {
+    0%    {opacity: 0;}
+    100%  {opacity: 1;}
+}
+
+summary:focus {
+    outline:0;
+}

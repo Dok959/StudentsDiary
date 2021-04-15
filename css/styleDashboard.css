@@ -29,28 +29,16 @@ header{
     justify-content: space-between;
 }
 
-#user-profile{
+#links{
     width: min-content;
     height: min-content;
     margin: 5px;
     display: inline-flex;
 }
 
-#user-image{
+#image{
     max-width: 30px;
     min-width: 30px;
-}
-
-#user-activity{
-    display: inline-flex;
-    height: min-content;
-    margin: 9px;
-}
-
-#activity-title{
-    max-height: min-content;
-    min-height: min-content;
-    height: min-content;
 }
 
 #additionally-tasks{
@@ -63,6 +51,11 @@ header{
     max-height: min-content;
     min-height: min-content;
     height: min-content;
+    align-self: center;
+    font-size: 16px;
+    padding-left: 5px;
+    color: #083863;
+    font-weight: 400;
 }
 
 #dashboard-main{
@@ -335,6 +328,31 @@ textarea {
     border-color: rgb(218, 20, 125);
 }
 
+#create{
+    width: 310px;
+    height: 270px;
+}
+
+.icon-close.create{
+    margin-left: 85%;
+}
+
+.card-detail-item-header.create-title{
+    font-size: 24px;
+    white-space: normal;
+    line-height: 26px;
+    margin-top: -10px;
+}
+
+.card-detail-action.create{
+    display: grid;
+}
+
+.link-button.create-btn{
+    width: 100%;
+    margin: 10px 0;
+}
+
 
 @media(max-width: 2500px){
     .wrapper{
@@ -385,6 +403,12 @@ textarea {
 @media(max-width: 650px){
     .card-detail-description{
         height: 375px;
+    }
+}
+
+@media(max-width: 600px){
+    #additionally-title{
+        display: none;
     }
 }
 
