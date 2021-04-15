@@ -1,6 +1,5 @@
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 
-
 // Адаптивный список дней
 function formation(){
     const nowDay = new Date();
@@ -172,33 +171,13 @@ async function checkRaspisanie() {
                                 .getElementsByClassName('table_style')[0];
 
                                 let day; let dayOld;
+                                let weekNext = week;
+                                let date;
                                 for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
                                     row = raspisanie.rows[i];
-                                    let para; let predmet; let teacher; let auditoria;
-                                    // набор данных о паре
-                                    for (let j = 0, col; j < row.cells.length; j += 1) {
-                                        col = row.cells[j];
-                                        if (j < 2 && col.getElementsByClassName('naz_disc')[0] === undefined ) {
-                                            para = col.textContent;
-                                            para = para.length > 2 ? ((day = para), (para = undefined)) : para;
-                                        } else if (col === row.getElementsByClassName(week)[0]) {
-                                            predmet = col.getElementsByClassName('naz_disc').item(0);
-                                            if (predmet !== undefined) {
-                                                predmet = predmet.textContent;
-                                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
-                                            }
-                                        }
-                                    }
 
-                                    console.log(day, para, predmet, teacher, auditoria)
-                                    if (predmet !== undefined) {
-                                        // if (dayOld === undefined || dayOld !== day) {
-                                        //     const node = `<li class="day"><span class="title">${day}</span></li>`;
-                                        //     $('.raspisanie').append(node);
-                                        //     dayOld = day;
-                                        // }
-                                        let date;
+                                    if (row.cells.length === 4){
+                                        day = row.cells[0].textContent;
                                         // определяем индекс дня
                                         for (let index = 0; index < days.length; index += 1) {
                                             if (days[index] === day){
@@ -206,16 +185,55 @@ async function checkRaspisanie() {
                                             }
                                         }
 
+                                        if (date < now.getDay()) {
+                                            weekNext = week === 'td_style2_ch' ? 'td_style2_zn' : 'td_style2_ch';
+                                        }
+                                        else{
+                                            weekNext = week === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
+                                        }
+                                    }
+
+                                    let para; let predmet; let teacher; let auditoria;
+                                    // набор данных о паре
+                                    for (let j = 0, col; j < row.cells.length; j += 1) {
+                                        col = row.cells[j];
+
+                                        if ((row.cells.length === 4 && j === 1) || (row.cells.length === 3 && j === 0)){
+                                            para = col.textContent;
+                                        }
+
+                                        if (col === row.getElementsByClassName(weekNext)[0]) {
+                                            predmet = col.getElementsByClassName('naz_disc').item(0);
+                                            if (predmet !== null) {
+                                                predmet = predmet.textContent;
+                                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                                            }
+                                        }
+                                    }
+
+                                    if (predmet !== null) {
                                         // определяем столбец для вывода
                                         listTaks = document.getElementById(`day-${date}`);
 
-                                        const node = `<a href="#" class="list-task">
+                                        const node = `<div class="list-task no-clik">
                                                 <div class="list-task-details">
-                                                    <span class="list-task-label">
+                                                    <div class="center">
+                                                        <span class="list-task-label" id="para">
+                                                            Пара № ${para}
+                                                        </span>
+                                                        <span class="list-task-label" id="auditoria">
+                                                            Аудитория ${auditoria}
+                                                        </span>
+                                                    </div>
+                                                    <span class="list-task-label" id="predmet">
                                                         ${predmet}
                                                     </span>
+                                                    <span class="list-task-label" id="teacher">
+                                                        Преподаватель - ${teacher}
+                                                    </span>
                                                 </div>
-                                            </a>`;
+                                            </div>`;
 
                                         $(listTaks).append(node);
 

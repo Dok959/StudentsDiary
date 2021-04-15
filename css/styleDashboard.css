@@ -1,5 +1,5 @@
 body{
-    background-color: #d5eaeb;
+    background-color: #d1e2f3;
     position: relative;
 }
 
@@ -17,8 +17,9 @@ header{
     max-width: 100%;
     min-width: 100%;
     width: 100%;
-    background-color: #ada;
+    background-color: #C3DAF0;
     border-bottom: 1px solid #353;
+    z-index: 1;
 }
 
 #header-menu{
@@ -61,8 +62,7 @@ header{
 #dashboard-main{
     display: flex;
     flex-wrap: wrap;
-
-    margin-top: 40px;
+    margin-top: 45px;
     white-space: nowrap;
     position: absolute;
     top: 0;
@@ -83,7 +83,7 @@ header{
 }
 
 #bord-day{
-    background-color: #ebecf0;
+    background-color: #add3f7;
     border-radius: 3px;
     box-sizing: border-box;
     display: flex;
@@ -127,7 +127,7 @@ header{
 }
 
 .list-task{
-    background-color: #fff;
+    background-color: #e2edf8;
     border-radius: 3px;
     box-shadow: 0 1px 0 rgb(9 30 66 / 25%);
     cursor: pointer;
@@ -251,7 +251,7 @@ textarea {
 }
 
 .card-detail-header:focus, .card-detail-description:focus{
-    border-color: rgb(31, 106, 204);
+    border-color: #1e6acc;
 }
 
 .window-main-col {
@@ -325,7 +325,7 @@ textarea {
 }
 
 .error{
-    border-color: rgb(218, 20, 125);
+    border-color: #db147e;
 }
 
 #create{
@@ -351,6 +351,27 @@ textarea {
 .link-button.create-btn{
     width: 100%;
     margin: 10px 0;
+}
+
+.no-clik{
+    cursor: default;
+}
+
+.center{
+    text-align: center;
+}
+
+#para, #auditoria{
+    display: inline-flex;
+}
+
+#auditoria{
+    margin-left: 20px;
+}
+
+#predmet, #teacher{
+    display: block;
+    text-align: center;
 }
 
 
