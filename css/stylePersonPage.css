@@ -1,0 +1,82 @@
+#header-panel{
+    background-color: #f4f5f7;
+}
+
+#user-block{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 650px;
+    padding: 32px;
+    position: relative;
+}
+
+#user-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+#user-name{
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 28px;
+    color: #0c3953;
+    margin-right: 10px;
+}
+
+#user-code{
+    font-size: 12px;
+    line-height: 20px;
+    color: #5e6c84;
+}
+
+nav{
+    background-color: #f4f5f7;
+    border-bottom: 1px solid #dfe1e6;
+    position: relative;
+    text-align: center;
+}
+
+ul{
+    display: inline-flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li{
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    display: inline-block;
+    font-weight: 700;
+    margin: 2px 2px 0;
+    padding: 8px 20px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+#link{
+    font-size: 18px;
+    color: #6200ff;
+}
+
+#link::after{
+    background-color: rgb(250, 4, 4);
+    display: block;
+    content: '';
+    height: 2px;
+    width: 0%;
+    transition: width .3s ease-in-out;
+}
+
+#link:focus{
+    color: rgb(250, 4, 4);
+}
+
+#link:hover:after,
+#link:focus:after {
+    width: 100%;
+}

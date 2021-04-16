@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/styleDashboard.css">
+    <link rel="stylesheet" href="../css/stylePersonPage.css">
 
     <script src="/js/library/jquery-3.5.1.min.js" defer></script>
     <script src="/js/cookies/cookies.js" defer></script>
@@ -18,65 +19,25 @@
 <body>
     <div class="container">
 
-        <div class="header">
+        <div id="header-panel">
 
-            <div class="hello">
-                <h1>Здравствуйте, вфывфыв!</h1>
+            <div id="user-block">
+                <div id="user-header">
+                    <div id="user">
+                        <span id="user-name">Пользователь</span>
+                        <span id="user-code">код пользователя</span>
+                    </div>
+                </div>
             </div>
 
-            <nav class="menu">
-                <div class="menu__element">
-                    <a class="link__element" href="javascript:requestToSchedule()">
-                        <img class="link__img" src="/img/pac1/inbox.png" alt="Входящие">
-                        <span class="link__description">
-                            Запрос к расписанию
-                        </span>
-                    </a>
-                </div>
-
-                <!-- <div class="menu__element">
-                    <a class="link__element" href="#">
-                        <img class="link__img" src="/img/pac1/today.png" alt="Сегодня">
-                        <span class="link__description">
-                            Сегодня
-                        </span>
-                    </a>
-                </div>
-
-                <div class="menu__element">
-                    <a class="link__element" href="#">
-                        <img class="link__img" src="/img/pac1/calendar.png" alt="Планируемые">
-                        <span class="link__description">
-                            Предстоящие
-                        </span>
-                    </a>
-                </div>
-            </nav> -->
-
-            <nav class="menu bottom__menu">
-                <div class="bottom__menu__element">
-                    <a class="link__element" href="javascript:exit()">
-                        <img class="link__img" src="/img/pac1/settings.png" alt="Выход">
-                        <span class="link__description">
-                            Выход
-                        </span>
-                    </a>
-                </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="link">Профиль</a></li>
+                    <li><a href="#" id="link">Настройки</a></li>
+                    <li><a href="#" id="link">Друзья</a></li>
+                </ul>
             </nav>
 
-        </div>
-
-        <div class="bord">
-
-            <div class="title__bord">
-                <h1 class="inbox">Входящие</h1>
-                <h1 class="today">Сегодня</h1>
-                <h1 class="upcoming">Предстоящие</h1>
-            </div>
-
-            <div class="bord__tasks">
-
-            </div>
         </div>
     </div>
 </body>

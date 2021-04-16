@@ -61,7 +61,7 @@ function gettingListTasks(){
     });
 
     taskList.list.clearTasks();
-    removeWindow('.list-task');
+    removeWindow('.task');
     taskList.getTasks(data);
 }
 
@@ -236,18 +236,6 @@ async function checkRaspisanie() {
                                             </div>`;
 
                                         $(listTaks).append(node);
-
-                                        // node = `<li class="day__element">
-                                        //         <div class="schedule__item">
-                                        //             <div class="item__title">
-                                        //                 <span class="para">Пара № ${para}</span>
-                                        //                 <span class="auditoria">Аудитория ${auditoria}</span>
-                                        //             </div>
-                                        //                 <span class="predmet">${predmet}</span>
-                                        //                 <span class="teacher">${teacher}</span>
-                                        //         </div>
-                                        //     </li>`;
-                                        // $('.raspisanie').append(node);
                                     }
                                 }
                             }
@@ -264,6 +252,6 @@ async function checkRaspisanie() {
 // Действия при полной загрузке странцы
 document.addEventListener('DOMContentLoaded', () => {
     formation();
-    gettingListTasks();
     checkRaspisanie();
+    gettingListTasks();
 })

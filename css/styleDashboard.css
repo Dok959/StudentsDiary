@@ -1,5 +1,5 @@
 body{
-    background-color: #d1e2f3;
+    background-color: #e3f0fd;
     position: relative;
 }
 
@@ -111,7 +111,7 @@ header{
 .day-title{
     font-weight: 600;
     margin: 0 0 8px;
-    font-size: 15px;
+    font-size: 18px;
     line-height: 24px;
 }
 
@@ -150,6 +150,11 @@ header{
 .list-task-label{
     overflow: auto;
     position: relative;
+    font-size: 15px;
+}
+
+.task-title{
+    font-size: 16px;
 }
 
 /* * стиль по которому будут искаться все открытие окна */
@@ -355,6 +360,7 @@ textarea {
 
 .no-clik{
     cursor: default;
+    background: rgb(153, 255, 187);
 }
 
 .center{

@@ -33,7 +33,7 @@ class Bord {
             }
             else{
                 date = new Date(date);
-                if (date < new Date()){
+                if (date < new Date().setDate(new Date().getDate() - 1)){
                     date = -1;
                 }
                 else{
@@ -44,9 +44,9 @@ class Bord {
             // определяем столбец для вывода
             const taskList = document.getElementById(`day-${date}`);
 
-            const node = `<a href="javascript:openTask(${id})" class="list-task" id="${id}">
+            const node = `<a href="javascript:openTask(${id})" class="task list-task" id="${id}">
                     <div class="list-task-details">
-                        <span class="list-task-label">
+                        <span class="list-task-label task-title">
                             ${title}
                         </span>
                     </div>

@@ -75,6 +75,7 @@ router.get('/', (request, response) => {
 
 router.get('/index(.html)?', (request, response) => {
     // response.redirect('/');
+    // ! Временная переардесация
     response.sendFile(`${__dirname}/html/homePage.html`);
 });
 
@@ -95,6 +96,7 @@ router.post('/queryForUser', jsonParser, async (request, response) => {
 });
 
 // обработчики для попадания на рабочую область приложения
+// ! Временная переардесация
 router.use('/dashboard(.html)?', jsonParser, async (request, response) => {
     // await checkUser(request).then((result) => {
     //     if (result !== false) {
@@ -161,14 +163,16 @@ router.post(
 );
 
 // обработчик для попадания на рабочую область приложения
+// ! Временная переардесация
 router.use('/personPage(.html)?', jsonParser, async (request, response) => {
-    await checkUser(request, false).then((res) => {
-        if (res !== false) {
-            response.sendFile(`${__dirname}/html/personPage.html`);
-        } else {
-            response.redirect('/');
-        }
-    });
+    // await checkUser(request, false).then((res) => {
+    //     if (res !== false) {
+    //         response.sendFile(`${__dirname}/html/personPage.html`);
+    //     } else {
+    //         response.redirect('/');
+    //     }
+    // });
+    response.sendFile(`${__dirname}/html/personPage.html`);
 });
 
 // переадресация если страниц несуществует
