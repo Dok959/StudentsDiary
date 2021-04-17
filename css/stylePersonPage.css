@@ -88,14 +88,20 @@ li{
     position: relative;
 }
 
-#profile-tab-container{
+.tab-container{
     max-width: 90%;
     flex-direction: column;
     margin: auto;
+    display: none;
 }
 
 .visible{
     display: flex;
+}
+
+form{
+    margin: 0;
+    max-width: initial;
 }
 
 h1{
@@ -141,14 +147,35 @@ h1{
     font-size: 18px;
 }
 
-#input{
+.input{
     max-width: max-content;
     margin: 0;
     margin-left: 50px;
 }
 
-#select{
+.select{
     margin: 0;
     margin-left: 15px;
     width: 235px;
+    display: block;
+}
+
+button{
+    position: relative;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 400;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 6px 12px;
+    text-decoration: none;
+    background-color: #5aac44;
+    border: none;
+    color: #fff;
+    display: block;
+    margin: auto;
+    width: 100%;
 }

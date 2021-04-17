@@ -29,11 +29,11 @@ async function checkUser(request, flag = true) {
                 if (result[0] !== undefined) {
                     if (flag) {
                         user.table = 'SETTINGS';
-                        user.id_owner = idUser;
+                        user.idOwner = idUser;
                         delete user.id;
                         return buildingQueryForDB(user).then((settings) => {
                             try {
-                                return settings[0].first_name;
+                                return settings[0].firstName;
                             } catch (error) {
                                 return null;
                             }
@@ -141,9 +141,9 @@ router.post(
     jsonParser,
     async (request, response) => {
         // ! Временно отключено
-        // if (request.body.id_owner) {
+        // if (request.body.idOwner) {
         //     // если пользователь авторизован, то парсим его hash
-        //     request.body.id_owner = key.decrypt(
+        //     request.body.idOwner = key.decrypt(
         //         getCookie(request.headers.cookie, 'USER'),
         //         'utf8'
         //     );

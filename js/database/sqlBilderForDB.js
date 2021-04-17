@@ -97,12 +97,13 @@ buildingQueryForDB = async (args) => {
                 element !== 'idOwner'
             ) {
                 const iSValue = args[element];
-                // if (iSValue === null) {
-                //     query += `${element} is ${iSValue}, `;
-                // }
-                if (iSValue === null) {
+                if (element === 'group') {
+                    query += `\`group\` = '${iSValue}', `;
+                }
+                else if (iSValue === null) {
                     query += `${element} = DEFAULT, `;
-                } else {
+                }
+                else {
                     query += `${element} = '${iSValue}', `;
                 }
             }
@@ -112,7 +113,11 @@ buildingQueryForDB = async (args) => {
 
         if (args.table === 'HISTORY') {
             query += ` WHERE idOwner = '${args.idOwner}' and date = '${args.date}';`;
-        } else {
+        }
+        else if (args.table === 'SETTINGS') {
+            query += ` WHERE idOwner = '${args.idOwner}';`;
+        }
+        else {
             query += ` WHERE id = '${args.id}';`;
         }
         console.log(`Запрос на обновление: ${query}`);
@@ -236,9 +241,8 @@ buildingQueryForDB = async (args) => {
                 } else if (element === 'date') {
                     if (args.table === 'HISTORY') {
                         query += ` ${element} = '${iSValue}' and`;
-                    } else if (iSValue.slice(0, 1) === '=') {
-                        query += ` ${element} = '${iSValue.slice(1)}' and`;
-                    } else {
+                    }
+                    else {
                         query += ` ${element} <= '${iSValue}' and`;
                     }
                 } else {
@@ -246,6 +250,7 @@ buildingQueryForDB = async (args) => {
                 }
             }
         });
+
         if (Object.prototype.hasOwnProperty.call(args, 'startDate') &&
             Object.prototype.hasOwnProperty.call(args, 'endDate')) {
             query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
@@ -258,6 +263,7 @@ buildingQueryForDB = async (args) => {
         if (args.table === 'TASKS' && (args.date !== null || args.startDate !== undefined)) {
             query += ' ORDER BY date, - time DESC';
         }
+
         query += ';';
         console.log(`Запрос на поиск: ${query}`);
 

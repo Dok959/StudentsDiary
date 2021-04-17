@@ -32,71 +32,127 @@
 
             <nav>
                 <ul>
-                    <li><a href="#" id="link">Профиль</a></li>
-                    <li><a href="#" id="link">Настройки</a></li>
+                    <li><a href="javascript:renderTab('settings')" id="link">Профиль</a></li>
+                    <li><a href="javascript:renderTab('profile')" id="link">Настройки</a></li>
                     <li><a href="#" id="link">Друзья</a></li>
                 </ul>
             </nav>
 
             <div id="content">
-                <div id="profile-tab-container" class="visible">
-                    <h1>Данные о вашего профиля</h1>
+                <div class="tab-container visible" id="settings">
+                    <form action="javascript:userUpdate()" method="post">
+                        <h1>Данные о вашего профиля</h1>
 
-                    <div id="window-module">
-                        <div id="window-module-title">
-                            <h3 id="module-title">О Вас</h3>
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3 id="module-title">О Вас</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Фамилия</span>
+                                <input class="input" type="text" name="lastName" placeholder="Иванов">
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Имя</span>
+                                <input class="input" type="text" style="margin-left: 90px;" name="firstName" placeholder="Иван">
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Отчество</span>
+                                <input class="input" type="text" name="patronymic" placeholder="Иванович">
+                            </div>
                         </div>
-                        <div id="module-element">
-                            <span id="title-label">Имя</span>
-                            <input id="input" type="text" style="margin-left: 90px;">
-                        </div>
-                        <div id="module-element">
-                            <span id="title-label">Фамилия</span>
-                            <input id="input" type="text">
-                        </div>
-                        <div id="module-element">
-                            <span id="title-label">Отчество</span>
-                            <input id="input" type="text">
-                        </div>
-                    </div>
 
-                    <div id="window-module">
-                        <div id="window-module-title">
-                            <h3>Учебное заведение</h3>
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3 id="module-title">Аккаунт</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Код пользователя</span>
+                                <input class="input" type="text" style="margin-left: -30px;" name="user-code" placeholder="user12345">
+                            </div>
                         </div>
-                        <div id="module-element">
-                            <span id="title-label">Университет</span>
-                            <select id="select" name="" id="">
-                                <option value="1">АГУ</option>
-                            </select>
+
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3>Учебное заведение</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Университет</span>
+                                <select class="select" name="university">
+                                    <option value="1">АГУ</option>
+                                </select>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Роль</span>
+                                <select class="select" name="role" style="margin-left: 80px;">
+                                    <option value="1">Студент</option>
+                                    <option value="2">Преподаватель</option>
+                                </select>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Группа</span>
+                                <input class="input" type="text" style="margin-left: 65px;" name="group" placeholder="ДИТ11">
+                            </div>
                         </div>
-                        <div id="module-element">
-                            <span id="title-label">Роль</span>
-                            <select id="select" name="" id="" style="margin-left: 80px;">
-                                <option value="1">Студент</option>
-                                <option value="2">Преподаватель</option>
-                            </select>
-                        </div>
-                        <div id="module-element">
-                            <span id="title-label">Группа</span>
-                            <input id="input" type="text" style="margin-left: 65px;">
-                        </div>
-                    </div>
+
+                        <button type="submit">Сохранить</button>
+                    </form>
                 </div>
 
-                <div id="profile-tab-container" class="visible">
-                    <h1>Настройки аккаунта</h1>
+                <div class="tab-container" id="profile">
+                    <form action="javascript:userUpdate()" method="post">
 
-                    <!-- пароль перенести в настройки -->
-                    <div id="window-module">
-                        <div id="window-module-title">
-                            <h3>Аккаунт</h3>
+                        <h1>Настройки аккаунта</h1>
+
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3 id="module-title">Безопасность</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Новый пароль</span>
+                                <input class="input" type="password" style="margin-left: -5px;" name="password" placeholder="12345">
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Повторите новый пароль</span>
+                                <input class="input" type="password" style="margin-left: -95px;" name="repeat-password" placeholder="12345">
+                            </div>
                         </div>
-                        <span>Сменить пароль</span>
-                        <input type="text">
-                    </div>
+
+                        <button type="submit">Сохранить</button>
+                    </form>
                 </div>
 
+                <div class="tab-container" id="friends">
+                    <form action="" method="post">
+
+                        <h1>Настройки аккаунта</h1>
+
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3 id="module-title">Аккаунт</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Код пользователя</span>
+                                <input class="input" type="text" style="margin-left: -30px;" name="user-code" placeholder="user12345">
+                        </div>
+                        </div>
+
+                        <div id="window-module">
+                            <div id="window-module-title">
+                                <h3 id="module-title">Безопасность</h3>
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Новый пароль</span>
+                                <input class="input" type="password" style="margin-left: -5px;" name="password" placeholder="12345">
+                            </div>
+                            <div id="module-element">
+                                <span id="title-label">Повторите новый пароль</span>
+                                <input class="input" type="password" style="margin-left: -95px;" name="repeat-password" placeholder="12345">
+                            </div>
+                        </div>
+
+                        <button type="submit">Сохранить</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
