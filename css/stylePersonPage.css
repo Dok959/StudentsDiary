@@ -179,3 +179,9 @@ button{
     margin: auto;
     width: 100%;
 }
+
+.error{
+    border-style: double;
+    color: red;
+    border-color: red;
+}

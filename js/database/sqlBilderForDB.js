@@ -98,7 +98,12 @@ buildingQueryForDB = async (args) => {
             ) {
                 const iSValue = args[element];
                 if (element === 'group') {
-                    query += `\`group\` = '${iSValue}', `;
+                    if (iSValue !== null){
+                        query += `\`group\` = '${iSValue}', `;
+                    }
+                    else{
+                        query += `\`group\` = DEFAULT, `;
+                    }
                 }
                 else if (iSValue === null) {
                     query += `${element} = DEFAULT, `;

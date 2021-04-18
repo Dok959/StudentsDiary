@@ -80,13 +80,13 @@ function renderFieldsTab() {
     document.getElementsByName('lastName').item(0).value = user.lastName;
     document.getElementsByName('firstName').item(0).value = user.firstName;
     document.getElementsByName('patronymic').item(0).value = user.patronymic;
-    document.getElementsByName('role').item(0).value = user.role;
-    document.getElementsByName('university').item(0).value = user.university;
+    document.getElementsByName('role').item(0).value = user.role === null ? 10 : user.role;
+    document.getElementsByName('university').item(0).value = user.university === null ? 10 : user.university;
     document.getElementsByName('group').item(0).value = user.group;
 }
 
 // Обновление локальных данных
-function updateUserFields(firstName, lastName, patronymic, theme, role, university, group) {
+function updateUserFields(firstName, lastName, patronymic, theme, role = 10, university = 10, group) {
     user.setFirstName(firstName);
     user.setLastName(lastName);
     user.setPatronymic(patronymic);
@@ -133,6 +133,34 @@ async function uploadUserSettings() {
     renderFieldsTab();
 }
 
+// Выделение ошибок
+function generateError(element) {
+    $(element).addClass('error');
+    return false;
+}
+
+// Проверка маски
+function checkMask(args) {
+    if (/[\\/;.'']/.test(args.value)) {
+        return generateError(args);
+    }
+    return true;
+}
+
+// Проверка длины
+function checkLength(args) {
+    if (args.value.length < 5) {
+        return generateError(args);
+    }
+    return true;
+}
+
+// Удаление ошибок
+function removeValidation(element) {
+    $(element).removeClass('error');
+    return true;
+}
+
 // Сохранение изменений
 // todo прописать получение куки, 2 раз, добавить валидацию
 async function userUpdate() {
@@ -142,30 +170,70 @@ async function userUpdate() {
         table,
     };
 
+    let flag = true;
     if (table === 'SETTINGS'){
         userTest.idOwner = '1';// cookie;
         userTest.firstName = document.getElementsByName('firstName').item(0).value;
         userTest.lastName = document.getElementsByName('lastName').item(0).value;
         userTest.patronymic = document.getElementsByName('patronymic').item(0).value;
-        userTest.role = document.getElementsByName('role').item(0).value;
-        userTest.university = document.getElementsByName('university').item(0).value;
-        userTest.group = document.getElementsByName('group').item(0).value;
-        // data.lastName = document.getElementsByName('lastName').item(0);
 
-        updateUserFields(userTest.firstName, userTest.lastName, userTest.patronymic,
-            null, userTest.role, userTest.university, userTest.group);
+        const university = document.getElementsByName('university').item(0).value;
+        const role = document.getElementsByName('role').item(0).value;
+        if (Number.parseInt(university, 10) !== 10 && Number.parseInt(role, 10) !== 10){
+            userTest.university = university;
+            userTest.role = role;
+            const group = document.getElementsByName('group').item(0);
+            flag = checkLength(group) ? removeValidation(group) : false;
+            userTest.group = group.value;
+        }
+        else{
+            userTest.university = null;
+            userTest.role = null;
+            userTest.group = null;
+        }
     }
     else if(table === 'USERS'){
         userTest.id = '1';// cookie;
-        userTest.password = document.getElementsByName('password').item(0).value;
+
+        const password = document.getElementsByName('password').item(0);
+        flag = checkLength(password) ? (checkMask(password) && removeValidation(password)) : false;
+        userTest.password = password.value;
     }
 
-    const data = JSON.stringify(userTest);
-
-    await getResourse(data);
+    if (flag === true){
+        if (table === 'SETTINGS'){
+            updateUserFields(userTest.firstName, userTest.lastName, userTest.patronymic,
+                null, userTest.role, userTest.university, userTest.group);
+        }
+        const data = JSON.stringify(userTest);
+        await getResourse(data);
+    }
 }
 
 // Действия при полной загрузке странцы
 document.addEventListener('DOMContentLoaded', () => {
     uploadUserSettings();
+})
+
+// Слушатель
+document.addEventListener('click', (event) => {
+    try {
+        const university = document.getElementsByName('university').item(0).value;
+        if (Number.parseInt(university, 10) === 10){
+            document.getElementsByName('role').item(0).disabled = true;
+            document.getElementsByName('group').item(0).disabled = true;
+        }
+        else{
+            document.getElementsByName('role').item(0).disabled = false;
+            const role = document.getElementsByName('role').item(0).value;
+            if (Number.parseInt(role, 10) === 10){
+                document.getElementsByName('group').item(0).disabled = true;
+            }
+            else{
+                document.getElementsByName('group').item(0).disabled = false;
+            }
+        }
+    } catch (error) {
+        /* empty */
+    }
 })
