@@ -18,19 +18,29 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roles`
+-- Table structure for table `history`
 --
 
-DROP TABLE IF EXISTS `roles`;
+DROP TABLE IF EXISTS `history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roles` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ роли пользователя',
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Название роли пользователя',
-  `address` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Адрес обращения к данной роли',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая информацю о ролях пользователей для расписания';
+CREATE TABLE `history` (
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
+  `date` date NOT NULL COMMENT 'Дата выполнения задачи',
+  `count` int NOT NULL DEFAULT '1' COMMENT 'Количество выполненных задач за день',
+  KEY `history_OwnerId_idx` (`idOwner`),
+  CONSTRAINT `historyOwnerId` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая историю выполнения задач по дням';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history`
+--
+
+LOCK TABLES `history` WRITE;
+/*!40000 ALTER TABLE `history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -41,4 +51,4 @@ CREATE TABLE `roles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-07 18:19:51
+-- Dump completed on 2021-04-25 17:31:06

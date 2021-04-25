@@ -18,27 +18,30 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `history`
+-- Table structure for table `projects`
 --
 
-DROP TABLE IF EXISTS `history`;
+DROP TABLE IF EXISTS `projects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `history` (
-  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
-  `date` date NOT NULL COMMENT 'Дата выполнения задачи',
-  `count` int DEFAULT '1' COMMENT 'Количество выполненных задач за день'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая историю выполнения задач по дням';
+CREATE TABLE `projects` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ проекта',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца проекта',
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название проекта',
+  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание проекта',
+  PRIMARY KEY (`id`),
+  KEY `projects_OwnerId_idx` (`idOwner`),
+  CONSTRAINT `projectsOwnerId` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица проектов';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `history`
+-- Dumping data for table `projects`
 --
 
-LOCK TABLES `history` WRITE;
-/*!40000 ALTER TABLE `history` DISABLE KEYS */;
-INSERT INTO `history` VALUES (1,'2021-03-15',2),(1,'2021-03-20',19);
-/*!40000 ALTER TABLE `history` ENABLE KEYS */;
+LOCK TABLES `projects` WRITE;
+/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
+/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-13  9:46:41
+-- Dump completed on 2021-04-25 17:31:06

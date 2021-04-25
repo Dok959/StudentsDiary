@@ -1,7 +1,3 @@
-#header-panel{
-    background-color: #f4f5f7;
-}
-
 #user-block{
     display: flex;
     flex-direction: column;
@@ -34,8 +30,6 @@
 }
 
 nav{
-    background-color: #f4f5f7;
-    border-bottom: 1px solid #dfe1e6;
     position: relative;
     text-align: center;
 }
@@ -160,6 +154,30 @@ h1{
     display: block;
 }
 
+.center-firstName{
+    margin-left: 90px;
+}
+
+.center-userCode{
+    margin-left: -30px;
+}
+
+.center-selectRole{
+    margin-left: 80px;
+}
+
+.center-group{
+    margin-left: 65px;
+}
+
+.center-password{
+    margin-left: -5px;
+}
+
+.center-repeatPassword{
+    margin-left: -95px;
+}
+
 button{
     position: relative;
     font-size: 18px;
@@ -168,20 +186,101 @@ button{
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: 10px;
     cursor: pointer;
     padding: 6px 12px;
     text-decoration: none;
-    background-color: #5aac44;
-    border: none;
-    color: #fff;
+    color: #263849;
+    background-color: rgb(153, 255, 187);
+    border: 2px solid transparent;
     display: block;
     margin: auto;
     width: 100%;
+}
+
+button:hover{
+    border-color: #083863;
 }
 
 .error{
     border-style: double;
     color: red;
     border-color: red;
+}
+
+.btn-link{
+    position: relative;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 6px 12px;
+    text-decoration: none;
+    border: none;
+    color: #fff;
+    display: block;
+    width: 100%;
+    border: 2px solid transparent;
+    border-radius: 10px;
+}
+
+#return{
+    color: #263849;
+    background-color: #00EFD1;
+}
+
+#exit{
+    background-color: #e61f1f;
+    margin-top: 30px;
+}
+
+.btn-link:hover{
+    border-color: #083863;
+}
+
+@media(max-width: 850px){
+    #module-element{
+        display: block;
+        margin: 10px auto;
+    }
+
+    #title-label{
+        display: block;
+        margin: 5px;
+        text-align: center;
+    }
+
+    .input{
+        display: block;
+        margin-left: 0px;
+        margin: auto;
+    }
+
+    .select{
+        margin: 0 auto;
+        max-width: 292px;
+    }
+}
+
+@media(max-width: 400px){
+    .tab-container{
+        margin-left: 0px;
+        max-width: 100%;
+    }
+
+    ul{
+        display: block;
+    }
+
+    h1{
+        font-size: 22px;
+        text-align: center;
+    }
+
+    #window-module-title {
+        margin: 0;
+    }
 }

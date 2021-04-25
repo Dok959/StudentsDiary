@@ -30,6 +30,16 @@ CREATE TABLE `frequency` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Таблица хранящая частоты выполнения задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `frequency`
+--
+
+LOCK TABLES `frequency` WRITE;
+/*!40000 ALTER TABLE `frequency` DISABLE KEYS */;
+INSERT INTO `frequency` VALUES (1,'Каждый'),(2,'Через');
+/*!40000 ALTER TABLE `frequency` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -40,4 +50,4 @@ CREATE TABLE `frequency` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-07 18:19:51
+-- Dump completed on 2021-04-25 17:31:05

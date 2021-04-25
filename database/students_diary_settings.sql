@@ -26,15 +26,20 @@ DROP TABLE IF EXISTS `settings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
   `idOwner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
+  `userCode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Идентификатор пользователя для поиска друзей',
   `firstName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
   `lastName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
   `theme` enum('light','dark') NOT NULL DEFAULT 'light' COMMENT 'Тема оформления',
-  `role` int DEFAULT NULL COMMENT 'Указывает на роль пользователя при формировании учебного расписания',
   `university` int DEFAULT NULL COMMENT 'Ключ указывающий на принадлежность к конкретному университету',
+  `role` int DEFAULT NULL COMMENT 'Указывает на роль пользователя при формировании учебного расписания',
   `group` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название группы обучения',
-  KEY `id_owner_idx` (`idOwner`),
-  CONSTRAINT `id_owner` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `settings_id_owner_idx` (`idOwner`) /*!80000 INVISIBLE */,
+  KEY `settings_universitiesId_idx` (`university`),
+  KEY `settings_roleId_idx` (`role`),
+  CONSTRAINT `settingsOwnerId` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `settingsRoleId` FOREIGN KEY (`role`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `settingsUniversityId` FOREIGN KEY (`university`) REFERENCES `universities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица настроек пользователя';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -44,7 +49,6 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,NULL,NULL,NULL,'light',1,1,'ДИТ41'),(2,'Doktor',NULL,NULL,'light',NULL,NULL,NULL),(3,NULL,NULL,NULL,'light',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-13  9:46:40
+-- Dump completed on 2021-04-25 17:31:05

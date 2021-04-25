@@ -29,8 +29,17 @@ CREATE TABLE `users` (
   `login` varchar(45) NOT NULL COMMENT 'Логин пользователя',
   `password` varchar(45) NOT NULL COMMENT 'Пароль пользователя',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -41,4 +50,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-07 18:19:51
+-- Dump completed on 2021-04-25 17:31:05

@@ -3,10 +3,11 @@ let user;
 
 class User{
     constructor({
-        idOwner, firstName = null, lastName = null,
+        idOwner, userCode, firstName = null, lastName = null,
         patronymic = null, theme, role = null, university = null, group = null,
     }) {
         this.idOwner = idOwner;
+        this.userCode = userCode;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
@@ -14,6 +15,14 @@ class User{
         this.role = role;
         this.university = university;
         this.group = group;
+    }
+
+    setUserCode(userCode){
+        this.userCode = userCode;
+    }
+
+    getUserCode(){
+        return this.userCode;
     }
 
     setFirstName(firstName){
@@ -51,6 +60,11 @@ function exit() {
     window.location.href = '/';
 }
 
+// Возврат к основной странице
+function returnDashboard() {
+    window.location.href = '/dashboard';
+}
+
 // Оборажение вкладок
 function renderTab(tag) {
     $('#settings').removeClass('visible');
@@ -77,6 +91,9 @@ async function checkOpenTab() {
 
 // Оборажение вкладок
 function renderFieldsTab() {
+    document.getElementById('user-name').textContent = user.firstName || 'Пользователь';
+    document.getElementById('user-code').textContent = user.userCode;
+    document.getElementsByName('user-code').item(0).value = user.userCode;
     document.getElementsByName('lastName').item(0).value = user.lastName;
     document.getElementsByName('firstName').item(0).value = user.firstName;
     document.getElementsByName('patronymic').item(0).value = user.patronymic;
@@ -86,7 +103,8 @@ function renderFieldsTab() {
 }
 
 // Обновление локальных данных
-function updateUserFields(firstName, lastName, patronymic, theme, role = 10, university = 10, group) {
+function updateUserFields(userCode, firstName, lastName, patronymic, theme, role = 10, university = 10, group) {
+    user.setUserCode(userCode);
     user.setFirstName(firstName);
     user.setLastName(lastName);
     user.setPatronymic(patronymic);
@@ -148,8 +166,11 @@ function checkMask(args) {
 }
 
 // Проверка длины
-function checkLength(args) {
-    if (args.value.length < 5) {
+function checkLength(args, flag = true) {
+    if (flag === true && args.value.length < 5) {
+        return generateError(args);
+    }
+    if (flag === false && (args.value.length > 10 || args.value.length < 5)) {
         return generateError(args);
     }
     return true;
@@ -162,7 +183,7 @@ function removeValidation(element) {
 }
 
 // Сохранение изменений
-// todo прописать получение куки, 2 раз, добавить валидацию
+// todo прописать получение куки, 2 раз
 async function userUpdate() {
     const table = await checkOpenTab();
     const userTest = {
@@ -170,12 +191,30 @@ async function userUpdate() {
         table,
     };
 
-    let flag = true;
+    let flagUserCode = true; let flagGroup = true; let flagPassword = true;
     if (table === 'SETTINGS'){
         userTest.idOwner = '1';// cookie;
         userTest.firstName = document.getElementsByName('firstName').item(0).value;
         userTest.lastName = document.getElementsByName('lastName').item(0).value;
         userTest.patronymic = document.getElementsByName('patronymic').item(0).value;
+
+        const userCode = document.getElementsByName('user-code').item(0);
+        flagUserCode = checkLength(userCode, false) ? removeValidation(userCode) : false;
+        if (flagUserCode === true){ // проверка отсутствия значения в базе
+            userTest.userCode = userCode.value;
+            const userCodeOld = user.getUserCode();
+            if (userCode.value !== userCodeOld){
+                const data = JSON.stringify({code: 4, table, userCode: userCode.value});
+                const result = await getResourse(data);
+                if (result[0] !== undefined){
+                    flagUserCode = false;
+                    generateError(userCode);
+                }
+                else{
+                    removeValidation(userCode);
+                }
+            }
+        }
 
         const university = document.getElementsByName('university').item(0).value;
         const role = document.getElementsByName('role').item(0).value;
@@ -183,7 +222,7 @@ async function userUpdate() {
             userTest.university = university;
             userTest.role = role;
             const group = document.getElementsByName('group').item(0);
-            flag = checkLength(group) ? removeValidation(group) : false;
+            flagGroup = checkLength(group) ? removeValidation(group) : false;
             userTest.group = group.value;
         }
         else{
@@ -196,17 +235,29 @@ async function userUpdate() {
         userTest.id = '1';// cookie;
 
         const password = document.getElementsByName('password').item(0);
-        flag = checkLength(password) ? (checkMask(password) && removeValidation(password)) : false;
-        userTest.password = password.value;
+        const passwordRepeat = document.getElementsByName('repeat-password').item(0);
+        if (password.value === passwordRepeat.value){
+            flagPassword = checkLength(password) ? (checkMask(password) && removeValidation(password)) : false;
+            userTest.password = password.value;
+        }
+        else{
+            flagPassword = false;
+        }
     }
 
-    if (flag === true){
+    if (flagUserCode === true && flagGroup === true && flagPassword === true){
         if (table === 'SETTINGS'){
-            updateUserFields(userTest.firstName, userTest.lastName, userTest.patronymic,
+            updateUserFields(userTest.userCode, userTest.firstName, userTest.lastName, userTest.patronymic,
                 null, userTest.role, userTest.university, userTest.group);
+        }
+        else if (table === 'USERS'){
+            document.getElementsByName('password').item(0).value = null;
+            document.getElementsByName('repeat-password').item(0).value = null;
         }
         const data = JSON.stringify(userTest);
         await getResourse(data);
+
+        alert('Информация успешно обновлена');
     }
 }
 

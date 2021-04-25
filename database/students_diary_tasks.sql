@@ -18,28 +18,36 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `projects`
+-- Table structure for table `tasks`
 --
 
-DROP TABLE IF EXISTS `projects`;
+DROP TABLE IF EXISTS `tasks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `projects` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ проекта',
-  `idOwner` int NOT NULL COMMENT 'Ключ владельца проекта',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название проекта',
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание проекта',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица проектов';
+CREATE TABLE `tasks` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ задачи',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца задачи',
+  `idProject` int DEFAULT NULL COMMENT 'Ключ проекта которому принадлежит задача',
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Название задачи',
+  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Описание задачи',
+  `date` date DEFAULT NULL COMMENT 'Дата выполнения задачи',
+  `time` time DEFAULT NULL COMMENT 'Время выполнения задачи',
+  `period` int DEFAULT NULL COMMENT 'Значение отвечающее за то будет ли задача повторяться и указывающая на частоту',
+  PRIMARY KEY (`id`),
+  KEY `tasks_OwnerId_idx` (`idOwner`),
+  KEY `tasks_Period_idx` (`period`),
+  CONSTRAINT `tasksOwnerId` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tasksPeriod` FOREIGN KEY (`period`) REFERENCES `repetition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `projects`
+-- Dumping data for table `tasks`
 --
 
-LOCK TABLES `projects` WRITE;
-/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
+LOCK TABLES `tasks` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-13  9:46:41
+-- Dump completed on 2021-04-25 17:31:05

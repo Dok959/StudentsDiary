@@ -22,6 +22,7 @@
         <div id="header-panel">
 
             <div id="user-block">
+                <a href="javascript:returnDashboard()" class="btn-link" id="return">Вернуться</a>
                 <div id="user-header">
                     <div id="user">
                         <span id="user-name">Пользователь</span>
@@ -41,7 +42,7 @@
             <div id="content">
                 <div class="tab-container visible" id="settings">
                     <form action="javascript:userUpdate()" method="post">
-                        <h1>Данные о вашего профиля</h1>
+                        <h1>Данные вашего профиля</h1>
 
                         <div id="window-module">
                             <div id="window-module-title">
@@ -53,7 +54,7 @@
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Имя</span>
-                                <input class="input" type="text" style="margin-left: 90px;" name="firstName" placeholder="Иван">
+                                <input class="input center-firstName" type="text" name="firstName" placeholder="Иван">
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Отчество</span>
@@ -67,7 +68,7 @@
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Код пользователя</span>
-                                <input class="input" type="text" style="margin-left: -30px;" name="user-code" placeholder="user12345">
+                                <input class="input center-userCode" type="text" name="user-code" placeholder="user12345">
                             </div>
                         </div>
 
@@ -84,7 +85,7 @@
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Роль</span>
-                                <select class="select" name="role" style="margin-left: 80px;">
+                                <select class="select center-selectRole" name="role">
                                     <option value="1">Студент</option>
                                     <option value="2">Преподаватель</option>
                                     <option value="10" selected>Нет</option>
@@ -92,7 +93,7 @@
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Группа</span>
-                                <input class="input" type="text" style="margin-left: 65px;" name="group" placeholder="ДИТ11">
+                                <input class="input center-group" type="text" name="group" placeholder="ДИТ11">
                             </div>
                         </div>
 
@@ -111,16 +112,18 @@
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Новый пароль</span>
-                                <input class="input" type="password" style="margin-left: -5px;" name="password" placeholder="12345">
+                                <input class="input center-password" type="password" name="password" placeholder="12345">
                             </div>
                             <div id="module-element">
                                 <span id="title-label">Повторите новый пароль</span>
-                                <input class="input" type="password" style="margin-left: -95px;" name="repeat-password" placeholder="12345">
+                                <input class="input center-repeatPassword" type="password" name="repeat-password" placeholder="12345">
                             </div>
                         </div>
 
                         <button type="submit">Сохранить</button>
                     </form>
+
+                    <a href="javascript:exit()" class="btn-link" id="exit">Выход</a>
                 </div>
 
                 <div class="tab-container" id="friends">

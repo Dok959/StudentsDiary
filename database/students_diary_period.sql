@@ -18,12 +18,28 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping events for database 'students_diary'
+-- Table structure for table `period`
 --
 
+DROP TABLE IF EXISTS `period`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `period` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ периода',
+  `value` varchar(45) NOT NULL COMMENT 'Значение отвечающее за период',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
--- Dumping routines for database 'students_diary'
+-- Dumping data for table `period`
 --
+
+LOCK TABLES `period` WRITE;
+/*!40000 ALTER TABLE `period` DISABLE KEYS */;
+INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
+/*!40000 ALTER TABLE `period` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -34,4 +50,4 @@ USE `students_diary`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-07 18:19:52
+-- Dump completed on 2021-04-25 17:31:05

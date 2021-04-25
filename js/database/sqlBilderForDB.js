@@ -57,8 +57,9 @@ buildingQueryForDB = async (args) => {
                 request = await buildingQueryForDB(args);
                 response = JSON.parse(JSON.stringify(request[0]));
                 const idOwner = response.id;
+                const userCode = `user${Math.round(Math.random() * 10000)}`;
                 query =
-                    `INSERT INTO SETTINGS () VALUES (${idOwner}, NULL, NULL, NULL, DEFAULT);`;
+                    `INSERT INTO SETTINGS () VALUES (${idOwner}, '${userCode}', NULL, NULL, NULL, DEFAULT);`;
                 await pool.execute(query);
 
                 return buildingQueryForDB(args);
