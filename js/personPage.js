@@ -60,6 +60,25 @@ function exit() {
     window.location.href = '/';
 }
 
+// Взаимодействие с селектами
+function enableOrDisableGroup() {
+    const university = document.getElementsByName('university').item(0).value;
+        if (Number.parseInt(university, 10) === 10){
+            document.getElementsByName('role').item(0).disabled = true;
+            document.getElementsByName('group').item(0).disabled = true;
+        }
+        else{
+            document.getElementsByName('role').item(0).disabled = false;
+            const role = document.getElementsByName('role').item(0).value;
+            if (Number.parseInt(role, 10) === 10 || Number.parseInt(role, 10) === 2){
+                document.getElementsByName('group').item(0).disabled = true;
+            }
+            else{
+                document.getElementsByName('group').item(0).disabled = false;
+            }
+        }
+}
+
 // Возврат к основной странице
 function returnDashboard() {
     window.location.href = '/dashboard';
@@ -89,17 +108,28 @@ async function checkOpenTab() {
     return table;
 }
 
+// Выделение ошибок
+function generateError(element) {
+    $(element).addClass('error');
+    return false;
+}
+
 // Оборажение вкладок
 function renderFieldsTab() {
     document.getElementById('user-name').textContent = user.firstName || 'Пользователь';
     document.getElementById('user-code').textContent = user.userCode;
     document.getElementsByName('user-code').item(0).value = user.userCode;
+    if (user.userCode === null){
+        generateError(document.getElementsByName('user-code').item(0));
+    }
     document.getElementsByName('lastName').item(0).value = user.lastName;
     document.getElementsByName('firstName').item(0).value = user.firstName;
     document.getElementsByName('patronymic').item(0).value = user.patronymic;
     document.getElementsByName('role').item(0).value = user.role === null ? 10 : user.role;
     document.getElementsByName('university').item(0).value = user.university === null ? 10 : user.university;
     document.getElementsByName('group').item(0).value = user.group;
+
+    enableOrDisableGroup();
 }
 
 // Обновление локальных данных
@@ -138,23 +168,16 @@ async function getResourse(data) {
 };
 
 // Получение настроек пользователя
-// todo прописать получение куки, 1 раз
 async function uploadUserSettings() {
     const data = JSON.stringify({
         code: 4,
         table: 'SETTINGS',
-        idOwner: '1',// cookie,
+        idOwner: cookie,
     });
 
     const result = await getResourse(data);
     user = new User(result[0]);
     renderFieldsTab();
-}
-
-// Выделение ошибок
-function generateError(element) {
-    $(element).addClass('error');
-    return false;
 }
 
 // Проверка маски
@@ -183,7 +206,6 @@ function removeValidation(element) {
 }
 
 // Сохранение изменений
-// todo прописать получение куки, 2 раз
 async function userUpdate() {
     const table = await checkOpenTab();
     const userTest = {
@@ -193,7 +215,7 @@ async function userUpdate() {
 
     let flagUserCode = true; let flagGroup = true; let flagPassword = true;
     if (table === 'SETTINGS'){
-        userTest.idOwner = '1';// cookie;
+        userTest.idOwner = cookie;
         userTest.firstName = document.getElementsByName('firstName').item(0).value;
         userTest.lastName = document.getElementsByName('lastName').item(0).value;
         userTest.patronymic = document.getElementsByName('patronymic').item(0).value;
@@ -221,9 +243,14 @@ async function userUpdate() {
         if (Number.parseInt(university, 10) !== 10 && Number.parseInt(role, 10) !== 10){
             userTest.university = university;
             userTest.role = role;
-            const group = document.getElementsByName('group').item(0);
-            flagGroup = checkLength(group) ? removeValidation(group) : false;
-            userTest.group = group.value;
+            if (Number.parseInt(role, 10) !== 2){ // не препод
+                const group = document.getElementsByName('group').item(0);
+                flagGroup = checkLength(group) ? removeValidation(group) : false;
+                userTest.group = group.value;
+            }
+            else{
+                userTest.group = null;
+            }
         }
         else{
             userTest.university = null;
@@ -232,7 +259,7 @@ async function userUpdate() {
         }
     }
     else if(table === 'USERS'){
-        userTest.id = '1';// cookie;
+        userTest.id = cookie;
 
         const password = document.getElementsByName('password').item(0);
         const passwordRepeat = document.getElementsByName('repeat-password').item(0);
@@ -269,21 +296,22 @@ document.addEventListener('DOMContentLoaded', () => {
 // Слушатель
 document.addEventListener('click', (event) => {
     try {
-        const university = document.getElementsByName('university').item(0).value;
-        if (Number.parseInt(university, 10) === 10){
-            document.getElementsByName('role').item(0).disabled = true;
-            document.getElementsByName('group').item(0).disabled = true;
-        }
-        else{
-            document.getElementsByName('role').item(0).disabled = false;
-            const role = document.getElementsByName('role').item(0).value;
-            if (Number.parseInt(role, 10) === 10){
-                document.getElementsByName('group').item(0).disabled = true;
-            }
-            else{
-                document.getElementsByName('group').item(0).disabled = false;
-            }
-        }
+        enableOrDisableGroup();
+        // const university = document.getElementsByName('university').item(0).value;
+        // if (Number.parseInt(university, 10) === 10){
+        //     document.getElementsByName('role').item(0).disabled = true;
+        //     document.getElementsByName('group').item(0).disabled = true;
+        // }
+        // else{
+        //     document.getElementsByName('role').item(0).disabled = false;
+        //     const role = document.getElementsByName('role').item(0).value;
+        //     if (Number.parseInt(role, 10) === 10){
+        //         document.getElementsByName('group').item(0).disabled = true;
+        //     }
+        //     else{
+        //         document.getElementsByName('group').item(0).disabled = false;
+        //     }
+        // }
     } catch (error) {
         /* empty */
     }

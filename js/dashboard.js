@@ -1,4 +1,14 @@
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+const lessonAndTime = {
+    1: '8:30',
+    2: '10:15',
+    3: '12:00',
+    4: '13:45',
+    5: '15:20',
+    6: '16:55',
+    7: '18:30',
+    8: '20:05',
+}
 
 // Адаптивный список дней
 function formation(){
@@ -10,12 +20,25 @@ function formation(){
         }
         const element = days[now];
 
+        nowDay.setDate(nowDay.getDate() + 1);
+        const year = nowDay.getFullYear();
+        let month = nowDay.getMonth() + 1;
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        let day = nowDay.getDate();
+        if (day < 10) {
+            day = `0${day}`;
+        }
+        const dateInfo = `${day}.${month}.${year}`;
+
         const node = `<div class="wrapper">
                 <div id="bord-day">
                     <details open>
                         <summary>
                             <div id="bord-day-title">
                                 <h2 class="day-title">${element}</h2>
+                                <h5 class="date-title">${dateInfo}</h5>
                             </div>
                         </summary>
                         <div class="list-tasks" id="day-${now}">
@@ -33,7 +56,6 @@ function formation(){
 }
 
 // Получение задач на неделю
-// todo прописать получение куки, 1 раз
 function gettingListTasks(){
     // определение сроков
     const now = new Date();
@@ -54,7 +76,7 @@ function gettingListTasks(){
     const data = JSON.stringify({
         code: 4,
         table: 'TASKS',
-        idOwner: '1',// cookie,
+        idOwner: cookie,
         idProject: null,
         startDate,
         endDate,
@@ -65,21 +87,208 @@ function gettingListTasks(){
     taskList.getTasks(data);
 }
 
+function creatingASchedule(role, week, raspisanieQuerry) {
+    const raspisanie = new DOMParser()
+    .parseFromString(raspisanieQuerry, 'text/html')
+    .getElementsByClassName('table_style')[0];
+
+    const now = new Date();
+    // определение текущей даты
+    const nowYear = now.getFullYear();
+    const nowMonth = now.getMonth() + 1;
+    const nowDay = now.getDate();
+    let day; let dayOld;
+    let date;
+    for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
+        row = raspisanie.rows[i];
+
+        if (row.cells.length === 4){
+            day = row.cells[0].textContent;
+            // определяем индекс дня
+            for (let index = 0; index < days.length; index += 1) {
+                if (days[index] === day){
+                    date = index;
+                }
+            }
+
+            if (date < now.getDay()) {
+                week === 'td_style2_ch' ? 'td_style2_zn' : 'td_style2_ch';
+            }
+            else{
+                week === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
+            }
+        }
+
+        let para; let predmet = null; let teacher = null; let auditoria; let group; // = null
+        // набор данных о паре
+        for (let j = 0, col; j < row.cells.length; j += 1) {
+            col = row.cells[j];
+
+            if ((row.cells.length === 4 && j === 1) || (row.cells.length === 3 && j === 0)){
+                para = col.textContent;
+            }
+            else if (role === 1){
+                if (col === row.getElementsByClassName(week)[0]) {
+                    predmet = col.getElementsByClassName('naz_disc').item(0);
+                    if (predmet !== null) {
+                        predmet = predmet.textContent;
+                        teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                        auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                    }
+                }
+            }
+            else if (role === 2){
+                if ((row.cells.length === 4 && week === 'td_style2_ch' && j === 2) ||
+                    (row.cells.length === 3 && week === 'td_style2_ch' && j === 1)){
+
+                    group = col.getElementsByClassName('segueGrup').item(0);
+                    if (group !== null){
+                        group = group.textContent;
+                    }
+
+                    auditoria = col.getElementsByClassName('segueAud').item(0);
+                    if (auditoria !== null){
+                        auditoria = auditoria.textContent;
+                    }
+
+                    const element = col.outerHTML;
+                    if (element.length > 45){
+                        const startIndexPredmet = element.indexOf('</b>', 50) + 4;
+                        const endIndexPredmet = element.indexOf('<br>', startIndexPredmet);
+                        predmet = element.substring(startIndexPredmet, endIndexPredmet);
+                        const startIndexTime = element.lastIndexOf ('<br>') + 4;
+                        const dateLession = element.substring(startIndexTime, element.length-5);
+
+                        // получение начала занятий
+                        const startYear = Number.parseInt(dateLession.slice(8, 12), 10)
+                        const startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
+                        const startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+
+                        // получение окончания занятий
+                        const endYear = Number.parseInt(dateLession.slice(22, 26), 10)
+                        const endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
+                        const endDay = Number.parseInt(dateLession.slice(16, 18), 10)
+
+                        if (nowYear <= startYear && nowYear <= endYear){
+                            if (nowMonth >= startMonth && nowMonth <= endMonth){
+                                if (nowDay > startDay && nowDay < endDay){
+                                    predmet = null;
+                                }
+                            }
+                            else{
+                                predmet = null;
+                            }
+                        }
+                        else{
+                            predmet = null;
+                        }
+                    }
+                }
+                else if ((row.cells.length === 4 && week === 'td_style2_zn' && j === 3) ||
+                    (row.cells.length === 3 && week === 'td_style2_zn' && j === 2)){
+                    group = col.getElementsByClassName('segueGrup').item(0);
+                    if (group !== null){
+                        group = group.textContent;
+                    }
+
+                    auditoria = col.getElementsByClassName('segueAud').item(0);
+                    if (auditoria !== null){
+                        auditoria = auditoria.textContent;
+                    }
+
+                    const element = col.outerHTML;
+                    if (element.length > 45){
+                        const startIndexPredmet = element.indexOf('</b>', 50) + 4;
+                        const endIndexPredmet = element.indexOf('<br>', startIndexPredmet);
+                        predmet = element.substring(startIndexPredmet, endIndexPredmet);
+                        const startIndexTime = element.lastIndexOf ('<br>') + 4;
+                        const dateLession = element.substring(startIndexTime, element.length-5);
+
+                        // получение начала занятий
+                        const startYear = Number.parseInt(dateLession.slice(8, 12), 10)
+                        const startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
+                        const startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+
+                        // получение окончания занятий
+                        const endYear = Number.parseInt(dateLession.slice(22, 26), 10)
+                        const endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
+                        const endDay = Number.parseInt(dateLession.slice(16, 18), 10)
+
+                        if (nowYear <= startYear && nowYear <= endYear){
+                            if (nowMonth >= startMonth && nowMonth <= endMonth){
+                                if (nowDay > startDay && nowDay < endDay){
+                                    predmet = null;
+                                }
+                            }
+                            else{
+                                predmet = null;
+                            }
+                        }
+                        else{
+                            predmet = null;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (predmet !== null) {
+            // определяем столбец для вывода
+            listTaks = document.getElementById(`day-${date}`);
+
+            const node = `<div class="list-task no-clik">
+                    <div class="list-task-details">
+                        <div class="center">
+                            <span class="list-task-label">
+                                В ${lessonAndTime[para]}
+                            </span>
+                            <span class="list-task-label" id="para">
+                                Пара № ${para}
+                            </span>
+                            <span class="list-task-label" id="auditoria">
+                                Аудитория ${auditoria}
+                            </span>
+                        </div>
+                        <span class="list-task-label" id="predmet">
+                            ${predmet}
+                        </span>
+                        ${teacher !== null ?
+                            `<span class="list-task-label" id="teacher">
+                                Преподаватель - ${teacher}
+                            </span>` :
+                            `<span class="list-task-label" id="teacher">
+                                Группа - ${group}
+                            </span>`}
+                    </div>
+                </div>`;
+
+            $(listTaks).append(node);
+        }
+    }
+}
+
 // Проверка расписания
-// todo прописать получение куки
 async function checkRaspisanie() {
     try {
         // определяем является ли пользователь привязанным к университету
         let data = JSON.stringify({
             code: 4,
             table: 'SETTINGS',
-            idOwner: 1, // cookie,
+            idOwner: cookie,
         });
 
         // выполняем запрос
         let result = await getResourse(data);
 
-        const {role, university, group} = result[0];
+        const {role, university} = result[0];
+        let group;
+        if (result[0].group === null){
+            const {firstName, lastName, patronymic} = result[0];
+            group = `${lastName}_${firstName.slice(0, 1)}.${patronymic.slice(0, 1)}.`;
+        }
+        else{
+            group = result[0].group;
+        }
 
         // проверка на наличие даннных
         if (role !== null || university !== null || group !== null) {
@@ -123,7 +332,6 @@ async function checkRaspisanie() {
 
             // парсим ответ
             response.onload = async function resLoad() {
-                // console.log(response);
                 if (response.status === 200) {
                     const raspisanieQuerry = await response.response;
                     // определяем неделю
@@ -142,101 +350,34 @@ async function checkRaspisanie() {
                     }
 
                     // получаем сроки актуальности пар
-                    const timing = new DOMParser()
+                    if (role === 2){
+                        creatingASchedule(role, week, raspisanieQuerry);
+                    }
+                    else{
+                        const timing = new DOMParser()
                         .parseFromString(raspisanieQuerry, 'text/html')
                         .getElementsByClassName('paud_date')[0].innerHTML;
 
-                    // получение начала занятий
-                    const startYear = Number.parseInt(timing.slice(8, 12), 10)
-                    const startMonth = Number.parseInt(timing.slice(5, 7), 10)
-                    const startDay = Number.parseInt(timing.slice(2, 4), 10)
+                        // получение начала занятий
+                        const startYear = Number.parseInt(timing.slice(8, 12), 10)
+                        const startMonth = Number.parseInt(timing.slice(5, 7), 10)
+                        const startDay = Number.parseInt(timing.slice(2, 4), 10)
 
-                    // получение окончания занятий
-                    const endYear = Number.parseInt(timing.slice(22, 26), 10)
-                    const endMonth = Number.parseInt(timing.slice(19, 21), 10)
-                    const endDay = Number.parseInt(timing.slice(16, 18), 10)
+                        // получение окончания занятий
+                        const endYear = Number.parseInt(timing.slice(22, 26), 10)
+                        const endMonth = Number.parseInt(timing.slice(19, 21), 10)
+                        const endDay = Number.parseInt(timing.slice(16, 18), 10)
 
-                    // определение текущей даты
-                    now = new Date();
-                    const nowYear = now.getFullYear();
-                    const nowMonth = now.getMonth() + 1;
-                    const nowDay = now.getDate();
+                        // определение текущей даты
+                        now = new Date();
+                        const nowYear = now.getFullYear();
+                        const nowMonth = now.getMonth() + 1;
+                        const nowDay = now.getDate();
 
-                    if (nowYear >= startYear && nowYear <= endYear){
-                        if (nowMonth >= startMonth && nowMonth <= endMonth){
-                            if (nowDay >= startDay || nowDay <= endDay){
-                                // получаем пары на неделю
-                                const raspisanie = new DOMParser()
-                                .parseFromString(raspisanieQuerry, 'text/html')
-                                .getElementsByClassName('table_style')[0];
-
-                                let day; let dayOld;
-                                let weekNext = week;
-                                let date;
-                                for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
-                                    row = raspisanie.rows[i];
-
-                                    if (row.cells.length === 4){
-                                        day = row.cells[0].textContent;
-                                        // определяем индекс дня
-                                        for (let index = 0; index < days.length; index += 1) {
-                                            if (days[index] === day){
-                                                date = index;
-                                            }
-                                        }
-
-                                        if (date < now.getDay()) {
-                                            weekNext = week === 'td_style2_ch' ? 'td_style2_zn' : 'td_style2_ch';
-                                        }
-                                        else{
-                                            weekNext = week === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
-                                        }
-                                    }
-
-                                    let para; let predmet; let teacher; let auditoria;
-                                    // набор данных о паре
-                                    for (let j = 0, col; j < row.cells.length; j += 1) {
-                                        col = row.cells[j];
-
-                                        if ((row.cells.length === 4 && j === 1) || (row.cells.length === 3 && j === 0)){
-                                            para = col.textContent;
-                                        }
-
-                                        if (col === row.getElementsByClassName(weekNext)[0]) {
-                                            predmet = col.getElementsByClassName('naz_disc').item(0);
-                                            if (predmet !== null) {
-                                                predmet = predmet.textContent;
-                                                teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                                                auditoria = col.getElementsByClassName('segueAud')[0].textContent;
-                                            }
-                                        }
-                                    }
-
-                                    if (predmet !== null) {
-                                        // определяем столбец для вывода
-                                        listTaks = document.getElementById(`day-${date}`);
-
-                                        const node = `<div class="list-task no-clik">
-                                                <div class="list-task-details">
-                                                    <div class="center">
-                                                        <span class="list-task-label" id="para">
-                                                            Пара № ${para}
-                                                        </span>
-                                                        <span class="list-task-label" id="auditoria">
-                                                            Аудитория ${auditoria}
-                                                        </span>
-                                                    </div>
-                                                    <span class="list-task-label" id="predmet">
-                                                        ${predmet}
-                                                    </span>
-                                                    <span class="list-task-label" id="teacher">
-                                                        Преподаватель - ${teacher}
-                                                    </span>
-                                                </div>
-                                            </div>`;
-
-                                        $(listTaks).append(node);
-                                    }
+                        if (nowYear >= startYear && nowYear <= endYear){
+                            if (nowMonth >= startMonth && nowMonth <= endMonth){
+                                if (nowDay >= startDay || nowDay <= endDay){
+                                    creatingASchedule(role, week, raspisanieQuerry);
                                 }
                             }
                         }

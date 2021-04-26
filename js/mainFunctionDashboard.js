@@ -187,7 +187,6 @@ selectTask = (id) => {
 };
 
 // Выполнение задачи в базе
-// todo прописать получение куки, 2 раза
 async function taskReady() {
     const id = Number.parseInt( getTask(), 10);
 
@@ -206,7 +205,7 @@ async function taskReady() {
     const data = JSON.stringify({
         code: 1,
         table: 'HISTORY',
-        idOwner: 1, // cookie,
+        idOwner: cookie,
         date,
         id,
     });
@@ -223,7 +222,7 @@ async function taskReady() {
         const dataElement = JSON.stringify({
             code: 4,
             table: 'TASKS',
-            idOwner: 1, // cookie,
+            idOwner: cookie,
             id,
         });
 
@@ -405,7 +404,6 @@ function createTask() {
 }
 
 // Создание задачи
-// todo прописать получение куки
 async function readyCreateTask() {
     const result = await cheskFields();
     const {availabilityTitle, availabilityDate, title,
@@ -431,7 +429,7 @@ async function readyCreateTask() {
         data = JSON.stringify({
             code: 1,
             table: 'TASKS',
-            idOwner: 1, // cookie,
+            idOwner: cookie,
             idProject: null,
             title,
             description,

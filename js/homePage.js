@@ -71,10 +71,10 @@ async function checkErrors(code, table, form, args) {
                     secure: false,
                     'max-age': 3600,
                 });
-                window.location.href = 'dashboard'; // переадресация на рабочую область
+                window.location.href = 'dashboard';
             } else {
                 alert(
-                    'Указанный пользователь не найден.\nПроверьте корректность данных или зарегистрируйтесь!'
+                    `Указанный пользователь не найден.\nПроверьте корректность данных или зарегистрируйтесь!`
                 );
             }
         } else {
@@ -89,8 +89,8 @@ async function checkErrors(code, table, form, args) {
 function handlerReg() {
     const code = 1;
     const table = 'USERS';
-    const {login} = document.forms.reg;
-    const {password} = document.forms.reg;
+    const { login } = document.forms.reg;
+    const { password } = document.forms.reg;
 
     const args = [login, password];
 
@@ -108,8 +108,8 @@ function handlerReg() {
 function handlerAuth() {
     const code = 4;
     const table = 'USERS';
-    const {login} = document.forms.auth;
-    const {password} = document.forms.auth;
+    const { login } = document.forms.auth;
+    const { password } = document.forms.auth;
 
     const args = [login, password];
 

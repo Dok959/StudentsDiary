@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `settings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
   `idOwner` int NOT NULL COMMENT 'Ключ пользователя, которому принадлежат данные настройки',
-  `userCode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Идентификатор пользователя для поиска друзей',
+  `userCode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Идентификатор пользователя для поиска друзей',
   `firstName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Имя пользователя',
   `lastName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Фамилия пользователя',
   `patronymic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Отчество пользователя',
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-25 17:31:05
+-- Dump completed on 2021-04-26 17:07:27

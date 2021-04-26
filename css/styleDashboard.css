@@ -1,6 +1,7 @@
 body{
     background-color: #e3f0fd;
     position: relative;
+    background-color: #f4f5f7;
 }
 
 #dashboard-container{
@@ -106,6 +107,8 @@ header{
     padding: 10px 8px;
     position: relative;
     min-height: 20px;
+    display: flex;
+    align-items: baseline;
 }
 
 .day-title{
@@ -113,6 +116,12 @@ header{
     margin: 0 0 8px;
     font-size: 18px;
     line-height: 24px;
+}
+
+.date-title{
+    font-size: 15px;
+    margin-left: 20px;
+    font-weight: 400;
 }
 
 .list-tasks{
@@ -155,6 +164,14 @@ header{
 
 .task-title{
     font-size: 16px;
+    display: inline-flex;
+    width: 100%;
+}
+
+.task-title-time{
+    display: block;
+    font-weight: 400;
+    font-size: 15px;
 }
 
 /* * стиль по которому будут искаться все открытие окна */
@@ -361,6 +378,7 @@ textarea {
 .no-clik{
     cursor: default;
     background: rgb(153, 255, 187);
+    background-color: #00EFD1;
 }
 
 .center{
@@ -369,9 +387,6 @@ textarea {
 
 #para, #auditoria{
     display: inline-flex;
-}
-
-#auditoria{
     margin-left: 20px;
 }
 

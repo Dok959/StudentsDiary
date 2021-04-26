@@ -1,5 +1,4 @@
 // Получение задач на неделю
-// todo прописать получение куки, 1 раз
 function gettingListTasks(){
     // определение сроков
     const now = new Date();
@@ -13,7 +12,7 @@ function gettingListTasks(){
     const data = JSON.stringify({
         code: 4,
         table: 'TASKS',
-        idOwner: '1',// cookie,
+        idOwner: cookie,
         idProject: null,
         dateFirst: null,
         dateSecond: date,
