@@ -17,8 +17,7 @@ const jsonParser = express.json();
 // * Функции для работы маршрутизатора
 
 // проверка начилия пользователя и его настроек
-// flag флаг равный false проверяет только существование пользователя
-async function checkUser(request, flag = true) {
+async function checkUser(request) {
     try {
         const idUser = key.decrypt(
             getCookie(request.headers.cookie, 'USER'),
@@ -33,18 +32,6 @@ async function checkUser(request, flag = true) {
         return await buildingQueryForDB(user)
             .then((result) => {
                 if (result[0] !== undefined) {
-                    if (flag) {
-                        user.table = 'SETTINGS';
-                        user.idOwner = idUser;
-                        delete user.id;
-                        return buildingQueryForDB(user).then((settings) => {
-                            try {
-                                return settings[0].firstName;
-                            } catch (error) {
-                                return null;
-                            }
-                        });
-                    }
                     return true;
                 }
                 return false;
@@ -95,17 +82,7 @@ router.post('/queryForUser', jsonParser, async (request, response) => {
 router.use('/dashboard(.html)?', jsonParser, async (request, response) => {
     await checkUser(request).then((result) => {
         if (result !== false) {
-            let userName;
-            if (result !== null) {
-                userName = result;
-            } else {
-                userName = getCookie(request.headers.cookie, 'LOGIN');
-            }
-
-            // вывод имени пользователя или его логина при приветствие
-            response.render('dashboard', {
-                user: userName,
-            });
+            response.render('dashboard');
         } else {
             response.redirect('/');
         }
@@ -119,7 +96,13 @@ router.get('/dashboard(.hbs)?', (_request, response) => {
 
 // путь на дополнительную область
 router.use('/additionally(.html)?', jsonParser, async (_request, response) => {
-    response.render('additionally');
+    await checkUser(request).then((result) => {
+        if (result !== false) {
+            response.render('additionally');
+        } else {
+            response.redirect('/');
+        }
+    });
 });
 
 router.get('/additionally(.hbs)?', (_request, response) => {
@@ -155,7 +138,7 @@ router.post(
 
 // обработчик для попадания на рабочую область приложения
 router.use('/personPage(.html)?', jsonParser, async (request, response) => {
-    await checkUser(request, false).then((res) => {
+    await checkUser(request).then((res) => {
         if (res !== false) {
             response.sendFile(`${__dirname}/html/personPage.html`);
         } else {

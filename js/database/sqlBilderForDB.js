@@ -244,13 +244,6 @@ buildingQueryForDB = async (args) => {
                 const iSValue = args[element];
                 if (iSValue === null) {
                     query += ` ${element} is ${iSValue} and`;
-                } else if (element === 'date') {
-                    if (args.table === 'HISTORY') {
-                        query += ` ${element} = '${iSValue}' and`;
-                    }
-                    else {
-                        query += ` ${element} <= '${iSValue}' and`;
-                    }
                 } else {
                     query += ` ${element} = '${iSValue}' and`;
                 }

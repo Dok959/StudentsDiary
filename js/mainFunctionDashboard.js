@@ -32,6 +32,7 @@ function removeDashbordTask(id) {
 // Закрытие окон, удаление задач
 function removeWindow(tag = closeTag) {
     const elements = document.querySelectorAll(tag);
+    console.log(elements)
     elements.forEach(element => {
         element.remove();
     });
@@ -136,42 +137,64 @@ async function updateTask() {
 
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
-        removeValidation(); // удаление ошибочного выделения;
-
-        // формируем набор для проверки периодичности задачи
+        // проверка существования задач на это время
         let data = JSON.stringify({
             code: 4,
-            table: 'REPETITION',
-            frequency,
-            period,
-        });
-
-        period = await getResourse(data);
-        period = period[0] ? period[0].id : null;
-
-        // обновление данных локально
-        taskList.list.localUpdateTask(
-            id,
-            title,
-            description,
-            date,
-            time,
-            period
-        );
-
-        // формируем набор для отправки на сервер
-        data = JSON.stringify({
-            code: 2,
             table: 'TASKS',
-            id: Number.parseInt(id, 10),
-            title,
-            description,
+            idOwner: cookie,
             date,
             time,
-            period,
         });
 
-        getResourse(data);
+        let cheskTime = await getResourse(data);
+        if (cheskTime[0] !== undefined){
+            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+        }
+        else{
+            cheskTime = true;
+        }
+
+        if (cheskTime === true){
+            removeValidation(); // удаление ошибочного выделения;
+    
+            // формируем набор для проверки периодичности задачи
+            data = JSON.stringify({
+                code: 4,
+                table: 'REPETITION',
+                frequency,
+                period,
+            });
+    
+            period = await getResourse(data);
+            period = period[0] ? period[0].id : null;
+    
+            // обновление данных локально
+            taskList.list.localUpdateTask(
+                id,
+                title,
+                description,
+                date,
+                time,
+                period
+            );
+    
+            // формируем набор для отправки на сервер
+            data = JSON.stringify({
+                code: 2,
+                table: 'TASKS',
+                id: Number.parseInt(id, 10),
+                title,
+                description,
+                date,
+                time,
+                period,
+            });
+    
+            getResourse(data);
+        }
+        else{
+            generateError(document.getElementById('time'));
+        }
     }
 }
 
@@ -263,7 +286,7 @@ function createForm() {
                             <div class="card-detail-action create">
                                 <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
                                 <a href="#" class="link-button create-btn">Проект</a>
-                                <a href="#" class="link-button create-btn">Мероприятие</a>
+                                <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
                             </div>
                         </div>
                     </div>
@@ -327,7 +350,7 @@ async function renderTask({
                 <div class="window-wrapper">
                     <a href="javascript:removeWindow()" class="icon-close"></a>
 
-                    <div class="card-detail-window">
+                    <div class="task-card-detail-window">
                         <div class="window-detail-header">
                             <div class="window-title">
                                 <textarea class="card-detail-header" type="text" id="title" placeholder="Название задачи" maxlength=100>${title || ''}</textarea>
@@ -379,7 +402,7 @@ async function renderTask({
                                 <div class="card-detail-item">
                                     <h3 class="card-detail-item-header">Описание</h3>
                                     <div class="description-edit">
-                                        <textarea class="card-detail-description" type="text" id="description" placeholder="Описание задачи" maxlength=600>${description || ''}</textarea>
+                                        <textarea class="task-card-detail-description" type="text" id="description" placeholder="Описание задачи" maxlength=600>${description || ''}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -412,35 +435,330 @@ async function readyCreateTask() {
 
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
-        removeValidation(); // удаление ошибочного выделения;
-
-        // формируем набор для проверки периодичности задачи
+        // проверка существования задач на это время
         let data = JSON.stringify({
             code: 4,
+            table: 'TASKS',
+            idOwner: cookie,
+            date,
+            time,
+        });
+
+        let cheskTime = await getResourse(data);
+        if (cheskTime[0] !== undefined){
+            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+        }
+        else{
+            cheskTime = true;
+        }
+
+        if (cheskTime === true){
+        
+            removeValidation(); // удаление ошибочного выделения;
+
+            // формируем набор для проверки периодичности задачи
+            data = JSON.stringify({
+                code: 4,
+                table: 'REPETITION',
+                frequency,
+                period,
+            });
+
+            period = await getResourse(data);
+            period = period[0] ? period[0].id : null;
+
+            // формируем набор для отправки на сервер
+            data = JSON.stringify({
+                code: 1,
+                table: 'TASKS',
+                idOwner: cookie,
+                idProject: null,
+                title,
+                description,
+                date,
+                time,
+                period,
+            });
+
+            await getResourse(data);
+
+            gettingListTasks();
+        }
+        else{
+            generateError(document.getElementById('time'));
+        }
+    }
+}
+
+// Отрисовка задачи
+async function renderEvent({
+    id, idProject = '', title, description = '', date, time = '', period = null, } = {},
+    flag = false) {
+
+    removeWindow();
+
+    const nowDay = new Date();
+    let year = nowDay.getFullYear();
+    let month = nowDay.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    let day = nowDay.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    const minDate = `${year}-${month}-${day}`;
+
+    if (date != null) {
+        const dates = new Date(date);
+        year = dates.getFullYear();
+        month = dates.getMonth() + 1;
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        day = dates.getDate();
+        if (day < 10) {
+            day = `0${day}`;
+        }
+        date = `${year}-${month}-${day}`;
+    }
+
+    let frequency;
+    if (period !== null) {
+        // набор для проверки повторяемости задачи
+        const data = JSON.stringify({
+            code: 4,
             table: 'REPETITION',
-            frequency,
-            period,
+            id: period,
         });
 
         period = await getResourse(data);
-        period = period[0] ? period[0].id : null;
+        frequency = period[0].frequency;
+        period = period[0].period;
+    }
 
-        // формируем набор для отправки на сервер
-        data = JSON.stringify({
-            code: 1,
-            table: 'TASKS',
-            idOwner: cookie,
-            idProject: null,
-            title,
-            description,
-            date,
-            time,
-            period,
+    const node = `<div class="window-overlay">
+            <div class="window" id="window" name="${id}">
+                <div class="window-wrapper">
+                    <a href="javascript:removeWindow()" class="icon-close"></a>
+
+                    <div class="event-card-detail-window">
+                        <div class="window-detail-header">
+                            <div class="window-title">
+                                <textarea class="card-detail-header" type="text" id="title" placeholder="Название мероприятия" maxlength=100>${title || ''}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="window-main-col">
+                            <div class="card-detail-data">
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Действия с мероприятием</h3>
+                                    <div class="card-detail-action">
+                                        ${flag ?
+                                            `<a href="#" class="link-button">Сохранить</a>
+                                            <a href="#" class="link-button">Отменить</a>`:
+                                            `<a href="#" class="link-button">Изменить</a>
+                                            <a href="#" class="link-button">Выполнено</a>
+                                            <a href="#" class="link-button">Удалить</a>`}
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Срок</h3>
+                                    <div class="card-detail-due-date">
+                                        <input class="datetime-local" type="date" id="date" min="${minDate}" value="${date || ''}">
+                                        <input class="datetime-local" type="time" id="time" value="${time || ''}">
+                                        <a href="javascript:clearElement()" class="link-button">Сбросить</a>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Повторение</h3>
+                                    <div class="card-detail-repeat">
+                                        <a href="javascript:periodicityEnable()" class="link-button" id="periodicityEnable">Задать</a>
+                                        <select class="select" id="frequency">
+                                            <option value="1">Каждый</option>
+                                            <option value="2">Через</option>
+                                        </select>
+
+                                        <select class="select" id="period">
+                                            <option value="1">День</option>
+                                            <option value="2">Неделю</option>
+                                            <option value="3">Месяц</option>
+                                            <option value="4">Год</option>
+                                        </select>
+                                        <a href="javascript:periodicityShutdown()" class="link-button btn-invizible" id="periodicityShutdown">Очистить</a>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Описание</h3>
+                                    <div class="description-edit">
+                                        <textarea class="event-card-detail-description" type="text" id="description" placeholder="Описание мероприятия" maxlength=100>${description || ''}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Пригласить</h3>
+                                    <div class="description-edit card-detail-repeat">
+                                        <input class="input" name="userCode" type="text" placeholder="user12345" maxlength=10>
+                                        <a href="javascript:searchUser()" class="link-button">Найти</a>
+                                    </div>
+                                    <div class="invite-edit" id="search">
+                                    </div>
+                                </div>
+
+                                <div class="card-detail-item">
+                                    <h3 class="card-detail-item-header">Участники</h3>
+                                    <div class="invite-edit" id="party">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    $('#dashboard-container').append(node);
+
+    if (frequency !== undefined) {
+        periodicityEnable();
+        document.getElementById('frequency').value = frequency;
+        document.getElementById('period').value = period;
+    }
+}
+
+async function searchUser() {
+    removeWindow('#foundUser');
+    const userCode = document.getElementsByName('userCode').item(0).value;
+    if (userCode === '' || null){ // друзья пользователя
+        const data = JSON.stringify({
+            code: 4,
+            table: 'FRIENDS',
+            idSender: cookie,
+            idRecipient: cookie,
         });
 
-        await getResourse(data);
+        const result = await getResourse(data);
+        console.log(result);
+        // todo передаём список в рендер
 
-        gettingListTasks();
+        // ? а если друзей нет?
+    }
+    else{
+        const data = JSON.stringify({
+            code: 4,
+            table: 'SETTINGS',
+            userCode,
+        });
+
+        const result = await getResourse(data);
+        console.log(result);
+        if (result[0] !== undefined){
+            let title;
+            if (result[0].lastName !== undefined){
+                title = result[0].lastName;
+                if (result[0].firstName !== undefined){
+                    title += ` ${result[0].firstName.slice(0,1)}.`;
+                    if (result[0].patronymic !== undefined){
+                        title += ` ${result[0].patronymic.slice(0,1)}.`;
+                    }
+                }
+            }
+            else if (result[0].firstName !== undefined){
+                title = result[0].firstName;
+            }
+            else{
+                title = result[0].userCode;
+            }
+            // todo вынести в функцию
+            const node = `<div id="foundUser" class="foundUser">
+                    <span>${title}</span>
+                    <a href="#" class="">Профиль</a>
+                    <a href="#" class="">Добавить в друзья</a>
+                    <a href="#" class="">Пригласить в ...</a>
+                </div>`;
+            // todo сделать панельку где рядом будут кнопки "профиль" с инфой, "добавить" приглос в др
+            // todo "приглосить в ..." окно с приглашениями в проект, мероприятие и т.д.
+
+            // todo кнопки отвечающие за добавление пользователя в друзья и приглашение его на мероприятие
+            // todo в профили сделать вкладку куда будут прилетать приглосы, отображаться будет
+            // todo    только когда они есть или когда юзер где-то участвует
+            // todo    при нажатии на кнопку должна быть видна инфа пользователя: полное ФИО ...
+
+            // todo    добавить визуальное отображение на основной странице, например колокольчик
+
+            $('#search').append(node);
+        }
+        // todo сюда добавить сообщение когда пользователей нет
+    }
+}
+
+// Форма создания задач
+function createEvent() {
+    renderEvent({}, true);
+}
+
+// Создание задачи
+async function readyCreateEvent() {
+
+
+    const availabilityTitle =false;
+    // если все ок, сохраняем
+    if (availabilityTitle && availabilityDate) {
+        // проверка существования задач на это время
+        let data = JSON.stringify({
+            code: 4,
+            table: 'TASKS',
+            idOwner: cookie,
+            date,
+            time,
+        });
+
+        let cheskTime = await getResourse(data);
+        if (cheskTime[0] !== undefined){
+            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+        }
+        else{
+            cheskTime = true;
+        }
+
+        if (cheskTime === true){
+        
+            removeValidation(); // удаление ошибочного выделения;
+
+            // формируем набор для проверки периодичности задачи
+            data = JSON.stringify({
+                code: 4,
+                table: 'REPETITION',
+                frequency,
+                period,
+            });
+
+            period = await getResourse(data);
+            period = period[0] ? period[0].id : null;
+
+            // формируем набор для отправки на сервер
+            data = JSON.stringify({
+                code: 1,
+                table: 'TASKS',
+                idOwner: cookie,
+                idProject: null,
+                title,
+                description,
+                date,
+                time,
+                period,
+            });
+
+            await getResourse(data);
+
+            gettingListTasks();
+        }
+        else{
+            generateError(document.getElementById('time'));
+        }
     }
 }
 

@@ -18,12 +18,32 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping events for database 'students_diary'
+-- Table structure for table `freinds`
 --
 
+DROP TABLE IF EXISTS `freinds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `freinds` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ записи',
+  `idSender` int NOT NULL COMMENT 'Ключ отправителя предложения',
+  `idRecipient` int NOT NULL COMMENT 'Ключ получателя предложения',
+  PRIMARY KEY (`id`),
+  KEY `id-Sender_idx` (`idSender`),
+  KEY `id-Recipient_idx` (`idRecipient`),
+  CONSTRAINT `id-Recipient` FOREIGN KEY (`idRecipient`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id-Sender` FOREIGN KEY (`idSender`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица списков друзей';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
--- Dumping routines for database 'students_diary'
+-- Dumping data for table `freinds`
 --
+
+LOCK TABLES `freinds` WRITE;
+/*!40000 ALTER TABLE `freinds` DISABLE KEYS */;
+/*!40000 ALTER TABLE `freinds` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -233,8 +233,13 @@ header{
     transform: rotate(-45deg);
 }
 
-.card-detail-window{
+.task-card-detail-window{
     height: 600px;
+    margin-top: -10px;
+}
+
+.event-card-detail-window{
+    height: 1000px;
     margin-top: -10px;
 }
 
@@ -247,6 +252,13 @@ header{
 
 .window-title {
     margin: -10px 0 0;
+}
+
+.input{
+    max-width: max-content;
+    margin: 0;
+    width: fit-content;
+    display: inline-flex;
 }
 
 textarea {
@@ -270,10 +282,6 @@ textarea {
 .card-detail-header{
     width: 99%;
     height: 45px;
-}
-
-.card-detail-header:focus, .card-detail-description:focus{
-    border-color: #1e6acc;
 }
 
 .window-main-col {
@@ -313,6 +321,7 @@ textarea {
     border: 2px solid transparent;
     background: #00EFD1;
     margin: 0 5px;
+    align-self: center;
 }
 
 .link-button:hover{
@@ -326,6 +335,9 @@ textarea {
 .datetime-local{
     width: max-content;
     margin: 0 5px;
+    border-style: double;
+    border: 2px solid;
+    border-color: #fff;
 }
 
 .select{
@@ -334,16 +346,33 @@ textarea {
     margin: 0 5px;
 }
 
+.datetime-local:focus, .select:focus{
+    border-color: #1e6acc;
+}
+
 .btn-invizible{
     display: none;
 }
 
-.card-detail-description{
+.task-card-detail-description{
     width: 100%;
     height: 220px;
     font-weight: 400;
     font-size: 18px;
     overflow: auto;
+}
+
+.event-card-detail-description{
+    width: 100%;
+    height: 50px;
+    font-weight: 400;
+    font-size: 18px;
+    overflow: auto;
+}
+
+.card-detail-header:focus, .task-card-detail-description:focus,
+.event-card-detail-description:focus{
+    border-color: #1e6acc;
 }
 
 .error{
@@ -395,6 +424,18 @@ textarea {
     text-align: center;
 }
 
+.invite-edit{
+    height: 120px;
+    background-color: antiquewhite;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+.foundUser{
+    color: #172b4d;
+    font-size: 16px;
+}
+
 
 @media(max-width: 2500px){
     .wrapper{
@@ -435,16 +476,25 @@ textarea {
         width: 95%;
     }
 
-    .card-detail-description {
+    .task-card-detail-description {
         height: 250px;
+        font-weight: 300;
+        font-size: 17px;
+    }
+    
+    .event-card-detail-description{
         font-weight: 300;
         font-size: 17px;
     }
 }
 
 @media(max-width: 650px){
-    .card-detail-description{
+    .task-card-detail-description{
         height: 375px;
+    }
+
+    .event-card-detail-description{
+        height: 100px;
     }
 }
 
@@ -468,7 +518,6 @@ textarea {
         margin-left: 89.5%;
     }
 
-    /* * тут проверить стили кнопок, но сперва нужны скрипты */
     .card-detail-action, .card-detail-due-date, .card-detail-repeat{
         display: block;
         text-align: center;
@@ -515,7 +564,11 @@ textarea {
         font-size: 16px;
     }
 
-    .card-detail-description{
+    .task-card-detail-description{
+        font-size: 16px;
+    }
+
+    .event-card-detail-description{
         font-size: 16px;
     }
 }
@@ -542,8 +595,16 @@ textarea {
         font-size: 16px;
     }
 
-    .card-detail-description{
+    .task-card-detail-description{
         height: 480px;
+        font-size: 15px;
+        overflow: hidden;
+        font-weight: 300;
+        width: 93%;
+        margin-left: 0px;
+    }
+
+    .event-card-detail-description{
         font-size: 15px;
         overflow: hidden;
         font-weight: 300;
@@ -556,8 +617,12 @@ textarea {
             height: 125%;
         }
 
-        .card-detail-description{
+        .task-card-detail-description{
             height: 360px;
+        }
+
+        .event-card-detail-description{
+            height: 100px;
         }
     }
 }
@@ -576,8 +641,12 @@ textarea {
             height: 115%;
         }
 
-        .card-detail-description{
+        .task-card-detail-description{
             height: 385px;
+        }
+
+        .event-card-detail-description{
+            height: 100px;
         }
     }
 
@@ -598,8 +667,12 @@ textarea {
             height: 175%;
         }
 
-        .card-detail-description{
+        .task-card-detail-description{
             height: 475px;
+        }
+
+        .event-card-detail-description{
+            height: 100px;
         }
     }
 }

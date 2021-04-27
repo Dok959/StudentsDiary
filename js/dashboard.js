@@ -119,7 +119,7 @@ function creatingASchedule(role, week, raspisanieQuerry) {
             }
         }
 
-        let para; let predmet = null; let teacher = null; let auditoria; let group; // = null
+        let para; let predmet = null; let teacher = null; let auditoria; let group;
         // набор данных о паре
         for (let j = 0, col; j < row.cells.length; j += 1) {
             col = row.cells[j];
