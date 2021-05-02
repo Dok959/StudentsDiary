@@ -14,13 +14,17 @@ const lessonAndTime = {
 function formation(){
     const nowDay = new Date();
     let now = nowDay.getDay();
+    let indexDay = 0;
     for (let index = 0; index < 7; index += 1) {
         if (now === 7){
             now -= 7;
         }
         const element = days[now];
 
-        nowDay.setDate(nowDay.getDate() + 1);
+        nowDay.setDate(nowDay.getDate() + indexDay);
+        if (indexDay === 0){
+            indexDay = 1;
+        }
         const year = nowDay.getFullYear();
         let month = nowDay.getMonth() + 1;
         if (month < 10) {

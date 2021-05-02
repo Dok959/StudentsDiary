@@ -55,7 +55,7 @@ router.use((_request, _response, next) => {
 
 // путь на главную страницу, '/'
 router.get('/', (_request, response) => {
-    response.sendFile(`${__dirname}/html/homePage.html`);
+    response.sendFile(`${__dirname}/html/index.html`);
 });
 
 router.get('/index(.html)?', (_request, response) => {
@@ -118,6 +118,17 @@ router.post(
         if (request.body.idOwner) {
             // если пользователь авторизован, то парсим его hash
             request.body.idOwner = key.decrypt(
+                getCookie(request.headers.cookie, 'USER'),
+                'utf8'
+            );
+        }
+        else if (request.body.idSender) {
+            // если пользователь авторизован, то парсим его hash
+            request.body.idSender = key.decrypt(
+                getCookie(request.headers.cookie, 'USER'),
+                'utf8'
+            );
+            request.body.idRecipient = key.decrypt(
                 getCookie(request.headers.cookie, 'USER'),
                 'utf8'
             );

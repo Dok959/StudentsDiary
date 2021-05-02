@@ -32,7 +32,6 @@ function removeDashbordTask(id) {
 // Закрытие окон, удаление задач
 function removeWindow(tag = closeTag) {
     const elements = document.querySelectorAll(tag);
-    console.log(elements)
     elements.forEach(element => {
         element.remove();
     });
@@ -156,7 +155,7 @@ async function updateTask() {
 
         if (cheskTime === true){
             removeValidation(); // удаление ошибочного выделения;
-    
+
             // формируем набор для проверки периодичности задачи
             data = JSON.stringify({
                 code: 4,
@@ -164,10 +163,10 @@ async function updateTask() {
                 frequency,
                 period,
             });
-    
+
             period = await getResourse(data);
             period = period[0] ? period[0].id : null;
-    
+
             // обновление данных локально
             taskList.list.localUpdateTask(
                 id,
@@ -177,7 +176,7 @@ async function updateTask() {
                 time,
                 period
             );
-    
+
             // формируем набор для отправки на сервер
             data = JSON.stringify({
                 code: 2,
@@ -189,7 +188,7 @@ async function updateTask() {
                 time,
                 period,
             });
-    
+
             getResourse(data);
         }
         else{
@@ -453,7 +452,7 @@ async function readyCreateTask() {
         }
 
         if (cheskTime === true){
-        
+
             removeValidation(); // удаление ошибочного выделения;
 
             // формируем набор для проверки периодичности задачи
@@ -490,9 +489,142 @@ async function readyCreateTask() {
     }
 }
 
-// Отрисовка задачи
+// Рендер списка пользователей
+// flag отвечает за то что пользователи есть в списке друзей
+function renderListUsers(elements, flag = true) {
+    console.log(elements)
+
+    if (elements.title !== undefined){
+        const node = `<div id="foundUser" class="foundUser">
+            <span>${elements.title}</span>
+        </div>`;
+
+        $('#search').append(node);
+    }
+    else{
+        for (key in elements) {
+            if ({}.hasOwnProperty.call(elements, key)) {
+                let node; let title;
+                if (elements[key].lastName !== undefined){
+                    title = elements[key].lastName;
+                    if (elements[key].firstName !== undefined){
+                        title += ` ${elements[key].firstName.slice(0,1)}.`;
+                        if (elements[key].patronymic !== undefined){
+                            title += ` ${elements[key].patronymic.slice(0,1)}.`;
+                        }
+                    }
+                }
+                else if (elements[key].firstName !== undefined){
+                    title = elements[key].firstName;
+                }
+                else{
+                    title = elements[key].userCode;
+                }
+
+                if (flag === false){
+                    node = `<div id="foundUser" class="foundUser">
+                        <span>${title}</span>
+                        <a href="#" class="">Профиль</a>
+                        <a href="#" class="">Добавить в друзья</a>
+                        <a href="#" class="">Пригласить в ...</a>
+                    </div>`;
+                }
+                else{
+                    node = `<div id="foundUser" class="foundUser">
+                        <span>${title}</span>
+                        <a href="#" class="">Профиль</a>
+                        <a href="#" class="">Пригласить в ...</a>
+                    </div>`;
+                }
+    
+                $('#search').append(node);
+            }
+        }
+    }
+}
+
+// ! перебор и формирование списка должно быть на сервере, в файле бд
+function parseListUsers(elements) {
+    Object.keys(elements).forEach((key) => {
+        console.log(elements[key]);
+    });
+}
+
+// Поиск пользователей
+// flag = true в списке друзей, false - во всех
+async function searchUser() {
+    removeWindow('#foundUser');
+    const userCode = document.getElementsByName('userCode').item(0).value;
+    if (userCode === '' || null){ // друзья пользователя
+        const data = JSON.stringify({
+            code: 4,
+            table: 'FRIENDS',
+            idSender: cookie,
+            idRecipient: cookie,
+            flag: true,
+        });
+
+        const result = await getResourse(data);
+        console.log(result)
+        renderListUsers(result); // передаём список в рендер
+    }
+    else{
+        const data = JSON.stringify({
+            code: 4,
+            table: 'SETTINGS',
+            userCode,
+            flag: false,
+        });
+
+        const result = await getResourse(data);
+        console.log(result);
+
+        renderListUsers(result, false);
+
+        // if (result[0] !== undefined){
+        //     let title;
+        //     if (result[0].lastName !== undefined){
+        //         title = result[0].lastName;
+        //         if (result[0].firstName !== undefined){
+        //             title += ` ${result[0].firstName.slice(0,1)}.`;
+        //             if (result[0].patronymic !== undefined){
+        //                 title += ` ${result[0].patronymic.slice(0,1)}.`;
+        //             }
+        //         }
+        //     }
+        //     else if (result[0].firstName !== undefined){
+        //         title = result[0].firstName;
+        //     }
+        //     else{
+        //         title = result[0].userCode;
+        //     }
+            // todo вынести в функцию
+            // const node = `<div id="foundUser" class="foundUser">
+            //         <span>${title}</span>
+            //         <a href="#" class="">Профиль</a>
+            //         <a href="#" class="">Добавить в друзья</a>
+            //         <a href="#" class="">Пригласить в ...</a>
+            //     </div>`;
+            // todo сделать панельку где рядом будут кнопки "профиль" с инфой, "добавить" приглос в др
+            // todo "приглосить в ..." окно с приглашениями в проект, мероприятие и т.д.
+
+            // todo кнопки отвечающие за добавление пользователя в друзья и приглашение его на мероприятие
+            // todo в профили сделать вкладку куда будут прилетать приглосы, отображаться будет
+            // todo    только когда они есть или когда юзер где-то участвует
+            // todo    при нажатии на кнопку должна быть видна инфа пользователя: полное ФИО ...
+
+            // todo    добавить визуальное отображение на основной странице, например колокольчик
+
+        //     $('#search').append(node);
+        // }
+        // todo сюда добавить сообщение когда пользователей нет
+    }
+}
+
+// Отрисовка мероприятия
+// todo наверно нужен список участников или друзей
 async function renderEvent({
-    id, idProject = '', title, description = '', date, time = '', period = null, } = {},
+    id, title, description = '', date, time = '', period = null, } = {},
     flag = false) {
 
     removeWindow();
@@ -627,82 +759,18 @@ async function renderEvent({
         document.getElementById('frequency').value = frequency;
         document.getElementById('period').value = period;
     }
+
+    searchUser();
 }
 
-async function searchUser() {
-    removeWindow('#foundUser');
-    const userCode = document.getElementsByName('userCode').item(0).value;
-    if (userCode === '' || null){ // друзья пользователя
-        const data = JSON.stringify({
-            code: 4,
-            table: 'FRIENDS',
-            idSender: cookie,
-            idRecipient: cookie,
-        });
-
-        const result = await getResourse(data);
-        console.log(result);
-        // todo передаём список в рендер
-
-        // ? а если друзей нет?
-    }
-    else{
-        const data = JSON.stringify({
-            code: 4,
-            table: 'SETTINGS',
-            userCode,
-        });
-
-        const result = await getResourse(data);
-        console.log(result);
-        if (result[0] !== undefined){
-            let title;
-            if (result[0].lastName !== undefined){
-                title = result[0].lastName;
-                if (result[0].firstName !== undefined){
-                    title += ` ${result[0].firstName.slice(0,1)}.`;
-                    if (result[0].patronymic !== undefined){
-                        title += ` ${result[0].patronymic.slice(0,1)}.`;
-                    }
-                }
-            }
-            else if (result[0].firstName !== undefined){
-                title = result[0].firstName;
-            }
-            else{
-                title = result[0].userCode;
-            }
-            // todo вынести в функцию
-            const node = `<div id="foundUser" class="foundUser">
-                    <span>${title}</span>
-                    <a href="#" class="">Профиль</a>
-                    <a href="#" class="">Добавить в друзья</a>
-                    <a href="#" class="">Пригласить в ...</a>
-                </div>`;
-            // todo сделать панельку где рядом будут кнопки "профиль" с инфой, "добавить" приглос в др
-            // todo "приглосить в ..." окно с приглашениями в проект, мероприятие и т.д.
-
-            // todo кнопки отвечающие за добавление пользователя в друзья и приглашение его на мероприятие
-            // todo в профили сделать вкладку куда будут прилетать приглосы, отображаться будет
-            // todo    только когда они есть или когда юзер где-то участвует
-            // todo    при нажатии на кнопку должна быть видна инфа пользователя: полное ФИО ...
-
-            // todo    добавить визуальное отображение на основной странице, например колокольчик
-
-            $('#search').append(node);
-        }
-        // todo сюда добавить сообщение когда пользователей нет
-    }
-}
-
-// Форма создания задач
+// Форма создания мероприятия
 function createEvent() {
     renderEvent({}, true);
 }
 
-// Создание задачи
+// Создание мероприятия
+// todo не работает
 async function readyCreateEvent() {
-
 
     const availabilityTitle =false;
     // если все ок, сохраняем
@@ -725,7 +793,7 @@ async function readyCreateEvent() {
         }
 
         if (cheskTime === true){
-        
+
             removeValidation(); // удаление ошибочного выделения;
 
             // формируем набор для проверки периодичности задачи

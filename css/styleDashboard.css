@@ -32,10 +32,12 @@ header{
 }
 
 #links{
-    width: min-content;
+    /* width: min-content; */
     height: min-content;
     margin: 5px;
     display: inline-flex;
+
+    align-self: center;
 }
 
 #image{
@@ -239,7 +241,7 @@ header{
 }
 
 .event-card-detail-window{
-    height: 1000px;
+    height: 750px;
     margin-top: -10px;
 }
 

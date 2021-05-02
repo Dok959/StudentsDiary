@@ -29,7 +29,7 @@ CREATE TABLE `users` (
   `login` varchar(45) NOT NULL COMMENT 'Логин пользователя',
   `password` varchar(45) NOT NULL COMMENT 'Пароль пользователя',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-26 17:07:27
+-- Dump completed on 2021-05-02 11:50:05

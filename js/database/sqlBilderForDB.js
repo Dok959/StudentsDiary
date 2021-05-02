@@ -1,5 +1,61 @@
 const pool = require('./pool');
 
+// flag = true ищет в списке друзей; false - всех
+async function parseListUsers(flag, elements = {}, idNoOwner = null) {
+    console.log(elements)
+
+    const response = {}
+
+    if (Object.keys(elements).length > 0){
+
+        for (key in elements) {
+            if ({}.hasOwnProperty.call(elements, key)) {
+                console.log(elements[key]);
+                const data = {
+                    code: 4,
+                    table: 'SETTINGS',
+                    idOwner: elements[key].idSender === idNoOwner ?
+                        elements[key].idRecipient : elements[key].idSender,
+                };
+
+                const result = await buildingQueryForDB(data);
+                const element = result[0];
+                response[key] = element;
+                // console.log(response)
+                // renderListUsers(elements)
+            }
+        }
+        // !
+
+        // Object.keys(elements).forEach((key) = async () => {
+        //     console.log('+')
+        //     console.log(key)
+        //     console.log(elements[key]);
+        //     console.log(elements[key].idSender === idNoOwner)
+        //     const data = JSON.stringify({
+        //         code: 4,
+        //         table: 'SETTINGS',
+        //         idOwner: elements[key].idSender === idNoOwner ?
+        //             elements[key].idSender : elements[key].idRecipient,
+        //     });
+        //     console.log(data)
+    
+        //     const result = await buildingQueryForDB(data)
+        //     console.log(result)
+        //     // renderListUsers(elements)
+        // });
+    }
+    else if (flag === true){
+        response.title = 'Список друзей пуст';
+    }
+    else{
+        response.title = 'Пользователь не обнаружен';
+    }
+    console.log(response)
+
+    return response;
+}
+
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
 // eslint-disable-next-line consistent-return
 buildingQueryForDB = async (args) => {
@@ -241,11 +297,13 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                const iSValue = args[element];
-                if (iSValue === null) {
-                    query += ` ${element} is ${iSValue} and`;
-                } else {
-                    query += ` ${element} = '${iSValue}' and`;
+                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag'){
+                    const iSValue = args[element];
+                    if (iSValue === null) {
+                        query += ` ${element} is ${iSValue} and`;
+                    } else {
+                        query += ` ${element} = '${iSValue}' and`;
+                    }
                 }
             }
         });
@@ -256,6 +314,9 @@ buildingQueryForDB = async (args) => {
         } else if (Object.prototype.hasOwnProperty.call(args, 'dateFirst') &&
             Object.prototype.hasOwnProperty.call(args, 'dateSecond')) {
             query += ` date is ${args.dateFirst} or date <= '${args.dateSecond}' and`;
+        } else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
+            Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
+            query += ` idSender = ${args.idSender} or idRecipient = ${args.idRecipient} and`;
         }
         query = query.substr(0, query.length - 4);
         // сортировка по возрастанию дат
@@ -270,6 +331,10 @@ buildingQueryForDB = async (args) => {
         response = JSON.parse(JSON.stringify(request[0]));
 
         if (response.length === 0) {
+            if (args.flag !== undefined){
+                return parseListUsers(args.flag);
+            }
+
             result.el = undefined;
             return result;
         }
@@ -277,6 +342,11 @@ buildingQueryForDB = async (args) => {
         Object.keys(response).forEach((key) => {
             result[key] = response[key];
         });
+
+        if (args.flag !== undefined){
+            return parseListUsers(args.flag, result, Number.parseInt(args.idSender, 10));
+        }
+
         return result;
     }
 }

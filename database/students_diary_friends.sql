@@ -18,31 +18,31 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `freinds`
+-- Table structure for table `friends`
 --
 
-DROP TABLE IF EXISTS `freinds`;
+DROP TABLE IF EXISTS `friends`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `freinds` (
+CREATE TABLE `friends` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ записи',
   `idSender` int NOT NULL COMMENT 'Ключ отправителя предложения',
   `idRecipient` int NOT NULL COMMENT 'Ключ получателя предложения',
   PRIMARY KEY (`id`),
-  KEY `id-Sender_idx` (`idSender`),
   KEY `id-Recipient_idx` (`idRecipient`),
+  KEY `id-Sender_idx` (`idSender`),
   CONSTRAINT `id-Recipient` FOREIGN KEY (`idRecipient`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id-Sender` FOREIGN KEY (`idSender`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица списков друзей';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `freinds`
+-- Dumping data for table `friends`
 --
 
-LOCK TABLES `freinds` WRITE;
-/*!40000 ALTER TABLE `freinds` DISABLE KEYS */;
-/*!40000 ALTER TABLE `freinds` ENABLE KEYS */;
+LOCK TABLES `friends` WRITE;
+/*!40000 ALTER TABLE `friends` DISABLE KEYS */;
+/*!40000 ALTER TABLE `friends` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-27 18:58:43
+-- Dump completed on 2021-05-02 11:50:06
