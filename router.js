@@ -96,7 +96,7 @@ router.get('/dashboard(.hbs)?', (_request, response) => {
 
 // путь на дополнительную область
 router.use('/additionally(.html)?', jsonParser, async (_request, response) => {
-    await checkUser(request).then((result) => {
+    await checkUser(_request).then((result) => {
         if (result !== false) {
             response.render('additionally');
         } else {
@@ -118,18 +118,18 @@ router.post(
         if (request.body.idOwner) {
             // если пользователь авторизован, то парсим его hash
             request.body.idOwner = key.decrypt(
-                getCookie(request.headers.cookie, 'USER'),
+                request.body.idOwner,
                 'utf8'
             );
         }
         else if (request.body.idSender) {
             // если пользователь авторизован, то парсим его hash
             request.body.idSender = key.decrypt(
-                getCookie(request.headers.cookie, 'USER'),
+                request.body.idSender,
                 'utf8'
             );
             request.body.idRecipient = key.decrypt(
-                getCookie(request.headers.cookie, 'USER'),
+                request.body.idRecipient,
                 'utf8'
             );
         }
@@ -139,8 +139,15 @@ router.post(
 
         await buildingQueryForDB(request.body)
             .then((result) => {
-                // console.log('Ответ:'),
-                //     console.log(result),
+                // console.log('Ответ:')
+                // console.log(result)
+
+                if (!('el' in result) && ('0' in result) && ('idOwner' in result[0]) && result[0].idOwner !== null){
+                    Object.keys(result).forEach((index) => {
+                        result[index].idOwner = key.encrypt(result[index].idOwner, 'base64');
+                    });
+                }
+
                 response.send(result);
             })
             .catch((error) => console.log(error));

@@ -492,8 +492,6 @@ async function readyCreateTask() {
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
 function renderListUsers(elements, flag = true) {
-    console.log(elements)
-
     if (elements.title !== undefined){
         const node = `<div id="foundUser" class="foundUser">
             <span>${elements.title}</span>
@@ -524,30 +522,34 @@ function renderListUsers(elements, flag = true) {
                 if (flag === false){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="">Профиль</a>
-                        <a href="#" class="">Добавить в друзья</a>
-                        <a href="#" class="">Пригласить в ...</a>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
+                        <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
                 else{
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="">Профиль</a>
-                        <a href="#" class="">Пригласить в ...</a>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
-    
+
                 $('#search').append(node);
             }
         }
     }
 }
 
-// ! перебор и формирование списка должно быть на сервере, в файле бд
-function parseListUsers(elements) {
-    Object.keys(elements).forEach((key) => {
-        console.log(elements[key]);
+function inviteToFriends(idRecipient){
+    const data = JSON.stringify({
+        code: 1,
+        table: 'INVITE_TO_FRIENDS',
+        idSender: cookie,
+        idRecipient,
     });
+
+    getResourse(data);
 }
 
 // Поиск пользователей
@@ -670,11 +672,11 @@ async function renderEvent({
     }
 
     const node = `<div class="window-overlay">
-            <div class="window" id="window" name="${id}">
+            <div class="window ${id === undefined ? 'create-event' : ''}" id="window" name="${id}">
                 <div class="window-wrapper">
                     <a href="javascript:removeWindow()" class="icon-close"></a>
 
-                    <div class="event-card-detail-window">
+                    <div id="${id === undefined ? 'create-event' : ''}"class="event-card-detail-window">
                         <div class="window-detail-header">
                             <div class="window-title">
                                 <textarea class="card-detail-header" type="text" id="title" placeholder="Название мероприятия" maxlength=100>${title || ''}</textarea>
@@ -730,7 +732,7 @@ async function renderEvent({
                                     </div>
                                 </div>
 
-                                <div class="card-detail-item">
+                                ${id !== undefined ? `<div class="card-detail-item">
                                     <h3 class="card-detail-item-header">Пригласить</h3>
                                     <div class="description-edit card-detail-repeat">
                                         <input class="input" name="userCode" type="text" placeholder="user12345" maxlength=10>
@@ -744,7 +746,7 @@ async function renderEvent({
                                     <h3 class="card-detail-item-header">Участники</h3>
                                     <div class="invite-edit" id="party">
                                     </div>
-                                </div>
+                                </div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -760,7 +762,7 @@ async function renderEvent({
         document.getElementById('period').value = period;
     }
 
-    searchUser();
+    id !== undefined ? searchUser() : null;
 }
 
 // Форма создания мероприятия

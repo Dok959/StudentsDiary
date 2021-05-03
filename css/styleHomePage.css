@@ -129,8 +129,6 @@ header{
 #dashboard-main{
     display: flex;
     flex-wrap: nowrap;
-    /* margin-top: 45px; */
-    /* white-space: nowrap; */
     position: absolute;
     top: 0;
     right: 0;

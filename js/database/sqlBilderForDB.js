@@ -2,15 +2,13 @@ const pool = require('./pool');
 
 // flag = true ищет в списке друзей; false - всех
 async function parseListUsers(flag, elements = {}, idNoOwner = null) {
-    console.log(elements)
+    // console.log(elements)
 
     const response = {}
 
-    if (Object.keys(elements).length > 0){
-
+    if (Object.keys(elements).length > 0 && flag === true){
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
-                console.log(elements[key]);
                 const data = {
                     code: 4,
                     table: 'SETTINGS',
@@ -39,11 +37,18 @@ async function parseListUsers(flag, elements = {}, idNoOwner = null) {
         //             elements[key].idSender : elements[key].idRecipient,
         //     });
         //     console.log(data)
-    
+
         //     const result = await buildingQueryForDB(data)
         //     console.log(result)
         //     // renderListUsers(elements)
         // });
+    }
+    if (Object.keys(elements).length > 0 && flag === false){
+        for (key in elements) {
+            if ({}.hasOwnProperty.call(elements, key)) {
+                response[key] = elements[key];
+            }
+        }
     }
     else if (flag === true){
         response.title = 'Список друзей пуст';
@@ -69,7 +74,7 @@ buildingQueryForDB = async (args) => {
             // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (`;
 
-            if (args.table === 'USERS' || args.table === 'TASKS') {
+            if (args.table === 'USERS' || args.table === 'TASKS' || args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS') {
                 // геренация id пользователя
                 query += 'DEFAULT, ';
             }

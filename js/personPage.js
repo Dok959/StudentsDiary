@@ -288,6 +288,25 @@ async function userUpdate() {
     }
 }
 
+// Сохранение изменений
+async function searchUser() {
+    // removeWindow('#foundUser');
+    const userCode = document.getElementsByName('search-user-code').item(0).value;
+    if (userCode !== '' || null){
+        const data = JSON.stringify({
+            code: 4,
+            table: 'SETTINGS',
+            userCode,
+            flag: false,
+        });
+
+        const result = await getResourse(data);
+        console.log(result);
+
+        // renderListUsers(result, false);
+    }
+}
+
 // Действия при полной загрузке странцы
 document.addEventListener('DOMContentLoaded', () => {
     uploadUserSettings();

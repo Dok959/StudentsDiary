@@ -431,11 +431,29 @@ textarea {
     background-color: antiquewhite;
     margin-top: 5px;
     padding: 5px;
+    max-width: 100%;
 }
 
 .foundUser{
     color: #172b4d;
-    font-size: 16px;
+    font-size: 18px;
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px;
+    max-width: 100%;
+    min-width: 100%;
+}
+
+.user-action-link{
+    color: #172b4d;
+}
+
+#create-event{
+    height: 380px;
 }
 
 
@@ -468,6 +486,14 @@ textarea {
         height: 80%;
     }
 
+    #create-event{
+        height: 420px;
+    }
+
+    .create-event{
+        height: fit-content;
+    }
+
     .icon-close{
         margin-left: 91.5%;
     }
@@ -483,7 +509,7 @@ textarea {
         font-weight: 300;
         font-size: 17px;
     }
-    
+
     .event-card-detail-description{
         font-weight: 300;
         font-size: 17px;
@@ -497,6 +523,10 @@ textarea {
 
     .event-card-detail-description{
         height: 100px;
+    }
+
+    #create-event{
+        height: 460px;
     }
 }
 
@@ -514,6 +544,10 @@ textarea {
 
     .window {
         height: 85%;
+    }
+
+    #create-event {
+        height: 505px;
     }
 
     .icon-close{
@@ -582,6 +616,10 @@ textarea {
 
     .window {
         height: 120%;
+    }
+
+    #create-event {
+        height: 585px;
     }
 
     .window-main-col{
@@ -677,4 +715,8 @@ textarea {
             height: 100px;
         }
     }
+}
+
+.create-event{
+    height: fit-content;
 }
