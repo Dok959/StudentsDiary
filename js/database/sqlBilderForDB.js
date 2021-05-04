@@ -278,7 +278,7 @@ buildingQueryForDB = async (args) => {
         query = `DELETE FROM ${args.table} WHERE `;
 
         for (const element in args) {
-            if (element !== 'code' && element !== 'table') {
+            if (element !== 'code' && element !== 'table' && element !== 'flag') {
                 const iSValue = args[element];
                 if (iSValue === null) {
                     query += `${element} is ${iSValue} and `;
@@ -293,6 +293,12 @@ buildingQueryForDB = async (args) => {
 
         request = await pool.execute(query);
 
+        if (Object.prototype.hasOwnProperty.call(args, 'flag') && args.flag === true){
+            args.code = 1;
+            args.table = 'FRIENDS';
+            delete args.flag;
+            return buildingQueryForDB(args);
+        }
         result.el = undefined;
         return result;
     }
@@ -341,7 +347,7 @@ buildingQueryForDB = async (args) => {
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
             Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
-            query += ` idSender = ${args.idSender} or idRecipient = ${args.idRecipient} and`;
+            query += ` idSender = ${args.idSender} and idRecipient = ${args.idRecipient} and`;
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
             query += ` idRecipient = ${args.idRecipient} and`;

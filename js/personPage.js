@@ -131,24 +131,25 @@ async function getResourse(data) {
 
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
+// todo
 function renderListUsers(elements, area, flag = true) {
-    console.log(area, area.substr(1))
-    document.getElementById(`${area.substr(1)}`).setAttribute('style','border-color: #1e6acc');
+    document.getElementById(`${area.substr(1)}`)
+        .setAttribute('style','border-color: #1e6acc');
     let tag;
-    // todo
     if (area === '#search-invitations'){
-        tag = '';
+        tag = '#invitationsUser';
     }
     else{
         tag = '#foundUser';
     }
     removeWindow(tag);
-    
+
     let node;
     if (elements.title !== undefined){
         node = `<div id="foundUser" class="foundUser">
             <span>${elements.title}</span>
         </div>`;
+        $(area).append(node);
     }
     else{
         for (key in elements) {
@@ -170,12 +171,14 @@ function renderListUsers(elements, area, flag = true) {
                     title = elements[key].userCode;
                 }
 
+                // todo сформировать строку для фио не более 90px, примерно, чтобы было ровно.
+
                 if (area === '#search-invitations'){
-                    node = `<div id="foundUser" class="foundUser">
+                    node = `<div id="invitationsUser" class="foundUser">
                     <span>${title}</span>
                     <a href="#" class="user-action-link">Профиль</a>
-                    <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
-                    <a href="#" class="user-action-link">Пригласить в ...</a>
+                    <a href="javascript:requestInvite('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
+                    <a href="javascript:requestInvite('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
                     </div>`;
                 }
                 else if (flag === false){
@@ -193,13 +196,27 @@ function renderListUsers(elements, area, flag = true) {
                         <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
+
+                $(area).append(node);
             }
         }
     }
+}
 
-    console.log(node)
-    console.log(area)
-    $(area).append(node);
+// Ответы на приглашения
+// todo убрать записи которые были отвечены
+async function requestInvite(idSender, flag){
+    const data = JSON.stringify({
+        code: 3,
+        table: 'INVITE_TO_FRIENDS',
+        idSender,
+        idRecipient: cookie,
+        flag,
+    });
+
+    await getResourse(data);
+
+    removeWindow('#invitationsUser');
 }
 
 // Проверка на наличие приглашения
@@ -212,10 +229,9 @@ async function checkInvite(){
     });
 
     const elements = await getResourse(data);
-    console.log(elements)
     if ({}.hasOwnProperty.call(elements, '0')){
         document.getElementById('check-invitations').setAttribute('style','display: block');
-        renderListUsers(elements, '#search-invitations', false); // ?
+        renderListUsers(elements, '#search-invitations', false);
     }
     else{
         document.getElementById('check-invitations').setAttribute('style','display: none');
@@ -417,6 +433,7 @@ async function inviteToFriends(idRecipient){
 }
 
 // Сохранение изменений
+// ?
 async function searchUser() {
     // removeWindow('#foundUser');
     const userCode = document.getElementsByName('search-user-code').item(0).value;
