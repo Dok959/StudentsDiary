@@ -115,21 +115,28 @@ router.post(
     '/database/buildingQueryForDB',
     jsonParser,
     async (request, response) => {
+        // если есть хеш - парсим
         if (request.body.idOwner) {
-            // если пользователь авторизован, то парсим его hash
             request.body.idOwner = key.decrypt(
                 request.body.idOwner,
                 'utf8'
             );
         }
-        else if (request.body.idSender) {
-            // если пользователь авторизован, то парсим его hash
+        if (request.body.idSender) {
             request.body.idSender = key.decrypt(
                 request.body.idSender,
                 'utf8'
             );
+        }
+        if (request.body.idRecipient) {
             request.body.idRecipient = key.decrypt(
                 request.body.idRecipient,
+                'utf8'
+            );
+        }
+        if (request.body.addressee) {
+            request.body.addressee = key.decrypt(
+                request.body.addressee,
                 'utf8'
             );
         }

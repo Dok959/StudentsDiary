@@ -85,14 +85,6 @@ function returnDashboard() {
 }
 
 // Оборажение вкладок
-function renderTab(tag) {
-    $('#settings').removeClass('visible');
-    $('#profile').removeClass('visible');
-    $('#friends').removeClass('visible');
-    $(`#${tag}`).addClass('visible');
-}
-
-// Оборажение вкладок
 async function checkOpenTab() {
     let table = null;
     table = $('#settings').hasClass('visible') ? 'SETTINGS' : null;
@@ -106,6 +98,140 @@ async function checkOpenTab() {
     }
 
     return table;
+}
+
+// Очиска областей
+function removeWindow(tag = closeTag) {
+    const elements = document.querySelectorAll(tag);
+    elements.forEach(element => {
+        element.remove();
+    });
+}
+
+// Механизм запросов
+async function getResourse(data) {
+    options = {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    }
+
+    const res = await fetch('./database/buildingQueryForDB', options);
+
+    if (!res.ok) {
+        throw new Error(`Произошла ошибка: ${res.status}`);
+    }
+
+    const result = await res.json()
+    return result;
+};
+
+// Рендер списка пользователей
+// flag отвечает за то что пользователи есть в списке друзей
+function renderListUsers(elements, area, flag = true) {
+    console.log(area, area.substr(1))
+    document.getElementById(`${area.substr(1)}`).setAttribute('style','border-color: #1e6acc');
+    let tag;
+    // todo
+    if (area === '#search-invitations'){
+        tag = '';
+    }
+    else{
+        tag = '#foundUser';
+    }
+    removeWindow(tag);
+    
+    let node;
+    if (elements.title !== undefined){
+        node = `<div id="foundUser" class="foundUser">
+            <span>${elements.title}</span>
+        </div>`;
+    }
+    else{
+        for (key in elements) {
+            if ({}.hasOwnProperty.call(elements, key)) {
+                let title;
+                if (elements[key].lastName !== null){
+                    title = elements[key].lastName;
+                    if (elements[key].firstName !== null){
+                        title += ` ${elements[key].firstName.slice(0,1)}.`;
+                        if (elements[key].patronymic !== null){
+                            title += ` ${elements[key].patronymic.slice(0,1)}.`;
+                        }
+                    }
+                }
+                else if (elements[key].firstName !== null){
+                    title = elements[key].firstName;
+                }
+                else{
+                    title = elements[key].userCode;
+                }
+
+                if (area === '#search-invitations'){
+                    node = `<div id="foundUser" class="foundUser">
+                    <span>${title}</span>
+                    <a href="#" class="user-action-link">Профиль</a>
+                    <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
+                    <a href="#" class="user-action-link">Пригласить в ...</a>
+                    </div>`;
+                }
+                else if (flag === false){
+                    node = `<div id="foundUser" class="foundUser">
+                        <span>${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
+                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                    </div>`;
+                }
+                else{
+                    node = `<div id="foundUser" class="foundUser">
+                        <span>${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                    </div>`;
+                }
+            }
+        }
+    }
+
+    console.log(node)
+    console.log(area)
+    $(area).append(node);
+}
+
+// Проверка на наличие приглашения
+async function checkInvite(){
+    const data = JSON.stringify({
+        code: 4,
+        table: 'INVITE_TO_FRIENDS',
+        idRecipient: cookie,
+        flag: true
+    });
+
+    const elements = await getResourse(data);
+    console.log(elements)
+    if ({}.hasOwnProperty.call(elements, '0')){
+        document.getElementById('check-invitations').setAttribute('style','display: block');
+        renderListUsers(elements, '#search-invitations', false); // ?
+    }
+    else{
+        document.getElementById('check-invitations').setAttribute('style','display: none');
+    }
+}
+
+// Оборажение вкладок
+function renderTab(tag) {
+    $('#settings').removeClass('visible');
+    $('#profile').removeClass('visible');
+    $('#friends').removeClass('visible');
+    $(`#${tag}`).addClass('visible');
+
+    if (tag === 'friends'){
+        checkInvite();
+    }
 }
 
 // Выделение ошибок
@@ -145,27 +271,6 @@ function updateUserFields(userCode, firstName, lastName, patronymic, theme, role
 
     renderFieldsTab();
 }
-
-// Механизм запросов
-async function getResourse(data) {
-    options = {
-        method: 'POST',
-        body: data,
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    }
-
-    const res = await fetch('./database/buildingQueryForDB', options);
-
-    if (!res.ok) {
-        throw new Error(`Произошла ошибка: ${res.status}`);
-    }
-
-    const result = await res.json()
-    return result;
-};
 
 // Получение настроек пользователя
 async function uploadUserSettings() {
@@ -288,6 +393,29 @@ async function userUpdate() {
     }
 }
 
+// Проверка на наличие в друзьях и отправка приглоса в друзья
+async function inviteToFriends(idRecipient){
+    const dataUser = JSON.stringify({
+        code: 4,
+        table: 'FRIENDS',
+        idSender: cookie,
+        idRecipient: cookie,
+        addressee: idRecipient,
+    });
+
+    const check = await getResourse(dataUser);
+    if (!{}.hasOwnProperty.call(check, '0')){
+        const data = JSON.stringify({
+            code: 1,
+            table: 'INVITE_TO_FRIENDS',
+            idSender: cookie,
+            idRecipient,
+        });
+
+        getResourse(data);
+    }
+}
+
 // Сохранение изменений
 async function searchUser() {
     // removeWindow('#foundUser');
@@ -297,13 +425,15 @@ async function searchUser() {
             code: 4,
             table: 'SETTINGS',
             userCode,
-            flag: false,
+            flag: false, // ?
         });
 
         const result = await getResourse(data);
-        console.log(result);
 
-        // renderListUsers(result, false);
+        renderListUsers(result, '#search-result',false); // ?
+    }
+    else{
+        document.getElementById('search-result').setAttribute('style','border-color: transparent')
     }
 }
 
@@ -316,21 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('click', (event) => {
     try {
         enableOrDisableGroup();
-        // const university = document.getElementsByName('university').item(0).value;
-        // if (Number.parseInt(university, 10) === 10){
-        //     document.getElementsByName('role').item(0).disabled = true;
-        //     document.getElementsByName('group').item(0).disabled = true;
-        // }
-        // else{
-        //     document.getElementsByName('role').item(0).disabled = false;
-        //     const role = document.getElementsByName('role').item(0).value;
-        //     if (Number.parseInt(role, 10) === 10){
-        //         document.getElementsByName('group').item(0).disabled = true;
-        //     }
-        //     else{
-        //         document.getElementsByName('group').item(0).disabled = false;
-        //     }
-        // }
     } catch (error) {
         /* empty */
     }

@@ -2,8 +2,6 @@ const pool = require('./pool');
 
 // flag = true ищет в списке друзей; false - всех
 async function parseListUsers(flag, elements = {}, idNoOwner = null) {
-    // console.log(elements)
-
     const response = {}
 
     if (Object.keys(elements).length > 0 && flag === true){
@@ -19,7 +17,6 @@ async function parseListUsers(flag, elements = {}, idNoOwner = null) {
                 const result = await buildingQueryForDB(data);
                 const element = result[0];
                 response[key] = element;
-                // console.log(response)
                 // renderListUsers(elements)
             }
         }
@@ -43,12 +40,28 @@ async function parseListUsers(flag, elements = {}, idNoOwner = null) {
         //     // renderListUsers(elements)
         // });
     }
-    if (Object.keys(elements).length > 0 && flag === false){
+    else if (Object.keys(elements).length > 0 && flag === false){
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
                 response[key] = elements[key];
             }
         }
+
+        // for (key in elements) {
+        //     if ({}.hasOwnProperty.call(elements, key)) {
+        //         const data = {
+        //             code: 4,
+        //             table: 'SETTINGS',
+        //             idOwner: elements[key].idSender === idNoOwner ?
+        //                 elements[key].idRecipient : elements[key].idSender,
+        //         };
+
+        //         const result = await buildingQueryForDB(data);
+        //         const element = result[0];
+        //         response[key] = element;
+        //         // renderListUsers(elements)
+        //     }
+        // }
     }
     else if (flag === true){
         response.title = 'Список друзей пуст';
@@ -56,7 +69,7 @@ async function parseListUsers(flag, elements = {}, idNoOwner = null) {
     else{
         response.title = 'Пользователь не обнаружен';
     }
-    console.log(response)
+    // console.log(response)
 
     return response;
 }
@@ -302,7 +315,7 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag'){
+                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee'){
                     const iSValue = args[element];
                     if (iSValue === null) {
                         query += ` ${element} is ${iSValue} and`;
@@ -316,12 +329,22 @@ buildingQueryForDB = async (args) => {
         if (Object.prototype.hasOwnProperty.call(args, 'startDate') &&
             Object.prototype.hasOwnProperty.call(args, 'endDate')) {
             query += ` date BETWEEN '${args.startDate}' and '${args.endDate}' and`;
-        } else if (Object.prototype.hasOwnProperty.call(args, 'dateFirst') &&
+        }
+        else if (Object.prototype.hasOwnProperty.call(args, 'dateFirst') &&
             Object.prototype.hasOwnProperty.call(args, 'dateSecond')) {
             query += ` date is ${args.dateFirst} or date <= '${args.dateSecond}' and`;
-        } else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
+        }
+        else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
+            Object.prototype.hasOwnProperty.call(args, 'idRecipient') &&
+            Object.prototype.hasOwnProperty.call(args, 'addressee')) {
+            query += ` (idSender = ${args.idSender} and idRecipient = ${args.addressee}) or (idSender = ${args.addressee} and idRecipient = ${args.idSender}) and`;
+        }
+        else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
             Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
             query += ` idSender = ${args.idSender} or idRecipient = ${args.idRecipient} and`;
+        }
+        else if (Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
+            query += ` idRecipient = ${args.idRecipient} and`;
         }
         query = query.substr(0, query.length - 4);
         // сортировка по возрастанию дат
@@ -349,7 +372,7 @@ buildingQueryForDB = async (args) => {
         });
 
         if (args.flag !== undefined){
-            return parseListUsers(args.flag, result, Number.parseInt(args.idSender, 10));
+            return parseListUsers(args.flag, result, Number.parseInt(args.idSender || args.idRecipient, 10));
         }
 
         return result;

@@ -437,13 +437,11 @@ textarea {
 .foundUser{
     color: #172b4d;
     font-size: 18px;
-
     display: inline-flex;
     flex-wrap: wrap;
     align-content: center;
     justify-content: space-around;
     align-items: center;
-    padding: 5px;
     max-width: 100%;
     min-width: 100%;
 }
