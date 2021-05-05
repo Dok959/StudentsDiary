@@ -91,18 +91,13 @@ function gettingListTasks(){
     taskList.getTasks(data);
 }
 
-function creatingASchedule(role, week, raspisanieQuerry) {
+function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
     const raspisanie = new DOMParser()
     .parseFromString(raspisanieQuerry, 'text/html')
     .getElementsByClassName('table_style')[0];
 
     const now = new Date();
-    // определение текущей даты
-    const nowYear = now.getFullYear();
-    const nowMonth = now.getMonth() + 1;
-    const nowDay = now.getDate();
-    let day; let dayOld;
-    let date;
+    let day; let date; let indexDay;
     for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
         row = raspisanie.rows[i];
 
@@ -112,6 +107,7 @@ function creatingASchedule(role, week, raspisanieQuerry) {
             for (let index = 0; index < days.length; index += 1) {
                 if (days[index] === day){
                     date = index;
+                    indexDay = index;
                 }
             }
 
@@ -121,6 +117,19 @@ function creatingASchedule(role, week, raspisanieQuerry) {
             else{
                 week === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
             }
+        }
+
+        let startYear; let startMonth; let startDay; let endYear; let endMonth; let endDay;
+        if (lastDate !== null){
+            // получение начала занятий
+            startYear = Number.parseInt(lastDate.slice(8, 12), 10);
+            startMonth = Number.parseInt(lastDate.slice(5, 7), 10);
+            startDay = Number.parseInt(lastDate.slice(2, 4), 10);
+
+            // получение окончания занятий
+            endYear = Number.parseInt(lastDate.slice(22, 26), 10);
+            endMonth = Number.parseInt(lastDate.slice(19, 21), 10);
+            endDay = Number.parseInt(lastDate.slice(16, 18), 10);
         }
 
         let para; let predmet = null; let teacher = null; let auditoria; let group;
@@ -134,10 +143,39 @@ function creatingASchedule(role, week, raspisanieQuerry) {
             else if (role === 1){
                 if (col === row.getElementsByClassName(week)[0]) {
                     predmet = col.getElementsByClassName('naz_disc').item(0);
-                    if (predmet !== null) {
-                        predmet = predmet.textContent;
-                        teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                        auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                    if (predmet !== null && lastDate !== null) {
+                        const todayIndex = new Date().getDay();
+                        let today;
+                        if (todayIndex > date){
+                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
+                        }
+                        else{
+                            today = new Date();
+                        }
+
+                        // определение текущей даты
+                        const todayYear = today.getFullYear();
+                        const todayMonth = today.getMonth() + 1;
+                        const todayDay = today.getDate();
+
+                        if (todayYear <= startYear && todayYear <= endYear){
+                            if (todayMonth >= startMonth && todayMonth <= endMonth){
+                                if (todayDay > startDay && todayDay > endDay){
+                                    predmet = null;
+                                }
+                                else{
+                                    predmet = predmet.textContent;
+                                    teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                                    auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                                }
+                            }
+                            else{
+                                predmet = null;
+                            }
+                        }
+                        else{
+                            predmet = null;
+                        }
                     }
                 }
             }
@@ -164,18 +202,32 @@ function creatingASchedule(role, week, raspisanieQuerry) {
                         const dateLession = element.substring(startIndexTime, element.length-5);
 
                         // получение начала занятий
-                        const startYear = Number.parseInt(dateLession.slice(8, 12), 10)
-                        const startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
-                        const startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+                        startYear = Number.parseInt(dateLession.slice(8, 12), 10)
+                        startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
+                        startDay = Number.parseInt(dateLession.slice(2, 4), 10)
 
                         // получение окончания занятий
-                        const endYear = Number.parseInt(dateLession.slice(22, 26), 10)
-                        const endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
-                        const endDay = Number.parseInt(dateLession.slice(16, 18), 10)
+                        endYear = Number.parseInt(dateLession.slice(22, 26), 10)
+                        endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
+                        endDay = Number.parseInt(dateLession.slice(16, 18), 10)
 
-                        if (nowYear <= startYear && nowYear <= endYear){
-                            if (nowMonth >= startMonth && nowMonth <= endMonth){
-                                if (nowDay > startDay && nowDay < endDay){
+                        const todayIndex = new Date().getDay();
+                        let today;
+                        if (todayIndex > date){
+                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
+                        }
+                        else{
+                            today = new Date();
+                        }
+
+                        // определение текущей даты
+                        const todayYear = today.getFullYear();
+                        const todayMonth = today.getMonth() + 1;
+                        const todayDay = today.getDate();
+
+                        if (todayYear <= startYear && todayYear <= endYear){
+                            if (todayMonth >= startMonth && todayMonth <= endMonth){
+                                if (todayDay > startDay && todayDay > endDay){
                                     predmet = null;
                                 }
                             }
@@ -209,18 +261,32 @@ function creatingASchedule(role, week, raspisanieQuerry) {
                         const dateLession = element.substring(startIndexTime, element.length-5);
 
                         // получение начала занятий
-                        const startYear = Number.parseInt(dateLession.slice(8, 12), 10)
-                        const startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
-                        const startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+                        startYear = Number.parseInt(dateLession.slice(8, 12), 10)
+                        startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
+                        startDay = Number.parseInt(dateLession.slice(2, 4), 10)
 
                         // получение окончания занятий
-                        const endYear = Number.parseInt(dateLession.slice(22, 26), 10)
-                        const endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
-                        const endDay = Number.parseInt(dateLession.slice(16, 18), 10)
+                        endYear = Number.parseInt(dateLession.slice(22, 26), 10)
+                        endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
+                        endDay = Number.parseInt(dateLession.slice(16, 18), 10)
 
-                        if (nowYear <= startYear && nowYear <= endYear){
-                            if (nowMonth >= startMonth && nowMonth <= endMonth){
-                                if (nowDay > startDay && nowDay < endDay){
+                        const todayIndex = new Date().getDay();
+                        let today;
+                        if (todayIndex > date){
+                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
+                        }
+                        else{
+                            today = new Date();
+                        }
+
+                        // определение текущей даты
+                        const todayYear = today.getFullYear();
+                        const todayMonth = today.getMonth() + 1;
+                        const todayDay = today.getDate();
+
+                        if (todayYear <= startYear && todayYear <= endYear){
+                            if (todayMonth >= startMonth && todayMonth <= endMonth){
+                                if (todayDay > startDay && todayDay > endDay){
                                     predmet = null;
                                 }
                             }
@@ -340,7 +406,7 @@ async function checkRaspisanie() {
                     const raspisanieQuerry = await response.response;
                     // определяем неделю
                     let week = raspisanieQuerry.indexOf('ЗНАМЕНАТЕЛЬ');
-                    let now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
+                    const now = new Date().getDay(); // если день = воскресенье получение расписания следующей недели
                     if (week === -1) {
                         week = 'td_style2_ch';
                         if (now === 0) {
@@ -362,29 +428,31 @@ async function checkRaspisanie() {
                         .parseFromString(raspisanieQuerry, 'text/html')
                         .getElementsByClassName('paud_date')[0].innerHTML;
 
-                        // получение начала занятий
-                        const startYear = Number.parseInt(timing.slice(8, 12), 10)
-                        const startMonth = Number.parseInt(timing.slice(5, 7), 10)
-                        const startDay = Number.parseInt(timing.slice(2, 4), 10)
+                        creatingASchedule(role, week, raspisanieQuerry, timing);
 
-                        // получение окончания занятий
-                        const endYear = Number.parseInt(timing.slice(22, 26), 10)
-                        const endMonth = Number.parseInt(timing.slice(19, 21), 10)
-                        const endDay = Number.parseInt(timing.slice(16, 18), 10)
+                        // // получение начала занятий
+                        // const startYear = Number.parseInt(timing.slice(8, 12), 10)
+                        // const startMonth = Number.parseInt(timing.slice(5, 7), 10)
+                        // const startDay = Number.parseInt(timing.slice(2, 4), 10)
 
-                        // определение текущей даты
-                        now = new Date();
-                        const nowYear = now.getFullYear();
-                        const nowMonth = now.getMonth() + 1;
-                        const nowDay = now.getDate();
+                        // // получение окончания занятий
+                        // const endYear = Number.parseInt(timing.slice(22, 26), 10)
+                        // const endMonth = Number.parseInt(timing.slice(19, 21), 10)
+                        // const endDay = Number.parseInt(timing.slice(16, 18), 10)
 
-                        if (nowYear >= startYear && nowYear <= endYear){
-                            if (nowMonth >= startMonth && nowMonth <= endMonth){
-                                if (nowDay >= startDay || nowDay <= endDay){
-                                    creatingASchedule(role, week, raspisanieQuerry);
-                                }
-                            }
-                        }
+                        // // определение текущей даты
+                        // now = new Date();
+                        // const nowYear = now.getFullYear();
+                        // const nowMonth = now.getMonth() + 1;
+                        // const nowDay = now.getDate();
+
+                        // if (nowYear >= startYear && nowYear <= endYear){
+                        //     if (nowMonth >= startMonth && nowMonth <= endMonth){
+                        //         if (nowDay >= startDay || nowDay <= endDay){
+                        //             creatingASchedule(role, week, raspisanieQuerry);
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             };

@@ -238,6 +238,26 @@ async function checkInvite(){
     }
 }
 
+// Проверка на наличие приглашения
+async function checkFriends(){
+    const data = JSON.stringify({
+        code: 4,
+        table: 'FRIENDS',
+        idSender: cookie,
+        idRecipient: cookie,
+        flag: true
+    });
+
+    const elements = await getResourse(data);
+    if ({}.hasOwnProperty.call(elements, '0')){
+        document.getElementById('check-friends').setAttribute('style','display: block');
+        renderListUsers(elements, '#list-friends', true);
+    }
+    else{
+        document.getElementById('check-friends').setAttribute('style','display: none');
+    }
+}
+
 // Оборажение вкладок
 function renderTab(tag) {
     $('#settings').removeClass('visible');
@@ -247,6 +267,7 @@ function renderTab(tag) {
 
     if (tag === 'friends'){
         checkInvite();
+        checkFriends();
     }
 }
 
