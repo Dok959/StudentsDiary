@@ -28,14 +28,23 @@ class Tasks {
         time ? task.setTime(time) : null;
         period ? task.setPeriod(period) : null;
 
-        const oldDate = task.getDate();
+        let oldDate = task.getDate();
         if (oldDate !== date){
+            try{
+                oldDate = new Date(oldDate).getDay();
+                const count = Number.parseInt(document.getElementById(`count-day-${oldDate}`).textContent, 10);
+                document.getElementById(`count-day-${oldDate}`).textContent = count - 1;
+            } catch (error) {
+                /* empty */
+            }
+
             date ? task.setDate(date) : null;
             removeDashbordTask(id);
 
             // проверка сильного изменения сроков
             if (date === null){
-                this.localDeleteTask(id);
+                taskList.renderTasks([task]);
+                // this.localDeleteTask(id);
             }
             else{
                 const startDate = new Date(new Date().setHours(0, 0, 0, 0));
@@ -50,9 +59,22 @@ class Tasks {
                 }
             }
         }
+        else{
+            removeDashbordTask(id);
+            taskList.renderTasks([task]);
+        }
     };
 
     localDeleteTask(id) {
+        try {
+            let node = document.getElementById(id).parentNode.parentNode;
+            node = node.getElementsByClassName('date-title').item(2);
+            const count = Number.parseInt(node.textContent, 10);
+            node.textContent = count - 1;
+        } catch (error) {
+            /* empty */
+        }
+
         let index;
         for (let element = 0; element < this.tasks.length; element += 1) {
             if (this.tasks[element].id === id) {

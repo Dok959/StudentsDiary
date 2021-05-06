@@ -105,12 +105,21 @@ header{
 }
 
 #bord-day-title{
-    flex: 0 0 auto;
+    /* flex: 0 0 auto;
     padding: 10px 8px;
     position: relative;
     min-height: 20px;
     display: flex;
+    align-items: baseline; */
+
+    flex: 0 0 auto;
+    /* padding: 10px 8px; */
+    position: relative;
+    min-height: 20px;
+    display: flex;
     align-items: baseline;
+    justify-content: center;
+    padding: 10px 0 5px;
 }
 
 .day-title{
@@ -383,7 +392,9 @@ textarea {
 
 #create{
     width: 310px;
-    height: 270px;
+    /* height: 270px; */
+    /* Без проектов */
+    height: 215px;
 }
 
 .icon-close.create{

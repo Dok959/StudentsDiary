@@ -40,9 +40,15 @@ function formation(){
                 <div id="bord-day">
                     <details open>
                         <summary>
-                            <div id="bord-day-title">
-                                <h2 class="day-title">${element}</h2>
-                                <h5 class="date-title">${dateInfo}</h5>
+                            <div>
+                                <div id="bord-day-title">
+                                    <h2 class="day-title">${element}</h2>
+                                    <h5 class="date-title">${dateInfo}</h5>
+                                </div>
+                                <div id="bord-day-title" style="padding-top: 5px">
+                                    <h5 class="date-title">Количество дел на день</h5>
+                                    <h5 id="count-day-${now}" class="date-title">0</h5>
+                                </div>
                             </div>
                         </summary>
                         <div class="list-tasks" id="day-${now}">

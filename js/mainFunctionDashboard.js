@@ -136,21 +136,25 @@ async function updateTask() {
 
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
+        let cheskTime = true;
         // проверка существования задач на это время
-        let data = JSON.stringify({
-            code: 4,
-            table: 'TASKS',
-            idOwner: cookie,
-            date,
-            time,
-        });
+        if (date !== null && time !== null){
+            // проверка существования задач на это время
+            const data = JSON.stringify({
+                code: 4,
+                table: 'TASKS',
+                idOwner: cookie,
+                date,
+                time,
+            });
 
-        let cheskTime = await getResourse(data);
-        if (cheskTime[0] !== undefined){
-            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
-        }
-        else{
-            cheskTime = true;
+            cheskTime = await getResourse(data);
+            if (cheskTime[0] !== undefined){
+                cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+            }
+            else{
+                cheskTime = true;
+            }
         }
 
         if (cheskTime === true){
@@ -284,7 +288,6 @@ function createForm() {
                             <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
                             <div class="card-detail-action create">
                                 <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
-                                <a href="#" class="link-button create-btn">Проект</a>
                                 <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
                             </div>
                         </div>
@@ -294,6 +297,8 @@ function createForm() {
             </div>
         </div>`;
 
+    // расположить после элемента "задача"
+    // <a href="#" class="link-button create-btn">Проект</a>
     $('#dashboard-container').append(node);
 }
 
@@ -434,21 +439,24 @@ async function readyCreateTask() {
 
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
+        let cheskTime = true;
         // проверка существования задач на это время
-        let data = JSON.stringify({
-            code: 4,
-            table: 'TASKS',
-            idOwner: cookie,
-            date,
-            time,
-        });
+        if (date !== null && time !== null){
+            const data = JSON.stringify({
+                code: 4,
+                table: 'TASKS',
+                idOwner: cookie,
+                date,
+                time,
+            });
 
-        let cheskTime = await getResourse(data);
-        if (cheskTime[0] !== undefined){
-            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
-        }
-        else{
-            cheskTime = true;
+            cheskTime = await getResourse(data);
+            if (cheskTime[0] !== undefined){
+                cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+            }
+            else{
+                cheskTime = true;
+            }
         }
 
         if (cheskTime === true){
@@ -456,7 +464,7 @@ async function readyCreateTask() {
             removeValidation(); // удаление ошибочного выделения;
 
             // формируем набор для проверки периодичности задачи
-            data = JSON.stringify({
+            let data = JSON.stringify({
                 code: 4,
                 table: 'REPETITION',
                 frequency,
@@ -480,6 +488,15 @@ async function readyCreateTask() {
             });
 
             await getResourse(data);
+
+            try {
+                let node = document.getElementById(id).parentNode.parentNode;
+                node = node.getElementsByClassName('date-title').item(2);
+                const count = Number.parseInt(node.textContent, 10);
+                node.textContent = count - 1;
+            } catch (error) {
+                /* empty */
+            }
 
             gettingListTasks();
         }
