@@ -1,5 +1,4 @@
 body{
-    background-color: #e3f0fd;
     position: relative;
     background-color: #f4f5f7;
 }
@@ -32,7 +31,6 @@ header{
 }
 
 #links{
-    /* width: min-content; */
     height: min-content;
     margin: 5px;
     display: inline-flex;
@@ -105,21 +103,12 @@ header{
 }
 
 #bord-day-title{
-    /* flex: 0 0 auto;
-    padding: 10px 8px;
-    position: relative;
-    min-height: 20px;
-    display: flex;
-    align-items: baseline; */
-
     flex: 0 0 auto;
-    /* padding: 10px 8px; */
     position: relative;
     min-height: 20px;
     display: flex;
     align-items: baseline;
-    justify-content: center;
-    padding: 10px 0 5px;
+    padding: 10px 10px 5px;
 }
 
 .day-title{

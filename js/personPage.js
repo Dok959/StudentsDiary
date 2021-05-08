@@ -100,6 +100,12 @@ async function checkOpenTab() {
     return table;
 }
 
+// Удаление приглашения
+function removeInvite(id) {
+    const element = document.getElementById(id).parentNode;
+    element.remove();
+}
+
 // Очиска областей
 function removeWindow(tag = closeTag) {
     const elements = document.querySelectorAll(tag);
@@ -133,22 +139,34 @@ async function getResourse(data) {
 // flag отвечает за то что пользователи есть в списке друзей
 // todo
 function renderListUsers(elements, area, flag = true) {
+    console.log(elements)
     document.getElementById(`${area.substr(1)}`)
         .setAttribute('style','border-color: #1e6acc');
     let tag;
     if (area === '#search-invitations'){
         tag = '#invitationsUser';
     }
-    else{
+    else if ((area === '#search-result')){
         tag = '#foundUser';
     }
+    else if ((area === '#list-friends')){
+        tag = '#friendUser';
+    }
+
     removeWindow(tag);
 
     let node;
     if (elements.title !== undefined){
-        node = `<div id="foundUser" class="foundUser">
-            <span>${elements.title}</span>
-        </div>`;
+        if (area === '#search-result'){
+            node = `<div id="foundUser" class="foundUser">
+                <span>${elements.title}</span>
+            </div>`;
+        }
+        else{
+            node = `<div id="friendUser" class="foundUser">
+                <span>${elements.title}</span>
+            </div>`;
+        }
         $(area).append(node);
     }
     else{
@@ -175,13 +193,13 @@ function renderListUsers(elements, area, flag = true) {
 
                 if (area === '#search-invitations'){
                     node = `<div id="invitationsUser" class="foundUser">
-                    <span>${title}</span>
+                    <span id="${elements[key].idOwner}">${title}</span>
                     <a href="#" class="user-action-link">Профиль</a>
                     <a href="javascript:requestInvite('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
                     <a href="javascript:requestInvite('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
                     </div>`;
                 }
-                else if (flag === false){
+                else if (area === '#search-result' && flag === false){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
                         <a href="#" class="user-action-link">Профиль</a>
@@ -189,8 +207,15 @@ function renderListUsers(elements, area, flag = true) {
                         <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
-                else{
+                else if (area === '#search-result' && flag === true){
                     node = `<div id="foundUser" class="foundUser">
+                        <span>${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                    </div>`;
+                }
+                else if (area === '#list-friends'){
+                    node = `<div id="friendUser" class="foundUser">
                         <span>${title}</span>
                         <a href="#" class="user-action-link">Профиль</a>
                         <a href="#" class="user-action-link">Пригласить в ...</a>
@@ -203,8 +228,25 @@ function renderListUsers(elements, area, flag = true) {
     }
 }
 
+// Проверка списка друзей
+async function checkFriends(){
+    const data = JSON.stringify({
+        code: 4,
+        table: 'FRIENDS',
+        idSender: cookie,
+        idRecipient: cookie,
+        flag: true,
+    });
+
+    const elements = await getResourse(data);
+    console.log(elements)
+    console.log(Object.keys(elements).length)
+    if (Object.keys(elements).length > 0){
+        renderListUsers(elements, '#list-friends', true);
+    }
+}
+
 // Ответы на приглашения
-// todo убрать записи которые были отвечены
 async function requestInvite(idSender, flag){
     const data = JSON.stringify({
         code: 3,
@@ -216,7 +258,15 @@ async function requestInvite(idSender, flag){
 
     await getResourse(data);
 
-    removeWindow('#invitationsUser');
+    if (flag === true){
+        checkFriends();
+    }
+
+    removeInvite(idSender);
+
+    if (document.getElementById('search-invitations').childNodes.length < 1){
+        document.getElementById('check-invitations').setAttribute('style','display:none')
+    }
 }
 
 // Проверка на наличие приглашения
@@ -235,26 +285,6 @@ async function checkInvite(){
     }
     else{
         document.getElementById('check-invitations').setAttribute('style','display: none');
-    }
-}
-
-// Проверка на наличие приглашения
-async function checkFriends(){
-    const data = JSON.stringify({
-        code: 4,
-        table: 'FRIENDS',
-        idSender: cookie,
-        idRecipient: cookie,
-        flag: true
-    });
-
-    const elements = await getResourse(data);
-    if ({}.hasOwnProperty.call(elements, '0')){
-        document.getElementById('check-friends').setAttribute('style','display: block');
-        renderListUsers(elements, '#list-friends', true);
-    }
-    else{
-        document.getElementById('check-friends').setAttribute('style','display: none');
     }
 }
 
@@ -293,6 +323,13 @@ function renderFieldsTab() {
     document.getElementsByName('group').item(0).value = user.group;
 
     enableOrDisableGroup();
+
+    if (user.userCode === null){
+        document.getElementById('tab-friends').setAttribute('style','display:none');
+    }
+    else{
+        document.getElementById('tab-friends').setAttribute('style','display:inline-block');
+    }
 }
 
 // Обновление локальных данных
@@ -447,6 +484,7 @@ async function inviteToFriends(idRecipient){
             table: 'INVITE_TO_FRIENDS',
             idSender: cookie,
             idRecipient,
+            addFriend: true, // ?
         });
 
         getResourse(data);
@@ -454,23 +492,43 @@ async function inviteToFriends(idRecipient){
 }
 
 // Сохранение изменений
-// ?
 async function searchUser() {
-    // removeWindow('#foundUser');
     const userCode = document.getElementsByName('search-user-code').item(0).value;
     if (userCode !== '' || null){
-        const data = JSON.stringify({
+        const search = JSON.stringify({
             code: 4,
             table: 'SETTINGS',
             userCode,
-            flag: false, // ?
+            flag: false,
         });
 
-        const result = await getResourse(data);
+        const result = await getResourse(search);
 
-        renderListUsers(result, '#search-result',false); // ?
+        let elements = null;
+        if (result[0] !== undefined){
+            const data = JSON.stringify({
+                code: 4,
+                table: 'FRIENDS',
+                idSender: cookie,
+                idRecipient: cookie,
+                addressee: result[0].idOwner,
+            });
+
+            elements = await getResourse(data);
+
+            if (Object.keys(elements).length > 0){
+                renderListUsers(result, '#search-result',true);
+            }
+            else{
+                renderListUsers(result, '#search-result',false);
+            }
+        }
+        else{
+            renderListUsers(result, '#search-result',false);
+        }
     }
     else{
+        removeWindow('#foundUser');
         document.getElementById('search-result').setAttribute('style','border-color: transparent')
     }
 }

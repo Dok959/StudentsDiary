@@ -35,7 +35,7 @@
                 <ul>
                     <li><a href="javascript:renderTab('settings')" id="link">Профиль</a></li>
                     <li><a href="javascript:renderTab('profile')" id="link">Настройки</a></li>
-                    <li><a href="javascript:renderTab('friends')" id="link">Друзья</a></li>
+                    <li id="tab-friends"><a href="javascript:renderTab('friends')" id="link">Друзья</a></li>
                 </ul>
             </nav>
 
@@ -132,12 +132,10 @@
                     <div id="check-invitations">
                         <div id="window-module">
                             <div id="window-module-title">
-                                <h3 id="module-title">Полученные приглашения</h3>
+                                <h3 id="module-title">Полученные приглашения в друзья</h3>
                             </div>
                             <div id="module-element">
-                                <div id="search-invitations">
-
-                                </div>
+                                <div id="search-invitations"></div>
                             </div>
                         </div>
                     </div>
@@ -152,9 +150,7 @@
                             <a href="javascript:searchUser()" id="search" class="btn-link">Поиск</a>
                         </div>
                         <div id="module-element">
-                            <div id="search-result">
-
-                            </div>
+                            <div id="search-result"></div>
                         </div>
                     </div>
 
@@ -164,9 +160,7 @@
                                 <h3 id="module-title">Друзья</h3>
                             </div>
                             <div id="module-element">
-                                <div id="list-friends">
-                                    
-                                </div>
+                                <div id="list-friends"></div>
                             </div>
                         </div>
                     </div>

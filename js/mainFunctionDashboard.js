@@ -137,7 +137,6 @@ async function updateTask() {
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
         let cheskTime = true;
-        // проверка существования задач на это время
         if (date !== null && time !== null){
             // проверка существования задач на это время
             const data = JSON.stringify({
@@ -155,6 +154,25 @@ async function updateTask() {
             else{
                 cheskTime = true;
             }
+
+            const taskDate = new Date (date);
+            let hour = Number.parseInt(time.slice(0,2), 10)
+            let min = Number.parseInt(time.slice(3,5), 10)
+            taskDate.setHours(hour, min);
+
+            taskList.list.tasks.forEach(element => {
+                if (element.id !== Number.parseInt(id, 10) && element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
         }
 
         if (cheskTime === true){
@@ -457,6 +475,25 @@ async function readyCreateTask() {
             else{
                 cheskTime = true;
             }
+
+            const taskDate = new Date (date);
+            let hour = Number.parseInt(time.slice(0,2), 10)
+            let min = Number.parseInt(time.slice(3,5), 10)
+            taskDate.setHours(hour, min);
+
+            taskList.list.tasks.forEach(element => {
+                if (element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
         }
 
         if (cheskTime === true){

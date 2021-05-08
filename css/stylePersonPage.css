@@ -247,7 +247,7 @@ h1{
     height: fit-content;
     /* max-height: 100px;
     min-height: 31px; */
-    border: 2px double transparent;
+    border: 2px double #1e6acc;
 }
 
 @media(max-width: 850px){

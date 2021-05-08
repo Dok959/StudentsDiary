@@ -1,7 +1,7 @@
 const pool = require('./pool');
 
 // flag = true ищет в списке друзей; false - всех
-async function parseListUsers(flag, elements = {}, idNoOwner = null) {
+async function parseListUsers(flag = null, elements = {}, idNoOwner = null) {
     const response = {}
 
     if (Object.keys(elements).length > 0 && flag === true){
@@ -66,7 +66,7 @@ async function parseListUsers(flag, elements = {}, idNoOwner = null) {
     else if (flag === true){
         response.title = 'Список друзей пуст';
     }
-    else{
+    else if (flag === false){
         response.title = 'Пользователь не обнаружен';
     }
     // console.log(response)
@@ -86,6 +86,10 @@ buildingQueryForDB = async (args) => {
         if (request[0] === undefined) {
             // если записи не существует
             query = `INSERT INTO ${args.table} () VALUES (`;
+
+            if(args.table === 'FRIENDS' || args.table === 'INVITE_TO_FRIENDS'){
+                delete args.addFriend;
+            }
 
             if (args.table === 'USERS' || args.table === 'TASKS' || args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS') {
                 // геренация id пользователя
@@ -296,6 +300,7 @@ buildingQueryForDB = async (args) => {
         if (Object.prototype.hasOwnProperty.call(args, 'flag') && args.flag === true){
             args.code = 1;
             args.table = 'FRIENDS';
+            args.addFriend = true;
             delete args.flag;
             return buildingQueryForDB(args);
         }
@@ -321,7 +326,7 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee'){
+                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee' && element !== 'addFriend'){
                     const iSValue = args[element];
                     if (iSValue === null) {
                         query += ` ${element} is ${iSValue} and`;
@@ -346,8 +351,13 @@ buildingQueryForDB = async (args) => {
             query += ` (idSender = ${args.idSender} and idRecipient = ${args.addressee}) or (idSender = ${args.addressee} and idRecipient = ${args.idSender}) and`;
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
-            Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
+            Object.prototype.hasOwnProperty.call(args, 'idRecipient') &&
+            Object.prototype.hasOwnProperty.call(args, 'addFriend')) {
             query += ` idSender = ${args.idSender} and idRecipient = ${args.idRecipient} and`;
+        }
+        else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
+            Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
+            query += ` idSender = ${args.idSender} or idRecipient = ${args.idRecipient} and`;
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'idRecipient')) {
             query += ` idRecipient = ${args.idRecipient} and`;
@@ -366,6 +376,9 @@ buildingQueryForDB = async (args) => {
 
         if (response.length === 0) {
             if (args.flag !== undefined){
+                // if(args.flagConvertNull === true){
+                //     return parseListUsers(null);
+                // }
                 return parseListUsers(args.flag);
             }
 
@@ -378,6 +391,9 @@ buildingQueryForDB = async (args) => {
         });
 
         if (args.flag !== undefined){
+            // if(args.flagConvertNull === true){
+            //     return parseListUsers(null, result, Number.parseInt(args.idSender || args.idRecipient, 10));
+            // }
             return parseListUsers(args.flag, result, Number.parseInt(args.idSender || args.idRecipient, 10));
         }
 
