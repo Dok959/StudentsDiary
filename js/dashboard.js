@@ -97,6 +97,37 @@ function gettingListTasks(){
     taskList.getTasks(data);
 }
 
+// Получение мероприятий на неделю
+async function gettingListEvents(){
+    // определение сроков
+    const now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
+    // формирование начальной даты
+    const startDate = `${year}-${month}-${day}`;
+
+    // формирование конечной даты
+    now.setDate(now.getDate() + 6);
+    year = now.getFullYear();
+    month = now.getMonth() + 1;
+    day = now.getDate();
+    const endDate = `${year}-${month}-${day}`;
+
+    // формируем набор данных
+    const data = JSON.stringify({
+        code: 4,
+        table: 'EVENTS',
+        idOwner: cookie,
+        startDate,
+        endDate,
+    });
+
+    taskList.eventList.clearEvents();
+    removeWindow('.event');
+    taskList.getEvents(data);
+}
+
 function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
     const raspisanie = new DOMParser()
     .parseFromString(raspisanieQuerry, 'text/html')
@@ -150,14 +181,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                 if (col === row.getElementsByClassName(week)[0]) {
                     predmet = col.getElementsByClassName('naz_disc').item(0);
                     if (predmet !== null && lastDate !== null) {
-                        const todayIndex = new Date().getDay();
-                        let today;
-                        if (todayIndex > date){
-                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
-                        }
-                        else{
-                            today = new Date();
-                        }
+                        const today = new Date(new Date().setDate(new Date().getDate() + date));
 
                         // определение текущей даты
                         const todayYear = today.getFullYear();
@@ -217,14 +241,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
                         endDay = Number.parseInt(dateLession.slice(16, 18), 10)
 
-                        const todayIndex = new Date().getDay();
-                        let today;
-                        if (todayIndex > date){
-                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
-                        }
-                        else{
-                            today = new Date();
-                        }
+                        const today = new Date(new Date().setDate(new Date().getDate() + date));
 
                         // определение текущей даты
                         const todayYear = today.getFullYear();
@@ -276,14 +293,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
                         endDay = Number.parseInt(dateLession.slice(16, 18), 10)
 
-                        const todayIndex = new Date().getDay();
-                        let today;
-                        if (todayIndex > date){
-                            today = new Date(new Date().setDate(new Date().getDate() + 7 + (date - todayIndex)));
-                        }
-                        else{
-                            today = new Date();
-                        }
+                        const today = new Date(new Date().setDate(new Date().getDate() + date));
 
                         // определение текущей даты
                         const todayYear = today.getFullYear();
@@ -473,4 +483,5 @@ document.addEventListener('DOMContentLoaded', () => {
     formation();
     checkRaspisanie();
     gettingListTasks();
+    gettingListEvents();
 })

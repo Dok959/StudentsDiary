@@ -91,7 +91,7 @@ buildingQueryForDB = async (args) => {
                 delete args.addFriend;
             }
 
-            if (args.table === 'USERS' || args.table === 'TASKS' || args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS') {
+            if (args.table === 'USERS' || args.table === 'TASKS' || args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS' || args.table === 'EVENTS') {
                 // геренация id пользователя
                 query += 'DEFAULT, ';
             }

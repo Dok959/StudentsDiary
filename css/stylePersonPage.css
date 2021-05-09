@@ -1,3 +1,8 @@
+body{
+    position: relative;
+    background-color: #f4f5f7;
+}
+
 #user-block{
     display: flex;
     flex-direction: column;
@@ -250,6 +255,27 @@ h1{
     border: 2px double #1e6acc;
 }
 
+.foundUser{
+    color: #172b4d;
+    font-size: 18px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 100%;
+    min-width: 100%;
+    padding-bottom: 5px;
+}
+
+.foundUser:last-child{
+    padding-bottom: 0;
+}
+
+.user-action-link {
+    color: #172b4d;
+}
+
 @media(max-width: 850px){
     #module-element{
         display: block;
@@ -279,6 +305,12 @@ h1{
 
     #search{
         margin: 0 auto;
+    }
+}
+
+@media(max-width: 550px){
+    .user-action-link {
+        margin-left: 5px;
     }
 }
 

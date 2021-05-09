@@ -1,6 +1,7 @@
 class Bord {
     constructor() {
         this.list = new Tasks({});
+        this.eventList = new Events({});
     }
 
     async getTasks(data) {
@@ -95,6 +96,78 @@ class Bord {
                 </a>`;
 
             $(taskList).append(node);
+        });
+    }
+
+    async getEvents(data) {
+        await getResourse(data).then((res) => {
+            for (const element in res) {
+                if ({}.hasOwnProperty.call(res, element)) {
+                    this.eventList.addEvent(res[element]);
+                }
+            }
+        });
+        this.showEvents();
+    }
+
+    showEvents() {
+        removeWindow();
+
+        this.renderEvents(this.eventList.events);
+    }
+
+    // todo добавить ссылки на открытие, добавить стиль оформления
+    renderEvents(events) {
+        let oldDay = null;
+        events.forEach((element) => {
+            const {id} = element;
+            let {title, date, time} = element;
+            let count = 0;
+            if (title.length > 70) {
+                title = `${title.slice(0, 55)}...`;
+            }
+
+            date = new Date(date);
+            date = date.getDay();
+
+            try {
+                if (oldDay === null){
+                    oldDay = date;
+                    count = 0;
+                    if (events.length !== 1){
+                        document.getElementById(`count-day-${date}`).textContent = 0;
+                    }
+                }
+
+                if (document.getElementById(`count-day-${date}`).textContent === 0 || oldDay !== date){
+                    oldDay = date;
+                    count = 0;
+                }
+                else{
+                    count = Number.parseInt(document.getElementById(`count-day-${date}`).textContent > 0
+                        ? document.getElementById(`count-day-${date}`).textContent : 0, 10);
+                }
+                document.getElementById(`count-day-${date}`).textContent = count + 1;
+            } catch (error) {
+                /* empty */
+            }
+
+            if (time !== null){
+                time = time.slice(0, 5);
+            }
+
+            // определяем столбец для вывода
+            const eventsList = document.getElementById(`day-${date}`);
+            const node = `<a href="#" class="event list-task" id="${id}">
+                    <div class="list-task-details">
+                        ${time ? `<h5 class="task-title-time">В ${time} у Вас назначено:</h5>` : ''}
+                        <span class="list-task-label task-title">
+                            ${title}
+                        </span>
+                    </div>
+                </a>`;
+
+            $(eventsList).append(node);
         });
     }
 }

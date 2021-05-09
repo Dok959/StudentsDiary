@@ -139,7 +139,6 @@ async function getResourse(data) {
 // flag отвечает за то что пользователи есть в списке друзей
 // todo
 function renderListUsers(elements, area, flag = true) {
-    console.log(elements)
     document.getElementById(`${area.substr(1)}`)
         .setAttribute('style','border-color: #1e6acc');
     let tag;
@@ -239,8 +238,6 @@ async function checkFriends(){
     });
 
     const elements = await getResourse(data);
-    console.log(elements)
-    console.log(Object.keys(elements).length)
     if (Object.keys(elements).length > 0){
         renderListUsers(elements, '#list-friends', true);
     }
@@ -484,7 +481,7 @@ async function inviteToFriends(idRecipient){
             table: 'INVITE_TO_FRIENDS',
             idSender: cookie,
             idRecipient,
-            addFriend: true, // ?
+            addFriend: true,
         });
 
         getResourse(data);

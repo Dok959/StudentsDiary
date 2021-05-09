@@ -67,7 +67,7 @@ function getTask() {
     return task;
 }
 
-async function cheskFields() {
+async function cheskFields(flag = true) {
     let availabilityTitle = true; // флаг проверки названия
     const id = getTask() || null;
 
@@ -79,7 +79,7 @@ async function cheskFields() {
 
     // дата
     let date = document.getElementById('date');
-    const availabilityDate = await checkValidation(date); // флаг проверки даты
+    let availabilityDate = await checkValidation(date); // флаг проверки даты
     date = date.value ? date.value : null;
 
     // время
@@ -121,6 +121,10 @@ async function cheskFields() {
         }
         frequency = document.getElementById('frequency').value;
         period = document.getElementById('period').value;
+    }
+
+    if (flag === false){
+        availabilityDate = date !== null;
     }
 
     return {availabilityTitle, availabilityDate, id, title, description,
@@ -678,7 +682,7 @@ async function searchUser() {
 }
 
 // Отрисовка мероприятия
-// todo наверно нужен список участников или друзей
+// todo список участников или друзей вне создания
 async function renderEvent({
     id, title, description = '', date, time = '', period = null, } = {},
     flag = false) {
@@ -743,10 +747,10 @@ async function renderEvent({
                                     <h3 class="card-detail-item-header">Действия с мероприятием</h3>
                                     <div class="card-detail-action">
                                         ${flag ?
-                                            `<a href="#" class="link-button">Сохранить</a>
-                                            <a href="#" class="link-button">Отменить</a>`:
+                                            `<a href="javascript:readyCreateEvent()" class="link-button">Сохранить</a>
+                                            <a href="javascript:removeWindow()" class="link-button">Отменить</a>`:
                                             `<a href="#" class="link-button">Изменить</a>
-                                            <a href="#" class="link-button">Выполнено</a>
+                                            <a href="#" class="link-button">Проведено</a>
                                             <a href="#" class="link-button">Удалить</a>`}
                                     </div>
                                 </div>
@@ -825,34 +829,51 @@ function createEvent() {
 }
 
 // Создание мероприятия
-// todo не работает
+// todo проверка по времени
 async function readyCreateEvent() {
+    const result = await cheskFields(false);
+    const {availabilityTitle, availabilityDate, title,
+        description, date, time, frequency} = result;
+    let { period } = result;
 
-    const availabilityTitle =false;
     // если все ок, сохраняем
     if (availabilityTitle && availabilityDate) {
-        // проверка существования задач на это время
-        let data = JSON.stringify({
-            code: 4,
-            table: 'TASKS',
-            idOwner: cookie,
-            date,
-            time,
-        });
+        let cheskTime = true;
+        if (time !== null){
+            // проверка существования задач на это время
+            let data = JSON.stringify({
+                code: 4,
+                table: 'TASKS',
+                idOwner: cookie,
+                date,
+                time,
+            });
 
-        let cheskTime = await getResourse(data);
-        if (cheskTime[0] !== undefined){
-            cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+            cheskTime = await getResourse(data);
+            if (cheskTime[0] !== undefined){
+                cheskTime = false;
+            }
+            else{
+                // проверка существования мероприятий на это время
+                data = JSON.stringify({
+                    code: 4,
+                    table: 'EVENTS',
+                    idOwner: cookie,
+                    date,
+                    time,
+                });
+
+            cheskTime = await getResourse(data);
+            cheskTime = cheskTime[0] === undefined;
+            }
         }
-        else{
-            cheskTime = true;
-        }
+
+        // !
 
         if (cheskTime === true){
-
             removeValidation(); // удаление ошибочного выделения;
 
-            // формируем набор для проверки периодичности задачи
+            // формируем набор для проверки периодичности мероприятия
             data = JSON.stringify({
                 code: 4,
                 table: 'REPETITION',
@@ -866,9 +887,8 @@ async function readyCreateEvent() {
             // формируем набор для отправки на сервер
             data = JSON.stringify({
                 code: 1,
-                table: 'TASKS',
+                table: 'EVENTS',
                 idOwner: cookie,
-                idProject: null,
                 title,
                 description,
                 date,
@@ -878,7 +898,8 @@ async function readyCreateEvent() {
 
             await getResourse(data);
 
-            gettingListTasks();
+            removeWindow();
+            gettingListEvents();
         }
         else{
             generateError(document.getElementById('time'));
