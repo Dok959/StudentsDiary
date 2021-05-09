@@ -1,7 +1,7 @@
 class Event {
     // todo
     constructor({
-        id, idOwner, title = '', description = '', 
+        id, idOwner, title = '', description = '',
         date = '', time = '', period = null,
     }) {
         this.id = id;

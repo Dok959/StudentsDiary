@@ -39,12 +39,11 @@ class Tasks {
             }
 
             date ? task.setDate(date) : null;
-            removeDashbordTask(id);
+            removeDashbordElement(id);
 
             // проверка сильного изменения сроков
             if (date === null){
                 taskList.renderTasks([task]);
-                // this.localDeleteTask(id);
             }
             else{
                 const startDate = new Date(new Date().setHours(0, 0, 0, 0));
@@ -60,7 +59,7 @@ class Tasks {
             }
         }
         else{
-            removeDashbordTask(id);
+            removeDashbordElement(id);
             taskList.renderTasks([task]);
         }
     };

@@ -86,7 +86,7 @@ class Bord {
             // определяем столбец для вывода
             const taskList = document.getElementById(`day-${date}`);
             const term = time ? `<h5 class="task-title-time">В ${time} у Вас назначено:</h5>` : '';
-            const node = `<a href="javascript:openTask(${id})" class="task list-task" id="${id}">
+            const node = `<a href="javascript:openElement(${id}, true)" class="task list-task" id="task-${id}">
                     <div class="list-task-details">
                         ${date === -1 ? `<h5 class="task-title-time">${initialDate} ${time ? `в ${time}`: ''} у Вас было назначено:</h5>`: term}
                         <span class="list-task-label task-title">
@@ -158,7 +158,7 @@ class Bord {
 
             // определяем столбец для вывода
             const eventsList = document.getElementById(`day-${date}`);
-            const node = `<a href="#" class="event list-task" id="${id}">
+            const node = `<a href="javascript:openElement(${id}, false)" class="event list-task" id="event-${id}">
                     <div class="list-task-details">
                         ${time ? `<h5 class="task-title-time">В ${time} у Вас назначено:</h5>` : ''}
                         <span class="list-task-label task-title">

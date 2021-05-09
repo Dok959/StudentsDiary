@@ -24,8 +24,14 @@ async function getResourse (data) {
 };
 
 // Удаление задачи с панели
-function removeDashbordTask(id) {
-    const element = document.getElementById(id);
+function removeDashbordElement(id,flag = true) {
+    let element
+    if (flag){
+        element = document.getElementById(`task-${id}`);
+    }
+    else{
+        element = document.getElementById(`event-${id}`);
+    }
     element.remove();
 }
 
@@ -67,6 +73,7 @@ function getTask() {
     return task;
 }
 
+// Валидация полей
 async function cheskFields(flag = true) {
     let availabilityTitle = true; // флаг проверки названия
     const id = getTask() || null;
@@ -125,11 +132,16 @@ async function cheskFields(flag = true) {
 
     if (flag === false){
         availabilityDate = date !== null;
+        if (availabilityDate === false){
+            generateError(document.getElementById('date'))
+        }
     }
 
     return {availabilityTitle, availabilityDate, id, title, description,
         date, time, frequency, period};
 }
+
+/* Функции задач */
 
 // Обновление задачи
 async function updateTask() {
@@ -163,6 +175,20 @@ async function updateTask() {
             let hour = Number.parseInt(time.slice(0,2), 10)
             let min = Number.parseInt(time.slice(3,5), 10)
             taskDate.setHours(hour, min);
+
+            taskList.eventList.events.forEach(element => {
+                if (element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
 
             taskList.list.tasks.forEach(element => {
                 if (element.id !== Number.parseInt(id, 10) && element.date !== null && element.time !== null){
@@ -263,7 +289,7 @@ async function taskReady() {
     // локально
     const task = selectTask(id);
     if (task.getPeriod() === null){ // удаление задачи
-        removeDashbordTask(id);
+        removeDashbordElement(id);
         taskList.list.localDeleteTask(id);
     }
     else { // если задача повторяется, обновляем её
@@ -286,7 +312,7 @@ function deleteTask() {
 
     // обновление данных локально
     taskList.list.localDeleteTask(id);
-    removeDashbordTask(id);
+    removeDashbordElement(id);
 
     // формируем набор для отправки на сервер
     const data = JSON.stringify({
@@ -454,6 +480,7 @@ function createTask() {
 
 // Создание задачи
 async function readyCreateTask() {
+    removeValidation(); // удаление ошибочного выделения;
     const result = await cheskFields();
     const {availabilityTitle, availabilityDate, title,
         description, date, time, frequency} = result;
@@ -485,6 +512,20 @@ async function readyCreateTask() {
             let min = Number.parseInt(time.slice(3,5), 10)
             taskDate.setHours(hour, min);
 
+            taskList.eventList.events.forEach(element => {
+                if (element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
+
             taskList.list.tasks.forEach(element => {
                 if (element.date !== null && element.time !== null){
                     const testDate = new Date (element.date.slice(0, 10));
@@ -501,9 +542,6 @@ async function readyCreateTask() {
         }
 
         if (cheskTime === true){
-
-            removeValidation(); // удаление ошибочного выделения;
-
             // формируем набор для проверки периодичности задачи
             let data = JSON.stringify({
                 code: 4,
@@ -546,6 +584,9 @@ async function readyCreateTask() {
         }
     }
 }
+
+
+/* Функции мероприятий */
 
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
@@ -829,8 +870,8 @@ function createEvent() {
 }
 
 // Создание мероприятия
-// todo проверка по времени
 async function readyCreateEvent() {
+    removeValidation(); // удаление ошибочного выделения;
     const result = await cheskFields(false);
     const {availabilityTitle, availabilityDate, title,
         description, date, time, frequency} = result;
@@ -866,13 +907,42 @@ async function readyCreateEvent() {
             cheskTime = await getResourse(data);
             cheskTime = cheskTime[0] === undefined;
             }
+
+            const eventDate = new Date (date);
+            let hour = Number.parseInt(time.slice(0,2), 10)
+            let min = Number.parseInt(time.slice(3,5), 10)
+            eventDate.setHours(hour, min);
+
+            taskList.eventList.events.forEach(element => {
+                if (element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
+
+            taskList.list.tasks.forEach(element => {
+                if (element.date !== null && element.time !== null){
+                    const testDate = new Date (element.date.slice(0, 10));
+                    testDate.setDate(testDate.getDate() + 1);
+                    hour = Number.parseInt(element.time.slice(0,2), 10)
+                    min = Number.parseInt(element.time.slice(3,5), 10)
+                    testDate.setHours(hour, min);
+
+                    if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                        cheskTime = false;
+                    }
+                }
+            });
         }
 
-        // !
-
         if (cheskTime === true){
-            removeValidation(); // удаление ошибочного выделения;
-
             // формируем набор для проверки периодичности мероприятия
             data = JSON.stringify({
                 code: 4,
@@ -907,13 +977,41 @@ async function readyCreateEvent() {
     }
 }
 
-// Открытие выбранной задачей
-openTask = (id) => {
-    taskList.list.tasks.forEach((element) => {
-        if (element.id === id) {
-            renderTask(element);
-        }
+// Удаление мероприятия
+// todo
+function deleteEvent() {
+    const id = Number.parseInt(getTask(), 10);
+
+    // обновление данных локально
+    taskList.list.localDeleteTask(id);
+    removeDashbordElement(id, false);
+
+    // формируем набор для отправки на сервер
+    const data = JSON.stringify({
+        code: 3,
+        table: 'TASKS',
+        id,
     });
+
+    getResourse(data);
+}
+
+// Открытие выбранных элементов
+openElement = (id, flag = true) => {
+    if (flag === true){
+        taskList.list.tasks.forEach((element) => {
+            if (element.id === id) {
+                renderTask(element);
+            }
+        });
+    }
+    else{
+        taskList.eventList.events.forEach((element) => {
+            if (element.id === id) {
+                renderEvent(element);
+            }
+        });
+    }
 };
 
 // Проверка нажатия вне выбранной задачи
