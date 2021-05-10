@@ -128,13 +128,14 @@ async function gettingListEvents(){
     taskList.getEvents(data);
 }
 
+// Отрисовка информации о парах
 function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
     const raspisanie = new DOMParser()
     .parseFromString(raspisanieQuerry, 'text/html')
     .getElementsByClassName('table_style')[0];
 
     const now = new Date();
-    let day; let date; let indexDay;
+    let day; let date;
     for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
         row = raspisanie.rows[i];
 
@@ -144,7 +145,6 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
             for (let index = 0; index < days.length; index += 1) {
                 if (days[index] === day){
                     date = index;
-                    indexDay = index;
                 }
             }
 
@@ -351,6 +351,8 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
             $(listTaks).append(node);
         }
     }
+
+    counterToElement();
 }
 
 // Проверка расписания
@@ -477,6 +479,17 @@ async function checkRaspisanie() {
         /* empty */
     }
 }
+
+// Считаем количество дел на день
+counterToElement = () => {
+    document.getElementById(`count-day-0`).textContent = $(`#day-0`).children().length;
+    document.getElementById(`count-day-1`).textContent = $(`#day-1`).children().length;
+    document.getElementById(`count-day-2`).textContent = $(`#day-2`).children().length;
+    document.getElementById(`count-day-3`).textContent = $(`#day-3`).children().length;
+    document.getElementById(`count-day-4`).textContent = $(`#day-4`).children().length;
+    document.getElementById(`count-day-5`).textContent = $(`#day-5`).children().length;
+    document.getElementById(`count-day-6`).textContent = $(`#day-6`).children().length;
+};
 
 // Действия при полной загрузке странцы
 document.addEventListener('DOMContentLoaded', () => {

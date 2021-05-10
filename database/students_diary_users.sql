@@ -29,7 +29,7 @@ CREATE TABLE `users` (
   `login` varchar(45) NOT NULL COMMENT 'Логин пользователя',
   `password` varchar(45) NOT NULL COMMENT 'Пароль пользователя',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='Таблица пользователей';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','admin'),(2,'user123','12345'),(3,'test1','12345'),(4,'test2','12345'),(5,'test3','12345'),(6,'test4','12345'),(7,'test10','12345'),(8,'test5','12345');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-02 11:50:05
+-- Dump completed on 2021-05-10 20:00:15

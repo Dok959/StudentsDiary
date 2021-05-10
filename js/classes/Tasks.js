@@ -28,15 +28,16 @@ class Tasks {
         time ? task.setTime(time) : null;
         period ? task.setPeriod(period) : null;
 
-        let oldDate = task.getDate();
+        const oldDate = task.getDate();
         if (oldDate !== date){
-            try{
-                oldDate = new Date(oldDate).getDay();
-                const count = Number.parseInt(document.getElementById(`count-day-${oldDate}`).textContent, 10);
-                document.getElementById(`count-day-${oldDate}`).textContent = count - 1;
-            } catch (error) {
-                /* empty */
-            }
+            removeWindow();
+            // try{
+            //     oldDate = new Date(oldDate).getDay();
+            //     const count = Number.parseInt(document.getElementById(`count-day-${oldDate}`).textContent, 10);
+            //     document.getElementById(`count-day-${oldDate}`).textContent = count - 1;
+            // } catch (error) {
+            //     /* empty */
+            // }
 
             date ? task.setDate(date) : null;
             removeDashbordElement(id);
@@ -65,15 +66,6 @@ class Tasks {
     };
 
     localDeleteTask(id) {
-        try {
-            let node = document.getElementById(id).parentNode.parentNode;
-            node = node.getElementsByClassName('date-title').item(2);
-            const count = Number.parseInt(node.textContent, 10);
-            node.textContent = count - 1;
-        } catch (error) {
-            /* empty */
-        }
-
         let index;
         for (let element = 0; element < this.tasks.length; element += 1) {
             if (this.tasks[element].id === id) {

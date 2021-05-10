@@ -18,27 +18,34 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `period`
+-- Table structure for table `events`
 --
 
-DROP TABLE IF EXISTS `period`;
+DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `period` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ периода',
-  `value` varchar(45) NOT NULL COMMENT 'Значение отвечающее за период',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
+CREATE TABLE `events` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ мероприятия',
+  `idOwner` int NOT NULL COMMENT 'Ключ владельца',
+  `title` varchar(100) NOT NULL COMMENT 'Название мероприятия',
+  `description` varchar(100) DEFAULT NULL COMMENT 'Описание мероприятия',
+  `date` date NOT NULL COMMENT 'Дата',
+  `time` time DEFAULT NULL COMMENT 'Время',
+  `period` int DEFAULT NULL COMMENT 'Повторяемость мероприятия',
+  PRIMARY KEY (`id`),
+  KEY `id-owner-event_idx` (`idOwner`),
+  CONSTRAINT `id-owner-event` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='Таблица мероприятий';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `period`
+-- Dumping data for table `events`
 --
 
-LOCK TABLES `period` WRITE;
-/*!40000 ALTER TABLE `period` DISABLE KEYS */;
-INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
-/*!40000 ALTER TABLE `period` ENABLE KEYS */;
+LOCK TABLES `events` WRITE;
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+INSERT INTO `events` VALUES (1,1,'Первое мероприятие','fsdfsdf','2021-05-09','15:00:00',NULL),(2,2,'1','','2021-05-09',NULL,NULL),(4,2,'3','','2021-05-09','20:30:00',NULL),(5,2,'4','','2021-05-09','20:50:00',NULL),(6,2,'5','','2021-05-09','15:50:00',NULL);
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-10 20:00:16
+-- Dump completed on 2021-05-10 20:00:17

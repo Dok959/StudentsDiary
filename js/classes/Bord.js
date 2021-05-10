@@ -22,11 +22,10 @@ class Bord {
     }
 
     renderTasks(tasks) {
-        let oldDay = null;
         tasks.forEach((element) => {
             const {id} = element;
             let {title, date, time} = element;
-            let initialDate = null; let count = 0;
+            let initialDate = null;
             if (title.length > 70) {
                 title = `${title.slice(0, 55)}...`;
             }
@@ -42,28 +41,6 @@ class Bord {
                 }
                 else{
                     date = date.getDay();
-
-                    try {
-                        if (oldDay === null){
-                            oldDay = date;
-                            count = 0;
-                            if (tasks.length !== 1){
-                                document.getElementById(`count-day-${date}`).textContent = 0;
-                            }
-                        }
-
-                        if (document.getElementById(`count-day-${date}`).textContent === 0 || oldDay !== date){
-                            oldDay = date;
-                            count = 0;
-                        }
-                        else{
-                            count = Number.parseInt(document.getElementById(`count-day-${date}`).textContent > 0
-                                ? document.getElementById(`count-day-${date}`).textContent : 0, 10);
-                        }
-                        document.getElementById(`count-day-${date}`).textContent = count + 1;
-                    } catch (error) {
-                        /* empty */
-                    }
                 }
             }
 
@@ -97,6 +74,11 @@ class Bord {
 
             $(taskList).append(node);
         });
+
+        const url = unescape(window.location.href);
+        if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+            counterToElement();
+        }
     }
 
     async getEvents(data) {
@@ -118,39 +100,15 @@ class Bord {
 
     // todo добавить ссылки на открытие, добавить стиль оформления
     renderEvents(events) {
-        let oldDay = null;
         events.forEach((element) => {
             const {id} = element;
             let {title, date, time} = element;
-            let count = 0;
             if (title.length > 70) {
                 title = `${title.slice(0, 55)}...`;
             }
 
             date = new Date(date);
             date = date.getDay();
-
-            try {
-                if (oldDay === null){
-                    oldDay = date;
-                    count = 0;
-                    if (events.length !== 1){
-                        document.getElementById(`count-day-${date}`).textContent = 0;
-                    }
-                }
-
-                if (document.getElementById(`count-day-${date}`).textContent === 0 || oldDay !== date){
-                    oldDay = date;
-                    count = 0;
-                }
-                else{
-                    count = Number.parseInt(document.getElementById(`count-day-${date}`).textContent > 0
-                        ? document.getElementById(`count-day-${date}`).textContent : 0, 10);
-                }
-                document.getElementById(`count-day-${date}`).textContent = count + 1;
-            } catch (error) {
-                /* empty */
-            }
 
             if (time !== null){
                 time = time.slice(0, 5);
@@ -169,5 +127,10 @@ class Bord {
 
             $(eventsList).append(node);
         });
+
+        const url = unescape(window.location.href);
+        if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+            counterToElement();
+        }
     }
 }

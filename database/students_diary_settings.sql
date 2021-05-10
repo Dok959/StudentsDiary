@@ -49,6 +49,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
+INSERT INTO `settings` VALUES (1,'user123','Александр',NULL,NULL,'light',1,1,'ДИТ41'),(2,'user11','Олег','Евдошенко','Игоревич','light',1,2,NULL),(3,'user12','Александр','Кошкаров','Васильевич','light',1,2,NULL),(4,'user2',NULL,NULL,NULL,'light',NULL,NULL,NULL),(5,'user3',NULL,NULL,NULL,'light',NULL,NULL,NULL),(6,'user4',NULL,NULL,NULL,'light',NULL,NULL,NULL),(7,NULL,NULL,NULL,NULL,'light',NULL,NULL,NULL),(8,NULL,NULL,NULL,NULL,'light',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +62,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-02 11:50:06
+-- Dump completed on 2021-05-10 20:00:16

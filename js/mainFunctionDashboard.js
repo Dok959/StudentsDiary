@@ -68,15 +68,15 @@ function clearElement() {
 }
 
 // Получение задачи с формы
-function getTask() {
-    const task = document.getElementById('window').getAttribute('name');
-    return task;
+function getElement() {
+    const element = document.getElementById('window').getAttribute('name');
+    return element;
 }
 
 // Валидация полей
 async function cheskFields(flag = true) {
     let availabilityTitle = true; // флаг проверки названия
-    const id = getTask() || null;
+    const id = getElement() || null;
 
     let title = document.getElementById('title');
     // проверка на пустоту
@@ -262,7 +262,7 @@ selectTask = (id) => {
 
 // Выполнение задачи в базе
 async function taskReady() {
-    const id = Number.parseInt( getTask(), 10);
+    const id = Number.parseInt( getElement(), 10);
 
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -308,7 +308,7 @@ async function taskReady() {
 
 // Удаление задачи
 function deleteTask() {
-    const id = Number.parseInt(getTask(), 10);
+    const id = Number.parseInt(getElement(), 10);
 
     // обновление данных локально
     taskList.list.localDeleteTask(id);
@@ -322,6 +322,11 @@ function deleteTask() {
     });
 
     getResourse(data);
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
+    }
 }
 
 // Отрисовка формы для создания элементов
@@ -792,7 +797,7 @@ async function renderEvent({
                                             <a href="javascript:removeWindow()" class="link-button">Отменить</a>`:
                                             `<a href="#" class="link-button">Изменить</a>
                                             <a href="#" class="link-button">Проведено</a>
-                                            <a href="#" class="link-button">Удалить</a>`}
+                                            <a href="javascript:deleteEvent()" class="link-button">Удалить</a>`}
                                     </div>
                                 </div>
 
@@ -978,23 +983,30 @@ async function readyCreateEvent() {
 }
 
 // Удаление мероприятия
-// todo
 function deleteEvent() {
-    const id = Number.parseInt(getTask(), 10);
+    const id = Number.parseInt(getElement(), 10);
 
     // обновление данных локально
-    taskList.list.localDeleteTask(id);
+    taskList.eventList.localDeleteEvent(id);
     removeDashbordElement(id, false);
 
     // формируем набор для отправки на сервер
     const data = JSON.stringify({
         code: 3,
-        table: 'TASKS',
+        table: 'EVENTS',
         id,
     });
 
     getResourse(data);
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
+    }
 }
+
+
+/* Общие функции */
 
 // Открытие выбранных элементов
 openElement = (id, flag = true) => {

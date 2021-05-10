@@ -18,27 +18,31 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `period`
+-- Table structure for table `invite_to_friends`
 --
 
-DROP TABLE IF EXISTS `period`;
+DROP TABLE IF EXISTS `invite_to_friends`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `period` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ периода',
-  `value` varchar(45) NOT NULL COMMENT 'Значение отвечающее за период',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
+CREATE TABLE `invite_to_friends` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ приглашения',
+  `idSender` int NOT NULL COMMENT 'Ключ отправителя приглашения',
+  `idRecipient` int NOT NULL COMMENT 'Ключ получателя приглашения',
+  PRIMARY KEY (`id`),
+  KEY `id-sender_idx` (`idSender`),
+  KEY `id-recipient_idx` (`idRecipient`),
+  CONSTRAINT `id-Recipient_invite` FOREIGN KEY (`idRecipient`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id-Sender_invite` FOREIGN KEY (`idSender`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='Таблица отправленных приглашений в друзья';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `period`
+-- Dumping data for table `invite_to_friends`
 --
 
-LOCK TABLES `period` WRITE;
-/*!40000 ALTER TABLE `period` DISABLE KEYS */;
-INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
-/*!40000 ALTER TABLE `period` ENABLE KEYS */;
+LOCK TABLES `invite_to_friends` WRITE;
+/*!40000 ALTER TABLE `invite_to_friends` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invite_to_friends` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

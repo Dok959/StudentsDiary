@@ -68,23 +68,14 @@ class Events {
 
     // todo
     localDeleteEvent(id) {
-        try {
-            let node = document.getElementById(id).parentNode.parentNode;
-            node = node.getElementsByClassName('date-title').item(2);
-            const count = Number.parseInt(node.textContent, 10);
-            node.textContent = count - 1;
-        } catch (error) {
-            /* empty */
-        }
-
         let index;
-        for (let element = 0; element < this.tasks.length; element += 1) {
-            if (this.tasks[element].id === id) {
+        for (let element = 0; element < this.events.length; element += 1) {
+            if (this.events[element].id === id) {
                 index = element;
                 break;
             }
         }
-        this.tasks.splice(index, 1);
+        this.events.splice(index, 1);
         removeWindow();
     };
 }

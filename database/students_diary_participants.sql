@@ -18,27 +18,29 @@ USE `students_diary`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `period`
+-- Table structure for table `participants`
 --
 
-DROP TABLE IF EXISTS `period`;
+DROP TABLE IF EXISTS `participants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `period` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Ключ периода',
-  `value` varchar(45) NOT NULL COMMENT 'Значение отвечающее за период',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Таблица отвечающая за интервалы выполнения задач';
+CREATE TABLE `participants` (
+  `id_event` int NOT NULL COMMENT 'Ключ мероприятия',
+  `idOwner` int NOT NULL COMMENT 'Ключ участника',
+  KEY `id-event_idx` (`id_event`),
+  KEY `id-owner_idx` (`idOwner`),
+  CONSTRAINT `id-event` FOREIGN KEY (`id_event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id-owner` FOREIGN KEY (`idOwner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица участников мероприятия';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `period`
+-- Dumping data for table `participants`
 --
 
-LOCK TABLES `period` WRITE;
-/*!40000 ALTER TABLE `period` DISABLE KEYS */;
-INSERT INTO `period` VALUES (1,'День'),(2,'Неделю'),(3,'Месяц'),(4,'Год');
-/*!40000 ALTER TABLE `period` ENABLE KEYS */;
+LOCK TABLES `participants` WRITE;
+/*!40000 ALTER TABLE `participants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `participants` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-10 20:00:16
+-- Dump completed on 2021-05-10 20:00:17
