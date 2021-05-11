@@ -23,23 +23,16 @@ class Tasks {
     localUpdateTask(id, title, description, date, time, period) {
         id = Number.parseInt(id, 10);
         const task = this.getIdTask(id);
-        title ? task.setTitle(title) : null;
-        description ? task.setDescription(description) : null;
-        time ? task.setTime(time) : null;
-        period ? task.setPeriod(period) : null;
+        task.setTitle(title)
+        task.setDescription(description)
+        task.setTime(time)
+        task.setPeriod(period)
 
         const oldDate = task.getDate();
         if (oldDate !== date){
             removeWindow();
-            // try{
-            //     oldDate = new Date(oldDate).getDay();
-            //     const count = Number.parseInt(document.getElementById(`count-day-${oldDate}`).textContent, 10);
-            //     document.getElementById(`count-day-${oldDate}`).textContent = count - 1;
-            // } catch (error) {
-            //     /* empty */
-            // }
 
-            date ? task.setDate(date) : null;
+            task.setDate(date);
             removeDashbordElement(id);
 
             // проверка сильного изменения сроков

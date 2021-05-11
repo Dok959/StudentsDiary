@@ -238,8 +238,8 @@ header{
 }
 
 .event-card-detail-window{
-    height: 750px;
     margin-top: -10px;
+    height: fit-content;
 }
 
 .window-detail-header{
@@ -379,7 +379,7 @@ textarea {
 }
 
 #create{
-    width: 310px;
+    width: 300px;
     /* height: 270px; */
     /* Без проектов */
     height: 215px;
@@ -423,6 +423,10 @@ textarea {
 #predmet, #teacher{
     display: block;
     text-align: center;
+}
+
+.invited{
+    width: 150px;
 }
 
 .invite-edit{
@@ -721,6 +725,6 @@ textarea {
     }
 }
 
-.create-event{
+.create-event, .event-window{
     height: fit-content;
 }

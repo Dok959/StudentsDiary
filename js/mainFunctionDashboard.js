@@ -41,6 +41,8 @@ function removeWindow(tag = closeTag) {
     elements.forEach(element => {
         element.remove();
     });
+
+    document.getElementById('window-back') ? document.getElementById('window-back').id = 'window': null;
 }
 
 // Включение и выключение выбора периодичности
@@ -145,6 +147,7 @@ async function cheskFields(flag = true) {
 
 // Обновление задачи
 async function updateTask() {
+    removeValidation(); // удаление ошибочного выделения;
     const result = await cheskFields();
     const {availabilityTitle, availabilityDate, id, title,
         description, date, time, frequency} = result;
@@ -155,7 +158,7 @@ async function updateTask() {
         let cheskTime = true;
         if (date !== null && time !== null){
             // проверка существования задач на это время
-            const data = JSON.stringify({
+            let data = JSON.stringify({
                 code: 4,
                 table: 'TASKS',
                 idOwner: cookie,
@@ -164,50 +167,60 @@ async function updateTask() {
             });
 
             cheskTime = await getResourse(data);
-            if (cheskTime[0] !== undefined){
-                cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+            if (cheskTime[0] !== undefined || cheskTime[0].id !== Number.parseInt(id, 10)){
+                cheskTime = false;
             }
             else{
-                cheskTime = true;
+                // проверка существования мероприятий на это время
+                data = JSON.stringify({
+                    code: 4,
+                    table: 'EVENTS',
+                    idOwner: cookie,
+                    date,
+                    time,
+                });
+
+                cheskTime = await getResourse(data);
+                cheskTime = cheskTime[0] === undefined;
             }
 
-            const taskDate = new Date (date);
-            let hour = Number.parseInt(time.slice(0,2), 10)
-            let min = Number.parseInt(time.slice(3,5), 10)
-            taskDate.setHours(hour, min);
+            if (cheskTime !== false){
+                const taskDate = new Date (date);
+                let hour = Number.parseInt(time.slice(0,2), 10)
+                let min = Number.parseInt(time.slice(3,5), 10)
+                taskDate.setHours(hour, min);
 
-            taskList.eventList.events.forEach(element => {
-                if (element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.eventList.events.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
 
-            taskList.list.tasks.forEach(element => {
-                if (element.id !== Number.parseInt(id, 10) && element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.list.tasks.forEach(element => {
+                    if (element.id !== Number.parseInt(id, 10) && element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         if (cheskTime === true){
-            removeValidation(); // удаление ошибочного выделения;
-
             // формируем набор для проверки периодичности задачи
             data = JSON.stringify({
                 code: 4,
@@ -241,7 +254,7 @@ async function updateTask() {
                 period,
             });
 
-            getResourse(data);
+            await getResourse(data);
         }
         else{
             generateError(document.getElementById('time'));
@@ -279,6 +292,7 @@ async function taskReady() {
     const data = JSON.stringify({
         code: 1,
         table: 'HISTORY',
+        nextTable: 'TASKS',
         idOwner: cookie,
         date,
         id,
@@ -301,18 +315,15 @@ async function taskReady() {
         });
 
         const result = await getResourse(dataElement);
-        taskList.list.localUpdateTask(id, null,null,
-            result[0].date, null,null);
+        taskList.list.localUpdateTask(id, result[0].title, result[0].description,
+            result[0].date, result[0].time, result[0].period);
     }
 }
 
 // Удаление задачи
-function deleteTask() {
+async function deleteTask() {
     const id = Number.parseInt(getElement(), 10);
-
-    // обновление данных локально
-    taskList.list.localDeleteTask(id);
-    removeDashbordElement(id);
+    const task = selectTask(id);
 
     // формируем набор для отправки на сервер
     const data = JSON.stringify({
@@ -321,38 +332,29 @@ function deleteTask() {
         id,
     });
 
-    getResourse(data);
+    await getResourse(data);
+
+    if (task.getPeriod() === null){ // удаление задачи
+        taskList.list.localDeleteTask(id);
+        removeDashbordElement(id, true);
+    }
+    else { // если задача повторяется, обновляем её
+        const dataElement = JSON.stringify({
+            code: 4,
+            table: 'TASKS',
+            idOwner: cookie,
+            id,
+        });
+
+        const result = await getResourse(dataElement);
+        taskList.list.localUpdateTask(id, result[0].title, result[0].description,
+            result[0].date, result[0].time, result[0].period);
+    }
 
     const url = unescape(window.location.href);
     if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
         counterToElement();
     }
-}
-
-// Отрисовка формы для создания элементов
-function createForm() {
-    const node = `<div class="window-overlay">
-            <div class="window" id="create">
-                <div class="window-wrapper">
-                    <a href="javascript:removeWindow()" class="icon-close create"></a>
-
-                    <div class="card-detail-data">
-                        <div class="card-detail-item">
-                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
-                            <div class="card-detail-action create">
-                                <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
-                                <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>`;
-
-    // расположить после элемента "задача"
-    // <a href="#" class="link-button create-btn">Проект</a>
-    $('#dashboard-container').append(node);
 }
 
 // Отрисовка задачи
@@ -496,7 +498,7 @@ async function readyCreateTask() {
         let cheskTime = true;
         // проверка существования задач на это время
         if (date !== null && time !== null){
-            const data = JSON.stringify({
+            let data = JSON.stringify({
                 code: 4,
                 table: 'TASKS',
                 idOwner: cookie,
@@ -506,44 +508,56 @@ async function readyCreateTask() {
 
             cheskTime = await getResourse(data);
             if (cheskTime[0] !== undefined){
-                cheskTime = !!(Object.keys(cheskTime[0]).length === 0);
+                cheskTime = false;
             }
             else{
-                cheskTime = true;
+                // проверка существования мероприятий на это время
+                data = JSON.stringify({
+                    code: 4,
+                    table: 'EVENTS',
+                    idOwner: cookie,
+                    date,
+                    time,
+                });
+
+                cheskTime = await getResourse(data);
+                cheskTime = cheskTime[0] === undefined;
             }
 
-            const taskDate = new Date (date);
-            let hour = Number.parseInt(time.slice(0,2), 10)
-            let min = Number.parseInt(time.slice(3,5), 10)
-            taskDate.setHours(hour, min);
+            if (cheskTime !== false){
+                const taskDate = new Date (date);
+                let hour = Number.parseInt(time.slice(0,2), 10)
+                let min = Number.parseInt(time.slice(3,5), 10)
+                taskDate.setHours(hour, min);
 
-            taskList.eventList.events.forEach(element => {
-                if (element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.eventList.events.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
 
-            taskList.list.tasks.forEach(element => {
-                if (element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.list.tasks.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (taskDate - testDate > - (15 * 60 * 1000) && taskDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         if (cheskTime === true){
@@ -592,6 +606,37 @@ async function readyCreateTask() {
 
 
 /* Функции мероприятий */
+
+// Форма для отображения информации о гостях
+// 1 - приглашения
+function formToUser(action) {
+    if (action === 1){
+        console.log('Приглашения')
+    }
+    document.getElementById('window').id = 'window-back';
+    const node = `<div class="window-overlay formToUser">
+            <div class="window" id="create">
+                <div class="window-wrapper">
+                    <a href="javascript:removeWindow('.formToUser')" class="icon-close create"></a>
+
+                    <div class="card-detail-data">
+                        <div class="card-detail-item">
+                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
+                            <div class="card-detail-action create">
+                                <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
+                                <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>`;
+
+    // расположить после элемента "задача"
+    // <a href="#" class="link-button create-btn">Проект</a>
+    $('#dashboard-container').append(node);
+}
 
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
@@ -658,6 +703,7 @@ function inviteToFriends(idRecipient){
 
 // Поиск пользователей
 // flag = true в списке друзей, false - во всех
+// todo
 async function searchUser() {
     removeWindow('#foundUser');
     const userCode = document.getElementsByName('userCode').item(0).value;
@@ -729,6 +775,7 @@ async function searchUser() {
 
 // Отрисовка мероприятия
 // todo список участников или друзей вне создания
+// todo у участников не должно быть возможности удалить или изменить мероприятие, только "Посещено"
 async function renderEvent({
     id, title, description = '', date, time = '', period = null, } = {},
     flag = false) {
@@ -776,7 +823,7 @@ async function renderEvent({
     }
 
     const node = `<div class="window-overlay">
-            <div class="window ${id === undefined ? 'create-event' : ''}" id="window" name="${id}">
+            <div class="window ${id === undefined ? 'create-event' : 'event-window'}" id="window" name="${id}">
                 <div class="window-wrapper">
                     <a href="javascript:removeWindow()" class="icon-close"></a>
 
@@ -795,8 +842,8 @@ async function renderEvent({
                                         ${flag ?
                                             `<a href="javascript:readyCreateEvent()" class="link-button">Сохранить</a>
                                             <a href="javascript:removeWindow()" class="link-button">Отменить</a>`:
-                                            `<a href="#" class="link-button">Изменить</a>
-                                            <a href="#" class="link-button">Проведено</a>
+                                            `<a href="javascript:updateEvent()" class="link-button">Изменить</a>
+                                            <a href="javascript:eventReady()" class="link-button">Проведено</a>
                                             <a href="javascript:deleteEvent()" class="link-button">Удалить</a>`}
                                     </div>
                                 </div>
@@ -836,20 +883,10 @@ async function renderEvent({
                                     </div>
                                 </div>
 
-                                ${id !== undefined ? `<div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Пригласить</h3>
-                                    <div class="description-edit card-detail-repeat">
-                                        <input class="input" name="userCode" type="text" placeholder="user12345" maxlength=10>
-                                        <a href="javascript:searchUser()" class="link-button">Найти</a>
-                                    </div>
-                                    <div class="invite-edit" id="search">
-                                    </div>
-                                </div>
-
-                                <div class="card-detail-item">
-                                    <h3 class="card-detail-item-header">Участники</h3>
-                                    <div class="invite-edit" id="party">
-                                    </div>
+                                ${id !== undefined ? `<div class="card-detail-action">
+                                    <a href="javascript:formToUser(1)" class="link-button">Пригласить</a>
+                                    <a href="#" class="link-button invited">Приглашены</a>
+                                    <a href="#" class="link-button">Участники</a>
                                 </div>` : ''}
                             </div>
                         </div>
@@ -865,8 +902,6 @@ async function renderEvent({
         document.getElementById('frequency').value = frequency;
         document.getElementById('period').value = period;
     }
-
-    id !== undefined ? searchUser() : null;
 }
 
 // Форма создания мероприятия
@@ -909,42 +944,44 @@ async function readyCreateEvent() {
                     time,
                 });
 
-            cheskTime = await getResourse(data);
-            cheskTime = cheskTime[0] === undefined;
+                cheskTime = await getResourse(data);
+                cheskTime = cheskTime[0] === undefined;
             }
 
-            const eventDate = new Date (date);
-            let hour = Number.parseInt(time.slice(0,2), 10)
-            let min = Number.parseInt(time.slice(3,5), 10)
-            eventDate.setHours(hour, min);
+            if (cheskTime !== false){
+                const eventDate = new Date (date);
+                let hour = Number.parseInt(time.slice(0,2), 10)
+                let min = Number.parseInt(time.slice(3,5), 10)
+                eventDate.setHours(hour, min);
 
-            taskList.eventList.events.forEach(element => {
-                if (element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.eventList.events.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
 
-            taskList.list.tasks.forEach(element => {
-                if (element.date !== null && element.time !== null){
-                    const testDate = new Date (element.date.slice(0, 10));
-                    testDate.setDate(testDate.getDate() + 1);
-                    hour = Number.parseInt(element.time.slice(0,2), 10)
-                    min = Number.parseInt(element.time.slice(3,5), 10)
-                    testDate.setHours(hour, min);
+                taskList.list.tasks.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
 
-                    if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
-                        cheskTime = false;
+                        if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         if (cheskTime === true){
@@ -974,6 +1011,169 @@ async function readyCreateEvent() {
             await getResourse(data);
 
             removeWindow();
+            try {
+                gettingListEvents();
+            } catch (error) {
+                /* empty */ 
+            }
+        }
+        else{
+            generateError(document.getElementById('time'));
+        }
+    }
+}
+
+// Выполнение мероприятия
+async function eventReady() {
+    const id = Number.parseInt(getElement(), 10);
+
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 9) {
+        month = `0${month}`;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    date = `${date.getFullYear()}-${month}-${day}`;
+
+    // формируем набор для отправки на сервер
+    const data = JSON.stringify({
+        code: 1,
+        table: 'HISTORY',
+        nextTable: 'EVENTS',
+        idOwner: cookie,
+        date,
+        id,
+    });
+
+    await getResourse(data);
+
+    // обновление данных локально
+    taskList.eventList.localDeleteEvent(id);
+    removeDashbordElement(id, false);
+
+    const dataElement = JSON.stringify({
+        code: 4,
+        table: 'EVENTS',
+        idOwner: cookie,
+        id,
+    });
+
+    await getResourse(dataElement);
+
+    gettingListEvents();
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
+    }
+}
+
+// Обновление мероприятия
+async function updateEvent() {
+    removeValidation(); // удаление ошибочного выделения;
+    const result = await cheskFields(false);
+    const {availabilityTitle, availabilityDate, id, title,
+        description, date, time, frequency} = result;
+    let { period } = result;
+
+    // если все ок, сохраняем
+    if (availabilityTitle && availabilityDate) {
+        let cheskTime = true;
+        if (time !== null){
+            // проверка существования задач на это время
+            let data = JSON.stringify({
+                code: 4,
+                table: 'TASKS',
+                idOwner: cookie,
+                date,
+                time,
+            });
+
+            cheskTime = await getResourse(data);
+            if (cheskTime[0] !== undefined){
+                cheskTime = false;
+            }
+            else{
+                // проверка существования мероприятий на это время
+                data = JSON.stringify({
+                    code: 4,
+                    table: 'EVENTS',
+                    idOwner: cookie,
+                    date,
+                    time,
+                });
+
+                cheskTime = await getResourse(data);
+                cheskTime = cheskTime[0] === undefined || cheskTime[0].id === Number.parseInt(id, 10);
+            }
+
+            if (cheskTime !== false){
+                const eventDate = new Date (date);
+                let hour = Number.parseInt(time.slice(0,2), 10)
+                let min = Number.parseInt(time.slice(3,5), 10)
+                eventDate.setHours(hour, min);
+    
+                taskList.eventList.events.forEach(element => {
+                    if (element.time !== null && element.id !== Number.parseInt(id, 10)){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
+    
+                        if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
+                    }
+                });
+
+                taskList.list.tasks.forEach(element => {
+                    if (element.time !== null){
+                        const testDate = new Date (element.date.slice(0, 10));
+                        testDate.setDate(testDate.getDate() + 1);
+                        hour = Number.parseInt(element.time.slice(0,2), 10)
+                        min = Number.parseInt(element.time.slice(3,5), 10)
+                        testDate.setHours(hour, min);
+    
+                        if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
+                            cheskTime = false;
+                        }
+                    }
+                });
+            }
+        }
+
+        if (cheskTime === true){
+            // формируем набор для проверки периодичности мероприятия
+            data = JSON.stringify({
+                code: 4,
+                table: 'REPETITION',
+                frequency,
+                period,
+            });
+
+            period = await getResourse(data);
+            period = period[0] ? period[0].id : null;
+
+            // формируем набор для отправки на сервер
+            data = JSON.stringify({
+                code: 2,
+                table: 'EVENTS',
+                id: Number.parseInt(id, 10),
+                idOwner: cookie,
+                title,
+                description,
+                date,
+                time,
+                period,
+            });
+
+            await getResourse(data);
+
+            removeWindow();
             gettingListEvents();
         }
         else{
@@ -983,7 +1183,7 @@ async function readyCreateEvent() {
 }
 
 // Удаление мероприятия
-function deleteEvent() {
+async function deleteEvent() {
     const id = Number.parseInt(getElement(), 10);
 
     // обновление данных локально
@@ -997,7 +1197,9 @@ function deleteEvent() {
         id,
     });
 
-    getResourse(data);
+    await getResourse(data);
+
+    gettingListEvents();
 
     const url = unescape(window.location.href);
     if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
@@ -1007,6 +1209,31 @@ function deleteEvent() {
 
 
 /* Общие функции */
+// Отрисовка формы для создания элементов
+function createForm() {
+    const node = `<div class="window-overlay">
+            <div class="window" id="create">
+                <div class="window-wrapper">
+                    <a href="javascript:removeWindow()" class="icon-close create"></a>
+
+                    <div class="card-detail-data">
+                        <div class="card-detail-item">
+                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
+                            <div class="card-detail-action create">
+                                <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
+                                <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>`;
+
+    // расположить после элемента "задача"
+    // <a href="#" class="link-button create-btn">Проект</a>
+    $('#dashboard-container').append(node);
+}
 
 // Открытие выбранных элементов
 openElement = (id, flag = true) => {

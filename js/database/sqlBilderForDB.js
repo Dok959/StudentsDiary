@@ -91,7 +91,9 @@ buildingQueryForDB = async (args) => {
                 delete args.addFriend;
             }
 
-            if (args.table === 'USERS' || args.table === 'TASKS' || args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS' || args.table === 'EVENTS') {
+            if (args.table === 'USERS' || args.table === 'TASKS' ||
+                args.table === 'INVITE_TO_FRIENDS' || args.table === 'FRIENDS' ||
+                args.table === 'EVENTS') {
                 // геренация id пользователя
                 query += 'DEFAULT, ';
             }
@@ -99,20 +101,18 @@ buildingQueryForDB = async (args) => {
             for (const element in args) {
                 // формирование запроса
                 if (
-                    element === 'idProject' ||
-                    element === 'date' ||
-                    element === 'time' ||
-                    element === 'period'
+                    element === 'idProject' || element === 'date' ||
+                    element === 'time' || element === 'period'
                 ) {
                     if (args[element] === null) {
                         query += `DEFAULT, `;
                     } else {
                         query += `'${args[element]}', `;
                     }
-                } else if (
-                    element !== 'code' &&
-                    element !== 'table' &&
-                    element !== 'id'
+                } 
+                else if (
+                    element !== 'code' && element !== 'table' &&
+                    element !== 'id' && element !== 'nextTable'
                 ) {
                     query += `'${args[element]}', `;
                 }
@@ -145,7 +145,13 @@ buildingQueryForDB = async (args) => {
             // если создалась запись об активности, то происходит проверка повторяемости задачи
             if (args.table === 'HISTORY') {
                 args.code = 3;
-                args.table = 'TASKS';
+                if (args.nextTable === 'TASKS'){
+                    args.table = 'TASKS';
+                }
+                else if (args.nextTable === 'EVENTS'){
+                    args.table = 'EVENTS';
+                } 
+                delete args.nextTable;
                 return buildingQueryForDB(args);
             }
 
@@ -162,18 +168,13 @@ buildingQueryForDB = async (args) => {
         return request;
     }
     if (args.code === 2) {
-        // только для таблицы настроек
-        // требуется приписка лимит, так как нет первичного ключа.
-        // UPDATE SETTINGS SET first_name = 'Doktor' where idOwner = 12 Limit 1
-
         query = `UPDATE ${args.table} SET `;
 
         for (const element in args) {
             if (
-                element !== 'code' &&
-                element !== 'table' &&
-                element !== 'id' &&
-                element !== 'idOwner'
+                element !== 'code' && element !== 'table' &&
+                element !== 'id' && element !== 'idOwner' &&
+                element !== 'nextTable'
             ) {
                 const iSValue = args[element];
                 if (element === 'group') {
@@ -212,7 +213,13 @@ buildingQueryForDB = async (args) => {
             delete args.count;
             delete args.date;
             args.code = 3;
-            args.table = 'TASKS';
+            if (args.nextTable === 'TASKS'){
+                args.table = 'TASKS';
+            }
+            else if (args.nextTable === 'EVENTS'){
+                args.table = 'EVENTS';
+            } 
+            delete args.nextTable;
 
             return buildingQueryForDB(args);
         }
@@ -221,16 +228,17 @@ buildingQueryForDB = async (args) => {
         return result;
     }
     if (args.code === 3) {
-        // проверка повторимости задач
-        if (args.table === 'TASKS') {
+        // проверка повторимости
+        if (args.table === 'TASKS' || args.table === 'EVENTS') {
+            const {table} = args;
             args.code = 4;
             result = await buildingQueryForDB(args);
 
-            // если повторяется задача
+            // если повторяется
             if (result[0].period !== null) {
                 args.code = 4;
                 args.table = 'REPETITION';
-                const taskId = args.id;
+                const elementId = args.id;
                 const {idOwner} = args;
                 let date = new Date(result[0].date);
                 delete args.idOwner;
@@ -245,15 +253,19 @@ buildingQueryForDB = async (args) => {
                     // увеличение даты
                     if (frequency === 2 && period === 1) {
                         date.setDate(date.getDate() + 2);
-                    } else if (period === 1) {
-                            date.setDate(date.getDate() + 1);
-                        } else if (period === 2) {
-                            date.setDate(date.getDate() + 7);
-                        } else if (period === 3) {
-                            date.setMonth(date.getMonth() + 1);
-                        } else if (period === 4) {
-                            date.setFullYear(date.getFullYear() + 1);
-                        }
+                    }
+                    else if (period === 1) {
+                        date.setDate(date.getDate() + 1);
+                    } 
+                    else if (period === 2) {
+                        date.setDate(date.getDate() + 7);
+                    } 
+                    else if (period === 3) {
+                        date.setMonth(date.getMonth() + 1);
+                    } 
+                    else if (period === 4) {
+                        date.setFullYear(date.getFullYear() + 1);
+                    }
 
                     // определение новой даты
                     const year = date.getFullYear();
@@ -268,12 +280,17 @@ buildingQueryForDB = async (args) => {
                     date = `${year}-${month}-${day}`;
 
                     args.code = 2;
-                    args.table = 'TASKS';
-                    args.id = taskId;
+                    if (table === 'TASKS'){
+                        args.table = 'TASKS';
+                    }
+                    else if (table === 'EVENTS'){
+                        args.table = 'EVENTS';
+                    }
+                    args.id = elementId;
                     args.idOwner = idOwner;
                     args.date = date;
 
-                    // обновление задачи, так она повторяется
+                    // обновление элемента
                     return buildingQueryForDB(args);
                 }
             }
