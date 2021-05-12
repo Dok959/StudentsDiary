@@ -137,7 +137,7 @@ async function getResourse(data) {
 
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
-// todo
+// todo ! для красоты
 function renderListUsers(elements, area, flag = true) {
     document.getElementById(`${area.substr(1)}`)
         .setAttribute('style','border-color: #1e6acc');
@@ -474,21 +474,33 @@ async function inviteToFriends(idRecipient){
         addressee: idRecipient,
     });
 
-    const check = await getResourse(dataUser);
+    let check = await getResourse(dataUser);
     if (!{}.hasOwnProperty.call(check, '0')){
-        const data = JSON.stringify({
-            code: 1,
+        let data = JSON.stringify({
+            code: 4,
             table: 'INVITE_TO_FRIENDS',
             idSender: cookie,
-            idRecipient,
-            addFriend: true,
+            idRecipient: cookie,
+            addressee: idRecipient,
         });
 
-        getResourse(data);
+        check = await getResourse(data);
+
+        if (!{}.hasOwnProperty.call(check, '0')){
+            data = JSON.stringify({
+                code: 1,
+                table: 'INVITE_TO_FRIENDS',
+                idSender: cookie,
+                idRecipient,
+                addFriend: true,
+            });
+
+            getResourse(data);
+        }
     }
 }
 
-// Сохранение изменений
+// Поиск пользователей
 async function searchUser() {
     const userCode = document.getElementsByName('search-user-code').item(0).value;
     if (userCode !== '' || null){
@@ -503,25 +515,30 @@ async function searchUser() {
 
         let elements = null;
         if (result[0] !== undefined){
-            const data = JSON.stringify({
-                code: 4,
-                table: 'FRIENDS',
-                idSender: cookie,
-                idRecipient: cookie,
-                addressee: result[0].idOwner,
-            });
+            if (result[0].userCode !== user.getUserCode()){
+                const data = JSON.stringify({
+                    code: 4,
+                    table: 'FRIENDS',
+                    idSender: cookie,
+                    idRecipient: cookie,
+                    addressee: result[0].idOwner,
+                });
 
-            elements = await getResourse(data);
+                elements = await getResourse(data);
 
-            if (Object.keys(elements).length > 0){
-                renderListUsers(result, '#search-result',true);
+                if (Object.keys(elements).length > 0){
+                    renderListUsers(result, '#search-result', true);
+                }
+                else{
+                    renderListUsers(result, '#search-result', false);
+                }
             }
             else{
-                renderListUsers(result, '#search-result',false);
+                renderListUsers({title: 'Пользователь не обнаружен'}, '#search-result', false);
             }
         }
         else{
-            renderListUsers(result, '#search-result',false);
+            renderListUsers(result, '#search-result', false);
         }
     }
     else{

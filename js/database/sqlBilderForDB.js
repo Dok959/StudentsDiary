@@ -1,44 +1,34 @@
 const pool = require('./pool');
 
 // flag = true ищет в списке друзей; false - всех
-async function parseListUsers(flag = null, elements = {}, idNoOwner = null) {
+async function parseListUsers(flag = null, elements = {}, idNoOwner = null, initialTable = null) {
     const response = {}
 
     if (Object.keys(elements).length > 0 && flag === true){
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
-                const data = {
-                    code: 4,
-                    table: 'SETTINGS',
-                    idOwner: elements[key].idSender === idNoOwner ?
-                        elements[key].idRecipient : elements[key].idSender,
-                };
+                let data;
+                if (!Number.isNaN(idNoOwner)){
+                    data = {
+                        code: 4,
+                        table: 'SETTINGS',
+                        idOwner: elements[key].idSender === idNoOwner ?
+                            elements[key].idRecipient : elements[key].idSender,
+                    };
+                }
+                else{
+                    data = {
+                        code: 4,
+                        table: 'SETTINGS',
+                        idOwner: elements[key].idOwner,
+                    };
+                }
 
                 const result = await buildingQueryForDB(data);
                 const element = result[0];
                 response[key] = element;
-                // renderListUsers(elements)
             }
         }
-        // !
-
-        // Object.keys(elements).forEach((key) = async () => {
-        //     console.log('+')
-        //     console.log(key)
-        //     console.log(elements[key]);
-        //     console.log(elements[key].idSender === idNoOwner)
-        //     const data = JSON.stringify({
-        //         code: 4,
-        //         table: 'SETTINGS',
-        //         idOwner: elements[key].idSender === idNoOwner ?
-        //             elements[key].idSender : elements[key].idRecipient,
-        //     });
-        //     console.log(data)
-
-        //     const result = await buildingQueryForDB(data)
-        //     console.log(result)
-        //     // renderListUsers(elements)
-        // });
     }
     else if (Object.keys(elements).length > 0 && flag === false){
         for (key in elements) {
@@ -46,22 +36,9 @@ async function parseListUsers(flag = null, elements = {}, idNoOwner = null) {
                 response[key] = elements[key];
             }
         }
-
-        // for (key in elements) {
-        //     if ({}.hasOwnProperty.call(elements, key)) {
-        //         const data = {
-        //             code: 4,
-        //             table: 'SETTINGS',
-        //             idOwner: elements[key].idSender === idNoOwner ?
-        //                 elements[key].idRecipient : elements[key].idSender,
-        //         };
-
-        //         const result = await buildingQueryForDB(data);
-        //         const element = result[0];
-        //         response[key] = element;
-        //         // renderListUsers(elements)
-        //     }
-        // }
+    }
+    else if (initialTable === 'PARTICIPANTS'){
+        response.title = 'Пользователи не обнаружены';
     }
     else if (flag === true){
         response.title = 'Список друзей пуст';
@@ -109,7 +86,7 @@ buildingQueryForDB = async (args) => {
                     } else {
                         query += `'${args[element]}', `;
                     }
-                } 
+                }
                 else if (
                     element !== 'code' && element !== 'table' &&
                     element !== 'id' && element !== 'nextTable'
@@ -150,7 +127,7 @@ buildingQueryForDB = async (args) => {
                 }
                 else if (args.nextTable === 'EVENTS'){
                     args.table = 'EVENTS';
-                } 
+                }
                 delete args.nextTable;
                 return buildingQueryForDB(args);
             }
@@ -218,7 +195,7 @@ buildingQueryForDB = async (args) => {
             }
             else if (args.nextTable === 'EVENTS'){
                 args.table = 'EVENTS';
-            } 
+            }
             delete args.nextTable;
 
             return buildingQueryForDB(args);
@@ -256,13 +233,13 @@ buildingQueryForDB = async (args) => {
                     }
                     else if (period === 1) {
                         date.setDate(date.getDate() + 1);
-                    } 
+                    }
                     else if (period === 2) {
                         date.setDate(date.getDate() + 7);
-                    } 
+                    }
                     else if (period === 3) {
                         date.setMonth(date.getMonth() + 1);
-                    } 
+                    }
                     else if (period === 4) {
                         date.setFullYear(date.getFullYear() + 1);
                     }
@@ -343,7 +320,7 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee' && element !== 'addFriend'){
+                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee' && element !== 'addFriend' && element !== 'initialTable'){
                     const iSValue = args[element];
                     if (iSValue === null) {
                         query += ` ${element} is ${iSValue} and`;
@@ -393,9 +370,9 @@ buildingQueryForDB = async (args) => {
 
         if (response.length === 0) {
             if (args.flag !== undefined){
-                // if(args.flagConvertNull === true){
-                //     return parseListUsers(null);
-                // }
+                if(args.initialTable === 'PARTICIPANTS'){
+                    return parseListUsers(null, {}, null, args.initialTable)
+                }
                 return parseListUsers(args.flag);
             }
 

@@ -42,7 +42,9 @@ function removeWindow(tag = closeTag) {
         element.remove();
     });
 
-    document.getElementById('window-back') ? document.getElementById('window-back').id = 'window': null;
+    if (tag === '.formToUser'){
+        document.getElementById('window-back').id = 'window';
+    }
 }
 
 // Включение и выключение выбора периодичности
@@ -69,9 +71,9 @@ function clearElement() {
     document.getElementById('time').value = null;
 }
 
-// Получение задачи с формы
-function getElement() {
-    const element = document.getElementById('window').getAttribute('name');
+// Получение элемента с формы
+function getElement(tag = 'window') {
+    const element = document.getElementById(tag).getAttribute('name');
     return element;
 }
 
@@ -607,174 +609,328 @@ async function readyCreateTask() {
 
 /* Функции мероприятий */
 
-// Форма для отображения информации о гостях
-// 1 - приглашения
-function formToUser(action) {
-    if (action === 1){
-        console.log('Приглашения')
-    }
-    document.getElementById('window').id = 'window-back';
-    const node = `<div class="window-overlay formToUser">
-            <div class="window" id="create">
-                <div class="window-wrapper">
-                    <a href="javascript:removeWindow('.formToUser')" class="icon-close create"></a>
-
-                    <div class="card-detail-data">
-                        <div class="card-detail-item">
-                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
-                            <div class="card-detail-action create">
-                                <a href="javascript:createTask()" class="link-button create-btn">Задача</a>
-                                <a href="javascript:createEvent()" class="link-button create-btn">Мероприятие</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>`;
-
-    // расположить после элемента "задача"
-    // <a href="#" class="link-button create-btn">Проект</a>
-    $('#dashboard-container').append(node);
-}
-
 // Рендер списка пользователей
-// flag отвечает за то что пользователи есть в списке друзей
-function renderListUsers(elements, flag = true) {
+// friends отвечает за связь пользователей
+// 0 - не друзья, 1 - приглос вам, 2 - ваш приглос, 3 - друзья
+// invite отвечает за возможность приглашения
+// todo !!!
+function renderListUsers(elements, friends = true, invite = true) {
+    removeWindow('#foundUser');
+
+    let node;
     if (elements.title !== undefined){
-        const node = `<div id="foundUser" class="foundUser">
+        node = `<div id="foundUser" class="foundUser">
             <span>${elements.title}</span>
         </div>`;
-
-        $('#search').append(node);
+        $('#list-users').append(node);
     }
     else{
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
-                let node; let title;
-                if (elements[key].lastName !== undefined){
+                let title;
+                if (elements[key].lastName !== null){
                     title = elements[key].lastName;
-                    if (elements[key].firstName !== undefined){
+                    if (elements[key].firstName !== null){
                         title += ` ${elements[key].firstName.slice(0,1)}.`;
-                        if (elements[key].patronymic !== undefined){
+                        if (elements[key].patronymic !== null){
                             title += ` ${elements[key].patronymic.slice(0,1)}.`;
                         }
                     }
                 }
-                else if (elements[key].firstName !== undefined){
+                else if (elements[key].firstName !== null){
                     title = elements[key].firstName;
                 }
                 else{
                     title = elements[key].userCode;
                 }
 
-                if (flag === false){
+                // todo сформировать строку для фио не более 90px, примерно, чтобы было ровно.
+
+                // todo если пользователь прислал запрос в друзья
+                // todo возможно потребуется кнопка отмены приглашения
+                // if (friends === true){
+                //     node = `<div id="invitationsUser" class="foundUser">
+                //     <span id="${elements[key].idOwner}">${title}</span>
+                //     <a href="#" class="user-action-link">Профиль</a>
+                //     <a href="javascript:requestInvite('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
+                //     <a href="javascript:requestInvite('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
+                //     </div>`;
+                // }
+                if (friends === 0){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
                         <a href="#" class="user-action-link">Профиль</a>
                         <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
-                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                        ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
                     </div>`;
                 }
-                else{
+                else if (friends === 1){
                     node = `<div id="foundUser" class="foundUser">
-                        <span>${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
-                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                        <span id="${elements[key].idOwner}">${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>.
+                        <a href="#" class="user-action-link">Принять в друзья</a>
+                        <a href="#" class="user-action-link">Отклонить заявку в друзья</a>
+                        ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
                     </div>`;
                 }
+                else if (friends === 2 || friends === 3){
+                    node = `<div id="foundUser" class="foundUser">
+                        <span id="${elements[key].idOwner}">${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>
+                        ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
+                    </div>`;
+                }
+                else if (friends === true){
+                    node = `<div id="foundUser" class="foundUser">
+                        <span id="${elements[key].idOwner}">${title}</span>
+                        <a href="#" class="user-action-link">Профиль</a>
+                    </div>`;
+                }
+                // else if (friends === 3){
+                //     node = `<div id="foundUser" class="foundUser">
+                //     <span id="${elements[key].idOwner}">${title}</span>
+                //     <a href="#" class="user-action-link">Профиль</a>
+                //     <a href="#" class="user-action-link">Пригласить на мероприятие</a>
+                //     </div>`;
+                // }
 
-                $('#search').append(node);
+                $('#list-users').append(node);
             }
         }
     }
 }
 
-function inviteToFriends(idRecipient){
+// Поиск приглашенных и участников
+async function searchUsers(flag = true) {
+    const id = getElement('window-back');
+    let result;
+    if (flag === true){
+        const search = JSON.stringify({
+            code: 4,
+            table: 'PARTICIPANTS',
+            idEvent: id,
+            confirmation: 1,
+            flag: true,
+            initialTable: 'PARTICIPANTS',
+        });
+
+        result = await getResourse(search);
+    }
+    else{
+        const search = JSON.stringify({
+            code: 4,
+            table: 'PARTICIPANTS',
+            idEvent: id,
+            confirmation: 0,
+            flag: true,
+            initialTable: 'PARTICIPANTS',
+        });
+
+        result = await getResourse(search);
+    }
+
+    renderListUsers(result, true, false);
+}
+
+// Приглашение на мероприятие
+async function invitationToTheEvent(idRecipient){
+    const id = getElement('window-back');
     const data = JSON.stringify({
         code: 1,
-        table: 'INVITE_TO_FRIENDS',
-        idSender: cookie,
-        idRecipient,
+        table: 'PARTICIPANTS',
+        idEvent: id,
+        idOwner: idRecipient,
+        confirmation: 0,
     });
 
-    getResourse(data);
+    await getResourse(data);
+}
+
+// Форма приглашения
+// 1 - приглашения, 2 - отправленные, 3 - участники
+function formToUser(action) {
+    document.getElementById('window').id = 'window-back';
+    let title; let area = '';
+    if (action === 1){
+        title = 'Пригласить пользователя';
+        area = `<div class="card-detail-item">
+            <h3 class="card-detail-item-header">Введете код пользователя</h3>
+            <div class="card-detail-action">
+                <input id="search-input" class="input" type="text" name="search-user-code" placeholder="user12345">
+                <a href="javascript:searchUser()" class="link-button">Поиск</a>
+            </div>
+            <div id="list-users"></div>
+        </div>`;
+    }
+    else if (action === 2){
+        title = 'Отправленные приглашения';
+        area = `<div class="card-detail-item">
+            <div id="list-users"></div>
+        </div>`;
+    }
+    else if (action === 3){
+        title = 'Список участников';
+        area = `<div class="card-detail-item">
+            <div id="list-users"></div>
+        </div>`;
+    }
+
+    const node = `<div class="window-overlay formToUser">
+            <div class="window" id="workWithUsers">
+                <div class="window-wrapper">
+                    <a href="javascript:removeWindow('.formToUser')" class="icon-close usersForm"></a>
+                    <div class="card-detail-item">
+                        <h3 class="card-detail-item-header users-title">${title}</h3>
+                        ${area}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    $('#dashboard-container').append(node);
+
+    if (action === 1){
+        renderListUsers({title: 'Пользователь не обнаружен'}, true)
+    }
+    else {
+        action === 2 ? searchUsers(false) : searchUsers(true)
+    }
+}
+
+// Проверка на наличие в друзьях и отправка приглоса в друзья
+async function inviteToFriends(idRecipient){
+    const dataUser = JSON.stringify({
+        code: 4,
+        table: 'FRIENDS',
+        idSender: cookie,
+        idRecipient: cookie,
+        addressee: idRecipient,
+    });
+
+    let check = await getResourse(dataUser);
+    if (!{}.hasOwnProperty.call(check, '0')){
+        let data = JSON.stringify({
+            code: 4,
+            table: 'INVITE_TO_FRIENDS',
+            idSender: cookie,
+            idRecipient: cookie,
+            addressee: idRecipient,
+        });
+
+        check = await getResourse(data);
+
+        if (!{}.hasOwnProperty.call(check, '0')){
+            data = JSON.stringify({
+                code: 1,
+                table: 'INVITE_TO_FRIENDS',
+                idSender: cookie,
+                idRecipient,
+                addFriend: true,
+            });
+
+            getResourse(data);
+        }
+    }
 }
 
 // Поиск пользователей
-// flag = true в списке друзей, false - во всех
-// todo
 async function searchUser() {
-    removeWindow('#foundUser');
-    const userCode = document.getElementsByName('userCode').item(0).value;
-    if (userCode === '' || null){ // друзья пользователя
-        const data = JSON.stringify({
-            code: 4,
-            table: 'FRIENDS',
-            idSender: cookie,
-            idRecipient: cookie,
-            flag: true,
-        });
-
-        const result = await getResourse(data);
-        console.log(result)
-        renderListUsers(result); // передаём список в рендер
-    }
-    else{
-        const data = JSON.stringify({
+    const userCode = document.getElementsByName('search-user-code').item(0).value;
+    if (userCode !== '' || null){
+        const search = JSON.stringify({
             code: 4,
             table: 'SETTINGS',
             userCode,
             flag: false,
         });
 
-        const result = await getResourse(data);
-        console.log(result);
+        const result = await getResourse(search);
 
-        renderListUsers(result, false);
+        let elements = null;
+        if (result[0] !== undefined){
+            const checkUser = JSON.stringify({
+                code: 4,
+                table: 'SETTINGS',
+                idOwner: cookie,
+                userCode,
+            });
 
-        // if (result[0] !== undefined){
-        //     let title;
-        //     if (result[0].lastName !== undefined){
-        //         title = result[0].lastName;
-        //         if (result[0].firstName !== undefined){
-        //             title += ` ${result[0].firstName.slice(0,1)}.`;
-        //             if (result[0].patronymic !== undefined){
-        //                 title += ` ${result[0].patronymic.slice(0,1)}.`;
-        //             }
-        //         }
-        //     }
-        //     else if (result[0].firstName !== undefined){
-        //         title = result[0].firstName;
-        //     }
-        //     else{
-        //         title = result[0].userCode;
-        //     }
-            // todo вынести в функцию
-            // const node = `<div id="foundUser" class="foundUser">
-            //         <span>${title}</span>
-            //         <a href="#" class="">Профиль</a>
-            //         <a href="#" class="">Добавить в друзья</a>
-            //         <a href="#" class="">Пригласить в ...</a>
-            //     </div>`;
-            // todo сделать панельку где рядом будут кнопки "профиль" с инфой, "добавить" приглос в др
-            // todo "приглосить в ..." окно с приглашениями в проект, мероприятие и т.д.
+            elements = await getResourse(checkUser);
+            if (Object.keys(elements).length === 0){
+                const id = getElement('window-back');
+                const invited = JSON.stringify({
+                    code: 4,
+                    table: 'PARTICIPANTS',
+                    idEvent: id,
+                    idOwner: result[0].idOwner,
+                });
 
-            // todo кнопки отвечающие за добавление пользователя в друзья и приглашение его на мероприятие
-            // todo в профили сделать вкладку куда будут прилетать приглосы, отображаться будет
-            // todo    только когда они есть или когда юзер где-то участвует
-            // todo    при нажатии на кнопку должна быть видна инфа пользователя: полное ФИО ...
+                let res = await getResourse(invited);
+                res = Object.keys(res).length === 0;
 
-            // todo    добавить визуальное отображение на основной странице, например колокольчик
+                let data = JSON.stringify({
+                    code: 4,
+                    table: 'FRIENDS',
+                    idSender: cookie,
+                    idRecipient: cookie,
+                    addressee: result[0].idOwner,
+                });
 
-        //     $('#search').append(node);
-        // }
-        // todo сюда добавить сообщение когда пользователей нет
+                elements = await getResourse(data);
+
+                if (Object.keys(elements).length > 0){
+                    renderListUsers(result, 3, res);
+                }
+                else{
+                    data = JSON.stringify({
+                        code: 4,
+                        table: 'INVITE_TO_FRIENDS',
+                        idSender: cookie,
+                        idRecipient: result[0].idOwner,
+                        addFriend: false,
+                    });
+
+                    elements = await getResourse(data);
+
+                    if (Object.keys(elements).length !== 0 &&
+                        Object.prototype.hasOwnProperty.call(elements[0], 'idSender')){
+                        renderListUsers(result, 2, res);
+                    }
+                    else{
+                        data = JSON.stringify({
+                            code: 4,
+                            table: 'INVITE_TO_FRIENDS',
+                            idSender: result[0].idOwner,
+                            idRecipient: cookie,
+                            addFriend: false,
+                        });
+
+                        elements = await getResourse(data);
+
+                        if (Object.keys(elements).length !== 0 &&
+                            Object.prototype.hasOwnProperty.call(elements[0], 'idSender')){
+                            renderListUsers(result, 1, res);
+                        }
+                        else{
+                            renderListUsers(result, 0, res);
+                        }
+                    }
+                }
+            }
+            else{
+                renderListUsers({title: 'Пользователь не обнаружен'}, 0)
+            }
+        }
+        else{
+            renderListUsers(result, 0);
+        }
+    }
+    else{
+        renderListUsers({title: 'Пользователь не обнаружен'}, 0)
     }
 }
 
 // Отрисовка мероприятия
-// todo список участников или друзей вне создания
 // todo у участников не должно быть возможности удалить или изменить мероприятие, только "Посещено"
 async function renderEvent({
     id, title, description = '', date, time = '', period = null, } = {},
@@ -885,8 +1041,8 @@ async function renderEvent({
 
                                 ${id !== undefined ? `<div class="card-detail-action">
                                     <a href="javascript:formToUser(1)" class="link-button">Пригласить</a>
-                                    <a href="#" class="link-button invited">Приглашены</a>
-                                    <a href="#" class="link-button">Участники</a>
+                                    <a href="javascript:formToUser(2)" class="link-button invited">Приглашены</a>
+                                    <a href="javascript:formToUser(3)" class="link-button">Участники</a>
                                 </div>` : ''}
                             </div>
                         </div>
@@ -1014,7 +1170,7 @@ async function readyCreateEvent() {
             try {
                 gettingListEvents();
             } catch (error) {
-                /* empty */ 
+                /* empty */
             }
         }
         else{
@@ -1115,7 +1271,7 @@ async function updateEvent() {
                 let hour = Number.parseInt(time.slice(0,2), 10)
                 let min = Number.parseInt(time.slice(3,5), 10)
                 eventDate.setHours(hour, min);
-    
+
                 taskList.eventList.events.forEach(element => {
                     if (element.time !== null && element.id !== Number.parseInt(id, 10)){
                         const testDate = new Date (element.date.slice(0, 10));
@@ -1123,7 +1279,7 @@ async function updateEvent() {
                         hour = Number.parseInt(element.time.slice(0,2), 10)
                         min = Number.parseInt(element.time.slice(3,5), 10)
                         testDate.setHours(hour, min);
-    
+
                         if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
                             cheskTime = false;
                         }
@@ -1137,7 +1293,7 @@ async function updateEvent() {
                         hour = Number.parseInt(element.time.slice(0,2), 10)
                         min = Number.parseInt(element.time.slice(3,5), 10)
                         testDate.setHours(hour, min);
-    
+
                         if (eventDate - testDate > - (15 * 60 * 1000) && eventDate - testDate < 15 * 60 * 1000){
                             cheskTime = false;
                         }

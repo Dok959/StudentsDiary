@@ -385,11 +385,21 @@ textarea {
     height: 215px;
 }
 
+#workWithUsers{
+    width: 500px;
+    height: fit-content;
+    max-height: 500px;
+}
+
 .icon-close.create{
     margin-left: 85%;
 }
 
-.card-detail-item-header.create-title{
+.icon-close.usersForm{
+    margin-left: 90%;
+}
+
+.card-detail-item-header.create-title, .card-detail-item-header.users-title{
     font-size: 24px;
     white-space: normal;
     line-height: 26px;
@@ -425,10 +435,45 @@ textarea {
     text-align: center;
 }
 
+#list-users{
+    display: flex;
+    margin: 10px;
+    align-items: center;
+    justify-content: space-evenly;
+    /* width: 100%; */
+    height: fit-content;
+    border: 2px double #1e6acc;
+    overflow-y: overlay;
+}
+
+.foundUser {
+    color: #172b4d;
+    font-size: 18px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 100%;
+    min-width: 100%;
+    padding-bottom: 5px;
+}
+
+.foundUser:last-child {
+    padding-bottom: 0;
+}
+
+
 .invited{
     width: 150px;
 }
 
+.user-action-link{
+    color: #172b4d;
+    margin-left: 5px;
+}
+
+/*
 .invite-edit{
     height: 120px;
     background-color: antiquewhite;
@@ -451,7 +496,7 @@ textarea {
 
 .user-action-link{
     color: #172b4d;
-}
+} */
 
 #create-event{
     height: 380px;
@@ -593,6 +638,10 @@ textarea {
     .btn-invizible {
         display: none;
     }
+
+    #workWithUsers{
+        width: 98%;
+    }
 }
 
 @media(max-width: 500px){
@@ -702,6 +751,16 @@ textarea {
         .window {
             height: 140%;
         }
+    }
+}
+
+@media(max-width: 380px){
+    .users-title{
+        width: 170px;
+    }
+
+    .icon-close.usersForm{
+        margin-left: 87%;
     }
 }
 

@@ -149,9 +149,17 @@ router.post(
                 // console.log('Ответ:')
                 // console.log(result)
 
-                if (!('el' in result) && ('0' in result) && ('idOwner' in result[0]) && result[0].idOwner !== null){
+                if (!('el' in result) && ('0' in result) &&
+                    ('idOwner' in result[0]) && result[0].idOwner !== null) {
                     Object.keys(result).forEach((index) => {
                         result[index].idOwner = key.encrypt(result[index].idOwner, 'base64');
+                    });
+                }
+                else if (!('el' in result) && ('0' in result) &&
+                    ('idSender' in result[0]) && result[0].idSender !== null) {
+                    Object.keys(result).forEach((index) => {
+                        result[index].idSender = key.encrypt(result[index].idSender, 'base64');
+                        result[index].idRecipient = key.encrypt(result[index].idRecipient, 'base64');
                     });
                 }
 
