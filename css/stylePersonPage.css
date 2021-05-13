@@ -276,6 +276,12 @@ h1{
     color: #172b4d;
 }
 
+#invitations-to-events{
+    width: 100%;
+    height: fit-content;
+    border: 2px double #1e6acc;
+}
+
 @media(max-width: 850px){
     #module-element{
         display: block;

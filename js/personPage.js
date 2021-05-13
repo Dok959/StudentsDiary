@@ -101,8 +101,8 @@ async function checkOpenTab() {
 }
 
 // Удаление приглашения
-function removeInvite(id) {
-    const element = document.getElementById(id).parentNode;
+function removeInvite(id, flag = '') {
+    const element = document.getElementById(flag+id).parentNode;
     element.remove();
 }
 
@@ -137,7 +137,6 @@ async function getResourse(data) {
 
 // Рендер списка пользователей
 // flag отвечает за то что пользователи есть в списке друзей
-// todo ! для красоты
 function renderListUsers(elements, area, flag = true) {
     document.getElementById(`${area.substr(1)}`)
         .setAttribute('style','border-color: #1e6acc');
@@ -171,37 +170,30 @@ function renderListUsers(elements, area, flag = true) {
     else{
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
-                let title;
+                let title = '';
                 if (elements[key].lastName !== null){
-                    title = elements[key].lastName;
-                    if (elements[key].firstName !== null){
-                        title += ` ${elements[key].firstName.slice(0,1)}.`;
-                        if (elements[key].patronymic !== null){
-                            title += ` ${elements[key].patronymic.slice(0,1)}.`;
-                        }
-                    }
+                    title += `${elements[key].lastName} `;
                 }
-                else if (elements[key].firstName !== null){
-                    title = elements[key].firstName;
+                if (elements[key].firstName !== null){
+                    title += `${elements[key].firstName} `;
                 }
-                else{
+                if (elements[key].patronymic !== null){
+                    title += elements[key].patronymic;
+                }
+                if (title === '') {
                     title = elements[key].userCode;
                 }
-
-                // todo сформировать строку для фио не более 90px, примерно, чтобы было ровно.
 
                 if (area === '#search-invitations'){
                     node = `<div id="invitationsUser" class="foundUser">
                     <span id="${elements[key].idOwner}">${title}</span>
-                    <a href="#" class="user-action-link">Профиль</a>
-                    <a href="javascript:requestInvite('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
-                    <a href="javascript:requestInvite('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
+                    <a href="javascript:requestInviteForFriends('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
+                    <a href="javascript:requestInviteForFriends('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
                     </div>`;
                 }
                 else if (area === '#search-result' && flag === false){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                         <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
                         <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
@@ -209,14 +201,12 @@ function renderListUsers(elements, area, flag = true) {
                 else if (area === '#search-result' && flag === true){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                         <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
                 else if (area === '#list-friends'){
                     node = `<div id="friendUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                         <a href="#" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
@@ -244,7 +234,7 @@ async function checkFriends(){
 }
 
 // Ответы на приглашения
-async function requestInvite(idSender, flag){
+async function requestInviteForFriends(idSender, flag){
     const data = JSON.stringify({
         code: 3,
         table: 'INVITE_TO_FRIENDS',
@@ -266,8 +256,78 @@ async function requestInvite(idSender, flag){
     }
 }
 
+// Отрисовка списка приглашений на мероприятия
+function renderListEvents(elements) {
+    removeWindow('#foundEvent');
+
+    let node;
+    for (key in elements) {
+        if ({}.hasOwnProperty.call(elements, key)) {
+            const {id, title} = elements[key];
+
+            node = `<div id="foundEvent" class="foundUser">
+                <span id="event-${id}">${title}</span>
+                <a href="javascript:requestInviteForEvents(${id}, true)" class="user-action-link">Принять</a>
+                <a href="javascript:requestInviteForEvents(${id}, false)" class="user-action-link">Отклонить</a>
+            </div>`;
+
+            $('#invitations-to-events').append(node);
+        }
+    }
+}
+
+// Ответы на приглашения
+async function requestInviteForEvents(idEvent, flag){
+    let data;
+    if (flag === true){
+        data = JSON.stringify({
+            code: 2,
+            table: 'PARTICIPANTS',
+            idEvent,
+            idOwner: cookie,
+            confirmation: 1,
+        });
+    }
+    else{
+        data = JSON.stringify({
+            code: 3,
+            table: 'PARTICIPANTS',
+            idEvent,
+            idOwner: cookie,
+        });
+    }
+
+    await getResourse(data);
+
+    removeInvite(idEvent, 'event-');
+
+    if (document.getElementById('invitations-to-events').childNodes.length < 1){
+        document.getElementById('check-invitations-for-events').setAttribute('style','display:none')
+    }
+}
+
 // Проверка на наличие приглашения
-async function checkInvite(){
+async function checkInviteEvents(){
+    const data = JSON.stringify({
+        code: 4,
+        table: 'PARTICIPANTS',
+        idOwner: cookie,
+        confirmation: false,
+        searchInviteEvents: true,
+    });
+
+    const elements = await getResourse(data);
+    if ({}.hasOwnProperty.call(elements, '0')){
+        document.getElementById('check-invitations-for-events').setAttribute('style','display: block');
+        renderListEvents(elements);
+    }
+    else{
+        document.getElementById('check-invitations-for-events').setAttribute('style','display: none');
+    }
+}
+
+// Проверка на наличие приглашения
+async function checkInviteFriends(){
     const data = JSON.stringify({
         code: 4,
         table: 'INVITE_TO_FRIENDS',
@@ -293,7 +353,8 @@ function renderTab(tag) {
     $(`#${tag}`).addClass('visible');
 
     if (tag === 'friends'){
-        checkInvite();
+        checkInviteEvents();
+        checkInviteFriends();
         checkFriends();
     }
 }

@@ -170,6 +170,17 @@ router.post(
 );
 
 // обработчик для попадания на рабочую область приложения
+router.use('/activity(.html)?', jsonParser, async (request, response) => {
+    await checkUser(request).then((res) => {
+        if (res !== false) {
+            response.sendFile(`${__dirname}/html/activity.html`);
+        } else {
+            response.redirect('/');
+        }
+    });
+});
+
+// обработчик для попадания на рабочую область приложения
 router.use('/personPage(.html)?', jsonParser, async (request, response) => {
     await checkUser(request).then((res) => {
         if (res !== false) {

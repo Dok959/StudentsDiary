@@ -117,7 +117,7 @@ async function gettingListEvents(){
     // формируем набор данных
     const data = JSON.stringify({
         code: 4,
-        table: 'EVENTS',
+        table: 'ALL-EVENTS',
         idOwner: cookie,
         startDate,
         endDate,

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>ZingSoft Demo</title>
+ 
+  <link href='//fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+ 
+  <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <style>
+    html,
+    body,
+    #myChart {
+      width: 100%;
+      height: 100%;
+    }
+ 
+    .zc-ref {
+      display: none;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div id='myChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
+  <script>
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+    var myConfig = {
+      "globals": {
+        "font-family": "Roboto"
+      },
+      "graphset": [{
+        "type": "area",
+        "background-color": "#fff",
+        "utc": true,
+        "plotarea": {
+          "margin-top": "10%",
+          "margin-right": "dynamic",
+          "margin-bottom": "dynamic",
+          "margin-left": "dynamic",
+          "adjust-layout": true
+        },
+        "scale-x": {
+          "label": {
+            "text": "Дата",
+            "font-size": "14px",
+            "font-weight": "normal",
+            "offset-x": "10%",
+            "font-angle": 360
+          },
+          "item": {
+            "text-align": "center",
+            "font-color": "#05636c"
+          },
+          "zooming": 1,
+          "max-labels": 12,
+          "labels": [
+            "Sept<br>19",
+            "Sept<br>20",
+            "Sept<br>21",
+            "Sept<br>22",
+            "Sept<br>23",
+          ],
+          "max-items": 12,
+          "items-overlap": true,
+          "guide": {
+            "line-width": "0px"
+          },
+          "tick": {
+            "line-width": "2px"
+          },
+        },
+        "crosshair-x": {
+          "line-color": "#fff",
+          "line-width": 1,
+          "plot-label": {
+            "visible": false
+          }
+        },
+        "scale-y": {
+          "values": "0:15:1",
+          "item": {
+            "font-color": "#05636c",
+            "font-weight": "normal"
+          },
+          "label": {
+            "text": "Количество",
+            "font-size": "14px"
+          },
+          "guide": {
+            "line-width": "0px",
+            "alpha": 0.2,
+            "line-style": "dashed"
+          }
+        },
+        "plot": {
+          "line-width": 2,
+          "marker": {
+            "size": 1,
+            "visible": false
+          },
+          "tooltip": {
+            "font-family": "Roboto",
+            "font-size": "15px",
+            "text": "There were %v %t on %data-days",
+            "text-align": "left",
+            "border-radius": 5,
+            "padding": 10
+          }
+        },
+        "series": [{
+            "values": [
+              1,2,3,4,5,
+            ],
+            // вроде можно без этого
+            "data-days": [
+              "Sept 19",
+              "Sept 20",
+              "Sept 21",
+              "Sept 22",
+              "Sept 23",
+            ],
+            "line-color": "#fc8d62",
+            "aspect": "spline",
+            "background-color": "#fc8d62",
+            "alpha-area": ".5",
+            "font-family": "Roboto",
+            "font-size": "14px",
+            "text": "returns"
+          },
+        ]
+      }]
+    };
+ 
+    zingchart.render({
+      id: 'myChart',
+      data: myConfig,
+      height: '100%',
+      width: '100%'
+    });
+  </script>
+</body>
+ 
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Активность пользователя</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/stylePersonPage.css">
+
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+    <script src="/js/library/jquery-3.5.1.min.js" defer></script>
+    <script src="/js/activity.js" defer></script>
+
+</head>
+<body>
+    
+    <div id="user-block">
+        <a href="javascript:returnDashboard()" class="btn-link" id="return">Вернуться</a>
+        <div id="user-header">
+            <div id="user">
+                <span id="user-name">Пользователь</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html> -->

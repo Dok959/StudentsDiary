@@ -613,7 +613,6 @@ async function readyCreateTask() {
 // friends отвечает за связь пользователей
 // 0 - не друзья, 1 - приглос вам, 2 - ваш приглос, 3 - друзья
 // invite отвечает за возможность приглашения
-// todo !!!
 function renderListUsers(elements, friends = true, invite = true) {
     removeWindow('#foundUser');
 
@@ -627,35 +626,20 @@ function renderListUsers(elements, friends = true, invite = true) {
     else{
         for (key in elements) {
             if ({}.hasOwnProperty.call(elements, key)) {
-                let title;
+                let title = '';
                 if (elements[key].lastName !== null){
-                    title = elements[key].lastName;
-                    if (elements[key].firstName !== null){
-                        title += ` ${elements[key].firstName.slice(0,1)}.`;
-                        if (elements[key].patronymic !== null){
-                            title += ` ${elements[key].patronymic.slice(0,1)}.`;
-                        }
-                    }
+                    title += `${elements[key].lastName} `;
                 }
-                else if (elements[key].firstName !== null){
-                    title = elements[key].firstName;
+                if (elements[key].firstName !== null){
+                    title += `${elements[key].firstName} `;
                 }
-                else{
+                if (elements[key].patronymic !== null){
+                    title += elements[key].patronymic;
+                }
+                if (title === '') {
                     title = elements[key].userCode;
                 }
 
-                // todo сформировать строку для фио не более 90px, примерно, чтобы было ровно.
-
-                // todo если пользователь прислал запрос в друзья
-                // todo возможно потребуется кнопка отмены приглашения
-                // if (friends === true){
-                //     node = `<div id="invitationsUser" class="foundUser">
-                //     <span id="${elements[key].idOwner}">${title}</span>
-                //     <a href="#" class="user-action-link">Профиль</a>
-                //     <a href="javascript:requestInvite('${elements[key].idOwner}', true)" class="user-action-link">Принять</a>
-                //     <a href="javascript:requestInvite('${elements[key].idOwner}', false)" class="user-action-link">Отклонить</a>
-                //     </div>`;
-                // }
                 if (friends === 0){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
@@ -667,7 +651,6 @@ function renderListUsers(elements, friends = true, invite = true) {
                 else if (friends === 1){
                     node = `<div id="foundUser" class="foundUser">
                         <span id="${elements[key].idOwner}">${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>.
                         <a href="#" class="user-action-link">Принять в друзья</a>
                         <a href="#" class="user-action-link">Отклонить заявку в друзья</a>
                         ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
@@ -676,23 +659,14 @@ function renderListUsers(elements, friends = true, invite = true) {
                 else if (friends === 2 || friends === 3){
                     node = `<div id="foundUser" class="foundUser">
                         <span id="${elements[key].idOwner}">${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                         ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
                     </div>`;
                 }
                 else if (friends === true){
                     node = `<div id="foundUser" class="foundUser">
                         <span id="${elements[key].idOwner}">${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                     </div>`;
                 }
-                // else if (friends === 3){
-                //     node = `<div id="foundUser" class="foundUser">
-                //     <span id="${elements[key].idOwner}">${title}</span>
-                //     <a href="#" class="user-action-link">Профиль</a>
-                //     <a href="#" class="user-action-link">Пригласить на мероприятие</a>
-                //     </div>`;
-                // }
 
                 $('#list-users').append(node);
             }
@@ -931,10 +905,23 @@ async function searchUser() {
 }
 
 // Отрисовка мероприятия
-// todo у участников не должно быть возможности удалить или изменить мероприятие, только "Посещено"
 async function renderEvent({
     id, title, description = '', date, time = '', period = null, } = {},
     flag = false) {
+
+    const checkEvent = JSON.stringify({
+        code: 4,
+        table: 'EVENTS',
+        id,
+        idOwner: cookie,
+    });
+
+    const result = await getResourse(checkEvent);
+    const activiti = Object.keys(result).length === 1 ?
+    `<a href="javascript:updateEvent()" class="link-button">Изменить</a>
+    <a href="javascript:eventReady()" class="link-button">Проведено</a>
+    <a href="javascript:deleteEvent()" class="link-button">Удалить</a>` :
+    `<a href="javascript:eventVisited()" class="link-button">Посещено</a>`;
 
     removeWindow();
 
@@ -998,9 +985,7 @@ async function renderEvent({
                                         ${flag ?
                                             `<a href="javascript:readyCreateEvent()" class="link-button">Сохранить</a>
                                             <a href="javascript:removeWindow()" class="link-button">Отменить</a>`:
-                                            `<a href="javascript:updateEvent()" class="link-button">Изменить</a>
-                                            <a href="javascript:eventReady()" class="link-button">Проведено</a>
-                                            <a href="javascript:deleteEvent()" class="link-button">Удалить</a>`}
+                                            activiti}
                                     </div>
                                 </div>
 
@@ -1210,15 +1195,6 @@ async function eventReady() {
     taskList.eventList.localDeleteEvent(id);
     removeDashbordElement(id, false);
 
-    const dataElement = JSON.stringify({
-        code: 4,
-        table: 'EVENTS',
-        idOwner: cookie,
-        id,
-    });
-
-    await getResourse(dataElement);
-
     gettingListEvents();
 
     const url = unescape(window.location.href);
@@ -1363,6 +1339,51 @@ async function deleteEvent() {
     }
 }
 
+// Посещение гостем мероприятие
+async function eventVisited(){
+    const id = Number.parseInt(getElement(), 10);
+
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 9) {
+        month = `0${month}`;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    date = `${date.getFullYear()}-${month}-${day}`;
+
+    // обновление данных локально
+    taskList.eventList.localDeleteEvent(id);
+    removeDashbordElement(id, false);
+
+    // формируем набор для отправки на сервер
+    const data = JSON.stringify({
+        code: 1,
+        table: 'HISTORY',
+        idOwner: cookie,
+        date,
+    });
+
+    await getResourse(data);
+
+    const removeInvite = JSON.stringify({
+        code: 3,
+        table: 'PARTICIPANTS',
+        idEvent: id,
+        idOwner: cookie,
+    });
+
+    await getResourse(removeInvite);
+
+    await gettingListEvents();
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
+    }
+}
 
 /* Общие функции */
 // Отрисовка формы для создания элементов

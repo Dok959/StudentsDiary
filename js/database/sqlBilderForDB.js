@@ -51,6 +51,28 @@ async function parseListUsers(flag = null, elements = {}, idNoOwner = null, init
     return response;
 }
 
+// Получение данных о мероприятиях
+async function parseListEvents(elements) {
+    const response = {}
+
+    for (key in elements) {
+        if ({}.hasOwnProperty.call(elements, key)) {
+            const data = {
+                code: 4,
+                table: 'EVENTS',
+                id: elements[key].idEvent,
+            };
+
+            const result = await buildingQueryForDB(data);
+            const element = result[0];
+            response[key] = element;
+        }
+    }
+    // console.log(response)
+
+    return response;
+}
+
 // code: 1 - insert, 2 - update, 3 - delete, 4 - select
 // eslint-disable-next-line consistent-return
 buildingQueryForDB = async (args) => {
@@ -120,7 +142,7 @@ buildingQueryForDB = async (args) => {
                 return buildingQueryForDB(args);
             }
             // если создалась запись об активности, то происходит проверка повторяемости задачи
-            if (args.table === 'HISTORY') {
+            if (args.table === 'HISTORY' && Object.prototype.hasOwnProperty.call(args, 'nextTable')) {
                 args.code = 3;
                 if (args.nextTable === 'TASKS'){
                     args.table = 'TASKS';
@@ -151,7 +173,7 @@ buildingQueryForDB = async (args) => {
             if (
                 element !== 'code' && element !== 'table' &&
                 element !== 'id' && element !== 'idOwner' &&
-                element !== 'nextTable'
+                element !== 'nextTable' && element !== 'idEvent'
             ) {
                 const iSValue = args[element];
                 if (element === 'group') {
@@ -179,13 +201,16 @@ buildingQueryForDB = async (args) => {
         else if (args.table === 'SETTINGS') {
             query += ` WHERE idOwner = '${args.idOwner}';`;
         }
+        else if (args.table === 'PARTICIPANTS') {
+            query += ` WHERE idOwner = '${args.idOwner}' and idEvent = '${args.idEvent}';`;
+        }
         else {
             query += ` WHERE id = '${args.id}';`;
         }
         console.log(`Запрос на обновление: ${query}`);
         request = await pool.execute(query);
 
-        if (args.table === 'HISTORY') {
+        if (args.table === 'HISTORY' && Object.prototype.hasOwnProperty.call(args, 'nextTable')) {
             // проверка периодчиности и удаление выполненной задачи
             delete args.count;
             delete args.date;
@@ -302,6 +327,26 @@ buildingQueryForDB = async (args) => {
         return result;
     }
     if (args.code === 4) {
+        if (args.table === 'ALL-EVENTS'){
+            query = `SELECT * FROM EVENTS WHERE (EVENTS.idOwner = ${args.idOwner} or EVENTS.id IN (SELECT idEvent FROM PARTICIPANTS WHERE confirmation = 1 and idOwner = ${args.idOwner})) and date BETWEEN '${args.startDate}' and '${args.endDate}';`;
+
+            console.log(`Запрос на поиск: ${query}`);
+
+            request = await pool.execute(query);
+            response = JSON.parse(JSON.stringify(request[0]));
+    
+            if (response.length === 0) {     
+                result.el = undefined;
+                return result;
+            }
+    
+            Object.keys(response).forEach((key) => {
+                result[key] = response[key];
+            });
+    
+            return result;
+        }
+
         // получение названий полей в искомой таблице
         query = `SHOW columns FROM ${args.table};`;
 
@@ -320,7 +365,10 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                if (element !== 'idSender' && element !== 'idRecipient' && element !== 'flag' && element !== 'addressee' && element !== 'addFriend' && element !== 'initialTable'){
+                if (element !== 'idSender' && element !== 'idRecipient' && 
+                    element !== 'flag' && element !== 'addressee' &&
+                    element !== 'addFriend' && element !== 'initialTable' &&
+                    element !== 'searchInviteEvents'){
                     const iSValue = args[element];
                     if (iSValue === null) {
                         query += ` ${element} is ${iSValue} and`;
@@ -384,10 +432,11 @@ buildingQueryForDB = async (args) => {
             result[key] = response[key];
         });
 
+        if (args.searchInviteEvents !== undefined){
+            return parseListEvents(result)
+        }
+
         if (args.flag !== undefined){
-            // if(args.flagConvertNull === true){
-            //     return parseListUsers(null, result, Number.parseInt(args.idSender || args.idRecipient, 10));
-            // }
             return parseListUsers(args.flag, result, Number.parseInt(args.idSender || args.idRecipient, 10));
         }
 
