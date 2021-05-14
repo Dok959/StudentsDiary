@@ -195,19 +195,19 @@ function renderListUsers(elements, area, flag = true) {
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
                         <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
-                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                        <a href="javascript:formInviteForEvents('${elements[key].idOwner}')" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
                 else if (area === '#search-result' && flag === true){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                        <a href="javascript:formInviteForEvents('${elements[key].idOwner}')" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
                 else if (area === '#list-friends'){
                     node = `<div id="friendUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Пригласить в ...</a>
+                        <a href="javascript:formInviteForEvents('${elements[key].idOwner}')" class="user-action-link">Пригласить в ...</a>
                     </div>`;
                 }
 
@@ -273,6 +273,145 @@ function renderListEvents(elements) {
 
             $('#invitations-to-events').append(node);
         }
+    }
+}
+
+// Форма для приглаглашения на мероприятия
+async function formInviteForEvents(idRecipient){
+    // определение сроков
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    // формирование начальной даты
+    const startDate = `${year}-${month}-${day}`;
+
+    // формируем набор данных
+    let data = JSON.stringify({
+        code: 4,
+        table: 'ALL-EVENTS',
+        idOwner: cookie,
+        startDate,
+    });
+
+    let result = await getResourse(data);
+
+    const selectList = document.createElement("select");
+    // `<select class="select" id="events-list"></select>`;
+    console.log(Object.keys(result).length) // ? почему 0
+    if (Object.keys(result).length > 0){
+        for (key in result) {
+            if ({}.hasOwnProperty.call(result, key)) {
+                const {id, title} = result[key];
+
+                const optionElement = document.createElement("option");
+
+                optionElement.value = id;
+                optionElement.text = title;
+    
+                // const list = `<option value="${id}">${title}</option>`;
+
+                selectList.appendChild(optionElement);
+                
+                // $(selectList).append(list);
+
+                // selectList.append(list)
+                
+                // list = `<div id="foundEvent" class="foundUser">
+                //     <span id="event-${id}">${title}</span>
+                //     <a href="javascript:inviteForEvents(idEvent, idRecipient)" class="user-action-link">Пригласить</a>
+                // </div>`;
+                console.log('+')
+                console.log(selectList)
+            }
+        }
+    }
+    else{
+        // 
+    }
+    selectList.id = "events-list";
+    console.log(selectList)
+
+    data = JSON.stringify({
+        code: 4,
+        table: 'SETTINGS',
+        idOwner: idRecipient,
+    });
+
+    result = await getResourse(data);
+
+    let title = '';
+    if (result[0].lastName !== null){
+        title += `${result[0].lastName} `;
+    }
+    if (result[0].firstName !== null){
+        title += `${result[0].firstName} `;
+    }
+    if (result[0].patronymic !== null){
+        title += result[0].patronymic;
+    }
+    if (title === '') {
+        title = result[0].userCode;
+    }
+
+
+    const node = `<div class="window-overlay">
+            <div class="window" id="create">
+                <div class="window-wrapper">
+                    <a href="javascript:removeWindow()" class="icon-close create"></a>
+
+                    <div class="card-detail-data">
+                        <div class="card-detail-item">
+                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
+                            <div class="card-detail-action create">
+                                ${title}<br>${selectList}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>`;
+
+    await $('#dashboard-container').append(node);
+
+}
+
+// Отправка приглашений на мероприятия
+// todo
+async function inviteForEvents(idEvent, idRecipient){
+    let data = JSON.stringify({
+        code: 4,
+        table: 'PARTICIPANTS',
+        idEvent,
+        idOwner: idRecipient,
+    });
+
+    let result = await getResourse(data);
+    if (Object.keys(result).length === 0){
+        data = JSON.stringify({
+            code: 4,
+            table: 'EVENTS',
+            id,
+            idOwner: idRecipient,
+        });
+
+        result = await getResourse(data);
+
+        if (Object.keys(result).length === 0){
+            data = JSON.stringify({
+                code: 1,
+                table: 'PARTICIPANTS',
+                idEvent,
+                idOwner: idRecipient,
+                confirmation: 0,
+            });
+    
+            await getResourse(data);
+        }
+    }
+    else{
+        //
     }
 }
 

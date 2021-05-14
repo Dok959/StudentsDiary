@@ -156,17 +156,13 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
             }
         }
 
-        let startYear; let startMonth; let startDay; let endYear; let endMonth; let endDay;
+        let stardDate; let endDate;
         if (lastDate !== null){
             // получение начала занятий
-            startYear = Number.parseInt(lastDate.slice(8, 12), 10);
-            startMonth = Number.parseInt(lastDate.slice(5, 7), 10);
-            startDay = Number.parseInt(lastDate.slice(2, 4), 10);
+            stardDate = new Date(`${lastDate.slice(5,7)}.${lastDate.slice(2,4)}.${lastDate.slice(8,12)}`);
 
             // получение окончания занятий
-            endYear = Number.parseInt(lastDate.slice(22, 26), 10);
-            endMonth = Number.parseInt(lastDate.slice(19, 21), 10);
-            endDay = Number.parseInt(lastDate.slice(16, 18), 10);
+            endDate = new Date(`${lastDate.slice(19,21)}.${lastDate.slice(16,18)}.${lastDate.slice(22,26)}`);
         }
 
         let para; let predmet = null; let teacher = null; let auditoria; let group;
@@ -181,27 +177,12 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                 if (col === row.getElementsByClassName(week)[0]) {
                     predmet = col.getElementsByClassName('naz_disc').item(0);
                     if (predmet !== null && lastDate !== null) {
-                        const today = new Date(new Date().setDate(new Date().getDate() + date));
+                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date)));
 
-                        // определение текущей даты
-                        const todayYear = today.getFullYear();
-                        const todayMonth = today.getMonth() + 1;
-                        const todayDay = today.getDate();
-
-                        if (todayYear <= startYear && todayYear <= endYear){
-                            if (todayMonth >= startMonth && todayMonth <= endMonth){
-                                if (todayDay > startDay && todayDay > endDay){
-                                    predmet = null;
-                                }
-                                else{
-                                    predmet = predmet.textContent;
-                                    teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                                    auditoria = col.getElementsByClassName('segueAud')[0].textContent;
-                                }
-                            }
-                            else{
-                                predmet = null;
-                            }
+                        if (today - stardDate >= 0 && endDate - today >= 0){
+                            predmet = predmet.textContent;
+                            teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
+                            auditoria = col.getElementsByClassName('segueAud')[0].textContent;
                         }
                         else{
                             predmet = null;
@@ -232,33 +213,15 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         const dateLession = element.substring(startIndexTime, element.length-5);
 
                         // получение начала занятий
-                        startYear = Number.parseInt(dateLession.slice(8, 12), 10)
-                        startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
-                        startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+                        stardDate = new Date(`${dateLession.slice(5,7)}.${dateLession.slice(2,4)}.${dateLession.slice(8,12)}`);
 
                         // получение окончания занятий
-                        endYear = Number.parseInt(dateLession.slice(22, 26), 10)
-                        endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
-                        endDay = Number.parseInt(dateLession.slice(16, 18), 10)
-
-                        const today = new Date(new Date().setDate(new Date().getDate() + date));
+                        endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const todayYear = today.getFullYear();
-                        const todayMonth = today.getMonth() + 1;
-                        const todayDay = today.getDate();
+                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date)));
 
-                        if (todayYear <= startYear && todayYear <= endYear){
-                            if (todayMonth >= startMonth && todayMonth <= endMonth){
-                                if (todayDay > startDay && todayDay > endDay){
-                                    predmet = null;
-                                }
-                            }
-                            else{
-                                predmet = null;
-                            }
-                        }
-                        else{
+                        if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
                         }
                     }
@@ -284,33 +247,15 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         const dateLession = element.substring(startIndexTime, element.length-5);
 
                         // получение начала занятий
-                        startYear = Number.parseInt(dateLession.slice(8, 12), 10)
-                        startMonth = Number.parseInt(dateLession.slice(5, 7), 10)
-                        startDay = Number.parseInt(dateLession.slice(2, 4), 10)
+                        stardDate = new Date(`${dateLession.slice(5,7)}.${dateLession.slice(2,4)}.${dateLession.slice(8,12)}`);
 
                         // получение окончания занятий
-                        endYear = Number.parseInt(dateLession.slice(22, 26), 10)
-                        endMonth = Number.parseInt(dateLession.slice(19, 21), 10)
-                        endDay = Number.parseInt(dateLession.slice(16, 18), 10)
-
-                        const today = new Date(new Date().setDate(new Date().getDate() + date));
+                        endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const todayYear = today.getFullYear();
-                        const todayMonth = today.getMonth() + 1;
-                        const todayDay = today.getDate();
+                        const today = new Date(new Date().setDate(new Date().getDate() + date));
 
-                        if (todayYear <= startYear && todayYear <= endYear){
-                            if (todayMonth >= startMonth && todayMonth <= endMonth){
-                                if (todayDay > startDay && todayDay > endDay){
-                                    predmet = null;
-                                }
-                            }
-                            else{
-                                predmet = null;
-                            }
-                        }
-                        else{
+                        if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
                         }
                     }

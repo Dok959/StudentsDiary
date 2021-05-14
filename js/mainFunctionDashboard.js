@@ -169,7 +169,7 @@ async function updateTask() {
             });
 
             cheskTime = await getResourse(data);
-            if (cheskTime[0] !== undefined || cheskTime[0].id !== Number.parseInt(id, 10)){
+            if (cheskTime[0] !== undefined && cheskTime[0].id !== Number.parseInt(id, 10)){
                 cheskTime = false;
             }
             else{
