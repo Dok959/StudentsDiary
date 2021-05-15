@@ -181,8 +181,8 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
 
                         if (today - stardDate >= 0 && endDate - today >= 0){
                             predmet = predmet.textContent;
-                            teacher = col.getElementsByClassName('segueTeacher')[0].textContent;
-                            auditoria = col.getElementsByClassName('segueAud')[0].textContent;
+                            teacher = col.getElementsByClassName('segueTeacher')[0] ? col.getElementsByClassName('segueTeacher')[0].textContent : null;
+                            auditoria = col.getElementsByClassName('segueAud')[0] ? col.getElementsByClassName('segueAud')[0].textContent : null;
                         }
                         else{
                             predmet = null;
@@ -267,6 +267,18 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
             // определяем столбец для вывода
             listTaks = document.getElementById(`day-${date}`);
 
+            let bottom = '';
+            if (teacher !== null){
+                bottom = `<span class="list-task-label" id="teacher">
+                    Преподаватель - ${teacher}
+                </span>`
+            }
+            else if (group !== undefined){
+                bottom = `<span class="list-task-label" id="teacher">
+                    Группа - ${group}
+                </span>`
+            }
+
             const node = `<div class="list-task no-clik">
                     <div class="list-task-details">
                         <div class="center">
@@ -276,20 +288,14 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                             <span class="list-task-label" id="para">
                                 Пара № ${para}
                             </span>
-                            <span class="list-task-label" id="auditoria">
+                            ${auditoria !== null ? `<span class="list-task-label" id="auditoria">
                                 Аудитория ${auditoria}
-                            </span>
+                            </span>` : ''}
                         </div>
                         <span class="list-task-label" id="predmet">
                             ${predmet}
                         </span>
-                        ${teacher !== null ?
-                            `<span class="list-task-label" id="teacher">
-                                Преподаватель - ${teacher}
-                            </span>` :
-                            `<span class="list-task-label" id="teacher">
-                                Группа - ${group}
-                            </span>`}
+                        ${bottom !== null ? bottom : ''}
                     </div>
                 </div>`;
 
