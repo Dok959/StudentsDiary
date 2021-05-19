@@ -45,11 +45,10 @@ async function checkUser(request) {
 // * МАРШРУТИЗАЦИЯ
 
 // логер
-// ! временно отключено
 router.use((_request, _response, next) => {
-    // const now = new Date();
-    // const data = `${now} ${request.method} ${request.url}`;
-    // fs.appendFile('server.log', `${data}\n`, () => {});
+    const now = new Date();
+    const data = `${now} ${_request.method} ${_request.url}`;
+    fs.appendFile('server.log', `${data}\n`, () => {});
     next();
 });
 

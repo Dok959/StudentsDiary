@@ -257,6 +257,11 @@ async function updateTask() {
             });
 
             await getResourse(data);
+            
+            const url = unescape(window.location.href);
+            if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+                counterToElement();
+            }
         }
         else{
             generateError(document.getElementById('time'));
@@ -319,6 +324,11 @@ async function taskReady() {
         const result = await getResourse(dataElement);
         taskList.list.localUpdateTask(id, result[0].title, result[0].description,
             result[0].date, result[0].time, result[0].period);
+    }
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
     }
 }
 

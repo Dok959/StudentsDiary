@@ -177,7 +177,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                 if (col === row.getElementsByClassName(week)[0]) {
                     predmet = col.getElementsByClassName('naz_disc').item(0);
                     if (predmet !== null && lastDate !== null) {
-                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date)));
+                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date + 1))).setHours(0,0,0,0);
 
                         if (today - stardDate >= 0 && endDate - today >= 0){
                             predmet = predmet.textContent;
@@ -219,7 +219,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date)));
+                        const today = new Date(new Date().setDate(new Date().getDate() + + (7-date + 1))).setHours(0,0,0,0);
 
                         if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
@@ -253,7 +253,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const today = new Date(new Date().setDate(new Date().getDate() + date));
+                        const today = new Date(new Date().setDate(new Date().getDate() + + (7-date + 1))).setHours(0,0,0,0);
 
                         if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
