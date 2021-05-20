@@ -334,16 +334,16 @@ buildingQueryForDB = async (args) => {
 
             request = await pool.execute(query);
             response = JSON.parse(JSON.stringify(request[0]));
-    
-            if (response.length === 0) {     
+
+            if (response.length === 0) {
                 result.el = undefined;
                 return result;
             }
-    
+
             Object.keys(response).forEach((key) => {
                 result[key] = response[key];
             });
-    
+
             return result;
         }
         if(args.table === 'ALL-EVENTS'){
@@ -353,16 +353,16 @@ buildingQueryForDB = async (args) => {
 
             request = await pool.execute(query);
             response = JSON.parse(JSON.stringify(request[0]));
-    
-            if (response.length === 0) {     
+
+            if (response.length === 0) {
                 result.el = undefined;
                 return result;
             }
-    
+
             Object.keys(response).forEach((key) => {
                 result[key] = response[key];
             });
-    
+
             return result;
         }
 
@@ -384,7 +384,7 @@ buildingQueryForDB = async (args) => {
         query = `SELECT * FROM ${args.table} WHERE`;
         fields.forEach((element) => {
             if (Object.prototype.hasOwnProperty.call(args, element)) {
-                if (element !== 'idSender' && element !== 'idRecipient' && 
+                if (element !== 'idSender' && element !== 'idRecipient' &&
                     element !== 'flag' && element !== 'addressee' &&
                     element !== 'addFriend' && element !== 'initialTable' &&
                     element !== 'searchInviteEvents'){
@@ -404,7 +404,7 @@ buildingQueryForDB = async (args) => {
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'dateFirst') &&
             Object.prototype.hasOwnProperty.call(args, 'dateSecond')) {
-            query += ` date is ${args.dateFirst} or date <= '${args.dateSecond}' and`;
+            query += ` (date is ${args.dateFirst} or date <= '${args.dateSecond}') and`;
         }
         else if (Object.prototype.hasOwnProperty.call(args, 'idSender') &&
             Object.prototype.hasOwnProperty.call(args, 'idRecipient') &&

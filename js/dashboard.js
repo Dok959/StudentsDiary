@@ -135,6 +135,7 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
     .getElementsByClassName('table_style')[0];
 
     const now = new Date();
+    const defaultWeek = week;
     let day; let date;
     for (let i = 2, row; i < raspisanie.rows.length; i += 1) {
         row = raspisanie.rows[i];
@@ -149,10 +150,10 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
             }
 
             if (date < now.getDay()) {
-                week === 'td_style2_ch' ? 'td_style2_zn' : 'td_style2_ch';
+                week = defaultWeek === 'td_style2_ch' ? 'td_style2_zn' : 'td_style2_ch';
             }
             else{
-                week === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
+                week = defaultWeek === 'td_style2_ch' ? 'td_style2_ch' : 'td_style2_zn';
             }
         }
 
@@ -177,7 +178,16 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                 if (col === row.getElementsByClassName(week)[0]) {
                     predmet = col.getElementsByClassName('naz_disc').item(0);
                     if (predmet !== null && lastDate !== null) {
-                        const today = new Date(new Date().setDate(new Date().getDate() + (7-date + 1))).setHours(0,0,0,0);
+                        let today;
+                        if (new Date().getDay() === date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate())).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() < date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (date - new Date().getDay()))).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() > date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (7 - new Date().getDay() + date))).setHours(0,0,0,0));
+                        }
 
                         if (today - stardDate >= 0 && endDate - today >= 0){
                             predmet = predmet.textContent;
@@ -219,7 +229,16 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const today = new Date(new Date().setDate(new Date().getDate() + + (7-date + 1))).setHours(0,0,0,0);
+                        let today;
+                        if (new Date().getDay() === date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate())).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() < date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (date - new Date().getDay()))).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() > date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (7 - new Date().getDay() + date))).setHours(0,0,0,0));
+                        }
 
                         if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
@@ -253,7 +272,16 @@ function creatingASchedule(role, week, raspisanieQuerry, lastDate = null) {
                         endDate = new Date(`${dateLession.slice(19,21)}.${dateLession.slice(16,18)}.${dateLession.slice(22,26)}`);
 
                         // определение текущей даты
-                        const today = new Date(new Date().setDate(new Date().getDate() + + (7-date + 1))).setHours(0,0,0,0);
+                        let today;
+                        if (new Date().getDay() === date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate())).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() < date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (date - new Date().getDay()))).setHours(0,0,0,0));
+                        }
+                        else if(new Date().getDay() > date){
+                            today = new Date(new Date(new Date().setDate(new Date().getDate() + (7 - new Date().getDay() + date))).setHours(0,0,0,0));
+                        }
 
                         if (today - stardDate < 0 || endDate - today < 0){
                             predmet = null;
@@ -398,30 +426,6 @@ async function checkRaspisanie() {
                         .getElementsByClassName('paud_date')[0].innerHTML;
 
                         creatingASchedule(role, week, raspisanieQuerry, timing);
-
-                        // // получение начала занятий
-                        // const startYear = Number.parseInt(timing.slice(8, 12), 10)
-                        // const startMonth = Number.parseInt(timing.slice(5, 7), 10)
-                        // const startDay = Number.parseInt(timing.slice(2, 4), 10)
-
-                        // // получение окончания занятий
-                        // const endYear = Number.parseInt(timing.slice(22, 26), 10)
-                        // const endMonth = Number.parseInt(timing.slice(19, 21), 10)
-                        // const endDay = Number.parseInt(timing.slice(16, 18), 10)
-
-                        // // определение текущей даты
-                        // now = new Date();
-                        // const nowYear = now.getFullYear();
-                        // const nowMonth = now.getMonth() + 1;
-                        // const nowDay = now.getDate();
-
-                        // if (nowYear >= startYear && nowYear <= endYear){
-                        //     if (nowMonth >= startMonth && nowMonth <= endMonth){
-                        //         if (nowDay >= startDay || nowDay <= endDay){
-                        //             creatingASchedule(role, week, raspisanieQuerry);
-                        //         }
-                        //     }
-                        // }
                     }
                 }
             };

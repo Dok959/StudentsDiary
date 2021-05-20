@@ -235,7 +235,10 @@ input {
 }
 
 .footer{
-    position:absolute;
+    display: flex;
+    position: fixed;
+
+    /* position:absolute; */
     bottom:0px;
     width:100%;
 
