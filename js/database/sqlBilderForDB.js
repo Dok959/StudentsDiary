@@ -327,7 +327,7 @@ buildingQueryForDB = async (args) => {
         return result;
     }
     if (args.code === 4) {
-        if (args.table === 'ALL-EVENTS' && Object.prototype.hasOwnProperty.call(args, 'startDate')){
+        if (args.table === 'ALL-EVENTS' && Object.prototype.hasOwnProperty.call(args, 'endDate')){
             query = `SELECT * FROM EVENTS WHERE (EVENTS.idOwner = ${args.idOwner} or EVENTS.id IN (SELECT idEvent FROM PARTICIPANTS WHERE confirmation = 1 and idOwner = ${args.idOwner})) and date BETWEEN '${args.startDate}' and '${args.endDate}';`;
 
             console.log(`Запрос на поиск: ${query}`);

@@ -286,118 +286,144 @@ async function formInviteForEvents(idRecipient){
     // формирование начальной даты
     const startDate = `${year}-${month}-${day}`;
 
-    // формируем набор данных
     let data = JSON.stringify({
+        code: 4,
+        table: 'SETTINGS',
+        idOwner: idRecipient,
+    });
+    const userSettings = await getResourse(data);
+
+    // формируем набор данных
+    data = JSON.stringify({
         code: 4,
         table: 'ALL-EVENTS',
         idOwner: cookie,
         startDate,
     });
+    const resultInitial = await getResourse(data);
 
-    let result = await getResourse(data);
+    // формируем набор данных
+    data = JSON.stringify({
+        code: 4,
+        table: 'ALL-EVENTS',
+        idOwner: userSettings[0].idOwner,
+        startDate,
+    });
+    const result = await getResourse(data);
 
     const selectList = document.createElement("select");
-    // `<select class="select" id="events-list"></select>`;
-    console.log(Object.keys(result).length) // ? почему 0
-    if (Object.keys(result).length > 0){
+    
+    if (Object.keys(resultInitial).length > 0 && Object.keys(result).length > 0){
+        const mac = {}; const finalMac = {};
         for (key in result) {
             if ({}.hasOwnProperty.call(result, key)) {
-                const {id, title} = result[key];
+                const {id} = result[key]; let i = 0;
+                for (let index = 0; index < Object.keys(resultInitial).length; index += 1) {
+                    const elementid = resultInitial[index].id;
+                    if (elementid === id){
+                        mac[i] = resultInitial[index];
+                        i += 1;
+                        break;
+                    }
+                }
+            }
+        }
 
+        for (key in resultInitial) {
+            if ({}.hasOwnProperty.call(resultInitial, key)) {
+                const {id} = resultInitial[key];
+                let flag = true;
+                for (let index = 0; index < Object.keys(mac).length; index += 1) {
+                    const elementid = mac[index].id;
+                    if (elementid === id){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag === true){
+                    finalMac[id] = resultInitial[key];
+                }
+            }
+        }
+
+        for (key in finalMac) {
+            if ({}.hasOwnProperty.call(finalMac, key)) {
+                const {id, title} = finalMac[key];
                 const optionElement = document.createElement("option");
-
                 optionElement.value = id;
                 optionElement.text = title;
-    
-                // const list = `<option value="${id}">${title}</option>`;
-
                 selectList.appendChild(optionElement);
-                
-                // $(selectList).append(list);
-
-                // selectList.append(list)
-                
-                // list = `<div id="foundEvent" class="foundUser">
-                //     <span id="event-${id}">${title}</span>
-                //     <a href="javascript:inviteForEvents(idEvent, idRecipient)" class="user-action-link">Пригласить</a>
-                // </div>`;
-                console.log('+')
-                console.log(selectList)
+            }
+        }
+    }
+    else if (Object.keys(resultInitial).length > 0){
+        for (key in resultInitial) {
+            if ({}.hasOwnProperty.call(resultInitial, key)) {
+                const {id, title} = resultInitial[key];
+                const optionElement = document.createElement("option");
+                optionElement.value = id;
+                optionElement.text = title;
+                selectList.appendChild(optionElement);
             }
         }
     }
     else{
         // 
     }
-    selectList.id = "events-list";
-    console.log(selectList)
-
-    data = JSON.stringify({
-        code: 4,
-        table: 'SETTINGS',
-        idOwner: idRecipient,
-    });
-
-    result = await getResourse(data);
+    selectList.id = 'events-list';
+    selectList.className = 'select';
 
     let title = '';
-    if (result[0].lastName !== null){
-        title += `${result[0].lastName} `;
+    if (userSettings[0].lastName !== null){
+        title += `${userSettings[0].lastName} `;
     }
-    if (result[0].firstName !== null){
-        title += `${result[0].firstName} `;
+    if (userSettings[0].firstName !== null){
+        title += `${userSettings[0].firstName} `;
     }
-    if (result[0].patronymic !== null){
-        title += result[0].patronymic;
+    if (userSettings[0].patronymic !== null){
+        title += userSettings[0].patronymic;
     }
     if (title === '') {
-        title = result[0].userCode;
+        title = userSettings[0].userCode;
     }
 
-
     const node = `<div class="window-overlay">
-            <div class="window" id="create">
+            <div class="window">
                 <div class="window-wrapper">
-                    <a href="javascript:removeWindow()" class="icon-close create"></a>
+                    <a href="javascript:removeWindow('.window-overlay')" class="icon-close"></a>
 
-                    <div class="card-detail-data">
-                        <div class="card-detail-item">
-                            <h3 class="card-detail-item-header create-title">Выберите элемент который хотите создать</h3>
-                            <div class="card-detail-action create">
-                                ${title}<br>${selectList}
-                            </div>
+                    <div class="card-detail-item">
+                        <h3 class="card-detail-item-header users-title">Пригласить пользователя</h3>
+                        <span class="user-resipient">${title}</span>
+                        <div id="events">
+                            <h3 class="card-detail-item-header">Выберите мероприятие</h3>
                         </div>
+                        <a href="javascript:inviteForEvents('${userSettings[0].idOwner}')" class="link-button">Пригласить</a>
                     </div>
-
                 </div>
             </div>
         </div>`;
 
-    await $('#dashboard-container').append(node);
+    $('#container').append(node);
+    if (selectList.length === 0){
+        selectList.disabled = true;
+    }
+    document.getElementById('events').appendChild(selectList);
 
 }
 
 // Отправка приглашений на мероприятия
-// todo
-async function inviteForEvents(idEvent, idRecipient){
-    let data = JSON.stringify({
-        code: 4,
-        table: 'PARTICIPANTS',
-        idEvent,
-        idOwner: idRecipient,
-    });
-
-    let result = await getResourse(data);
-    if (Object.keys(result).length === 0){
-        data = JSON.stringify({
+async function inviteForEvents(idRecipient){
+    const idEvent = document.getElementById('events-list').value;
+    if (idEvent.length > 0){
+        let data = JSON.stringify({
             code: 4,
             table: 'EVENTS',
-            id,
+            id: idEvent,
             idOwner: idRecipient,
         });
-
-        result = await getResourse(data);
-
+    
+        let result = await getResourse(data);
         if (Object.keys(result).length === 0){
             data = JSON.stringify({
                 code: 1,
@@ -407,11 +433,8 @@ async function inviteForEvents(idEvent, idRecipient){
                 confirmation: 0,
             });
     
-            await getResourse(data);
+            result = await getResourse(data);
         }
-    }
-    else{
-        //
     }
 }
 

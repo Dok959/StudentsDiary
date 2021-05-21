@@ -623,6 +623,7 @@ async function readyCreateTask() {
 // friends отвечает за связь пользователей
 // 0 - не друзья, 1 - приглос вам, 2 - ваш приглос, 3 - друзья
 // invite отвечает за возможность приглашения
+// todo функции при отрисовке пользователя (-лей)
 function renderListUsers(elements, friends = true, invite = true) {
     removeWindow('#foundUser');
 
@@ -653,7 +654,6 @@ function renderListUsers(elements, friends = true, invite = true) {
                 if (friends === 0){
                     node = `<div id="foundUser" class="foundUser">
                         <span>${title}</span>
-                        <a href="#" class="user-action-link">Профиль</a>
                         <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
                         ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
                     </div>`;
@@ -661,8 +661,7 @@ function renderListUsers(elements, friends = true, invite = true) {
                 else if (friends === 1){
                     node = `<div id="foundUser" class="foundUser">
                         <span id="${elements[key].idOwner}">${title}</span>
-                        <a href="#" class="user-action-link">Принять в друзья</a>
-                        <a href="#" class="user-action-link">Отклонить заявку в друзья</a>
+                        <a href="javascript:inviteToFriends('${elements[key].idOwner}')" class="user-action-link">Добавить в друзья</a>
                         ${invite === true ? `<a href="javascript:invitationToTheEvent('${elements[key].idOwner}')" class="user-action-link">Пригласить на мероприятие</a>` : ''}
                     </div>`;
                 }
@@ -810,6 +809,17 @@ async function inviteToFriends(idRecipient){
                 idSender: cookie,
                 idRecipient,
                 addFriend: true,
+            });
+
+            getResourse(data);
+        }
+        else{ // если есть приглашение то принимаем его
+            data = JSON.stringify({
+                code: 3,
+                table: 'INVITE_TO_FRIENDS',
+                idSender: idRecipient,
+                idRecipient: cookie,
+                flag: true,
             });
 
             getResourse(data);

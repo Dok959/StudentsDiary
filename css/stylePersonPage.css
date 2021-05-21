@@ -282,6 +282,136 @@ h1{
     border: 2px double #1e6acc;
 }
 
+
+/* * стиль по которому будут искаться все открытие окна */
+.window-overlay {
+    align-items: flex-start;
+    background-color: rgba(0,0,0,.64);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.window {
+    background-color: #f4f5f7;
+    border-radius: 5px;
+    display: block;
+    margin: 48px 0 80px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    width: 500px;
+    height: fit-content;
+    max-height: 500px;
+}
+
+.window-wrapper{
+    padding: 10px;
+}
+
+.icon-close {
+    position: absolute;
+    margin-left: 90%;
+    margin-top: 5px;
+    opacity: 0.3;
+    z-index: 3;
+    transition: background-color 85ms,color 85ms;
+}
+
+.icon-close:hover {
+    opacity: 1;
+}
+
+.icon-close:before, .icon-close:after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+}
+
+.icon-close:before {
+    transform: rotate(45deg);
+}
+.icon-close:after {
+    transform: rotate(-45deg);
+}
+
+.card-detail-item {
+    display: block;
+    margin: 10px 0;
+    max-width: 100%;
+}
+
+.card-detail-item-header{
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    margin-top: 16px;
+    display: inline-block;
+    line-height: 20px;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.users-title{
+    font-size: 24px;
+    white-space: normal;
+    line-height: 26px;
+    margin-top: -10px;
+}
+
+.link-button{
+    color: #263849;
+    font-weight: 400;
+    font-size: 20px;
+    width: 120px;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: #00EFD1;
+    margin: 0 5px;
+    align-self: center;
+
+    margin: 10px auto 0;
+    position: relative;
+    display: block;
+}
+
+.link-button:hover{
+    border-color: #083863;
+}
+
+.card-detail-action{
+    display: flex;
+}
+
+.user-resipient{
+    color: #172b4d;
+    font-size: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0px;
+    margin: 5px;
+}
+
+#events{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media(max-width: 850px){
     #module-element{
         display: block;
@@ -318,6 +448,29 @@ h1{
     .user-action-link {
         margin-left: 5px;
     }
+
+    .window{
+        width: 95%;
+    }
+}
+
+@media(max-width: 520px){
+    #events{
+        display: block;
+        margin: 0 auto;
+    }
+
+    #events .card-detail-item-header{
+        display: block;
+        text-align: center;
+        margin: 5px auto;
+    }
+}
+
+@media(max-width: 450px){
+    .icon-close{
+        margin-left: 88%;
+    }
 }
 
 @media(max-width: 400px){
@@ -337,5 +490,29 @@ h1{
 
     #window-module-title {
         margin: 0;
+    }
+
+    .users-title{
+        font-size: 23px;
+    }
+}
+
+@media(max-width: 370px){
+    .icon-close{
+        margin-left: 87%;
+    }
+
+    .users-title{
+        font-size: 22px;
+    }
+}
+
+@media(max-width: 350px){
+    .icon-close{
+        margin-left: 86%;
+    }
+
+    .users-title{
+        font-size: 20px;
     }
 }
