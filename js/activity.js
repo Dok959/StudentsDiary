@@ -73,16 +73,10 @@ async function requestActivity() {
 
     const myEvent = JSON.stringify({
         code: 4,
-        table: 'EVENTS',
+        table: 'ALL-EVENTS',
         idOwner: cookie,
-        date,
-    });
-
-    const inviteEvent = JSON.stringify({
-        code: 4,
-        table: 'PARTICIPANTS',
-        idOwner: cookie,
-        date,
+        startDate: date,
+        endDate: date,
     });
 
     const data = JSON.stringify({
@@ -100,11 +94,6 @@ async function requestActivity() {
     }
 
     result = await getResourse(myEvent)
-    if (Object.keys(result).length > 0){
-        appointed += Object.keys(result).length;
-    }
-
-    result = await getResourse(inviteEvent)
     if (Object.keys(result).length > 0){
         appointed += Object.keys(result).length;
     }
