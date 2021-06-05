@@ -257,7 +257,7 @@ async function updateTask() {
             });
 
             await getResourse(data);
-            
+
             const url = unescape(window.location.href);
             if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
                 counterToElement();
@@ -941,7 +941,8 @@ async function renderEvent({
     `<a href="javascript:updateEvent()" class="link-button">Изменить</a>
     <a href="javascript:eventReady()" class="link-button">Проведено</a>
     <a href="javascript:deleteEvent()" class="link-button">Удалить</a>` :
-    `<a href="javascript:eventVisited()" class="link-button">Посещено</a>`;
+    `<a href="javascript:eventVisited()" class="link-button">Посещено</a>
+    <a href="javascript:leaveTheEvent()" class="link-button">Покинуть</a>`;
 
     removeWindow();
 
@@ -1404,6 +1405,33 @@ async function eventVisited(){
         counterToElement();
     }
 }
+
+// Покинуть мероприятие
+async function leaveTheEvent(){
+    const id = Number.parseInt(getElement(), 10);
+
+    // обновление данных локально
+    taskList.eventList.localDeleteEvent(id);
+    removeDashbordElement(id, false);
+
+    // формируем набор для отправки на сервер
+    const removeInvite = JSON.stringify({
+        code: 3,
+        table: 'PARTICIPANTS',
+        idEvent: id,
+        idOwner: cookie,
+    });
+
+    await getResourse(removeInvite);
+
+    await gettingListEvents();
+
+    const url = unescape(window.location.href);
+    if (url.substring(url.lastIndexOf('/') + 1, url.length) === 'dashboard'){
+        counterToElement();
+    }
+}
+
 
 /* Общие функции */
 // Отрисовка формы для создания элементов
